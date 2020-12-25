@@ -1,0 +1,9 @@
+#!/bin/bash
+
+cwd=$(pwd)
+nwd=${cwd/A/B}
+
+cp -r $cwd $nwd
+cd $nwd
+
+unset cwd nwd
