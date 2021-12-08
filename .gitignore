@@ -1,7 +1,6 @@
 *.hi
 *.o
 Advent
-testinput
 .*
 dist-newstyle
 input
