@@ -1,0 +1,43 @@
+#!/bin/bash
+
+function show_help () {
+  echo "$0 [-h] [-t] <year>/<day>-<part>
+
+-h            help (this)
+
+-t            Only run tests
+  "
+}
+
+PROD=true
+while getopts "ht" opt; do
+  case "$opt" in
+  h|\?)
+    show_help
+    exit 0
+    ;;
+  t)  PROD=false
+    ;;
+  :)
+    echo "Option -$OPTARG requires an argument." >&2
+    exit 1
+    ;;
+  esac
+done
+
+shift $(($OPTIND - 1))
+dir="$@"
+
+cd $dir
+
+ghc Advent
+
+for testinput in testinput*
+do
+	./Advent < $testinput
+done
+
+if $PROD
+then
+	./Advent < input
+fi
