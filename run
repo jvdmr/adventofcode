@@ -30,14 +30,17 @@ dir="$@"
 
 cd $dir
 
+#ghc Advent -prof -fprof-auto -fprof-cafs
 ghc Advent
 
 for testinput in testinput*
 do
+#  ./Advent +RTS -xc < $testinput
 	./Advent < $testinput
 done
 
 if $PROD
 then
+#  ./Advent +RTS -xc < input
 	./Advent < input
 fi
