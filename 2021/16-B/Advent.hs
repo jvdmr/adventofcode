@@ -1,3 +1,4 @@
+{-# LANGUAGE BinaryLiterals #-}
 module Main where
 
 import Data.List
@@ -32,8 +33,8 @@ hexToBin 'E' = "1110"
 hexToBin 'F' = "1111"
 
 binToDec :: String -> Int
-binToDec = foldl (+) 0 . zipWith (*) twos . reverse . map (read . (:[]))
-  where twos = 1:[2 * x | x <- twos]
+binToDec [] = 0
+binToDec bs = 2 * binToDec (init bs) + read [last bs]
 
 bmanyx :: Int -> ParsecT String u Identity a -> ParsecT String u Identity [a]
 bmanyx 1 p =     (p >>= \r -> return [r])

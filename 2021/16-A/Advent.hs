@@ -1,3 +1,4 @@
+{-# LANGUAGE BinaryLiterals #-}
 module Main where
 
 import Data.List
@@ -31,9 +32,9 @@ hexToBin 'D' = "1101"
 hexToBin 'E' = "1110"
 hexToBin 'F' = "1111"
 
-binToDec :: Int -> Int
-binToDec 0 = 0
-binToDec i = 2 * binToDec (div i 10) + (mod i 10)
+binToDec :: String -> Int
+binToDec [] = 0
+binToDec bs = 2 * binToDec (init bs) + read [last bs]
 
 manyx :: Int -> ParsecT String u Identity a -> ParsecT String u Identity [a]
 manyx 1 p =     (p >>= \r -> return [r])
@@ -59,7 +60,7 @@ bits n =     (manyx n bit >>= return)
          <?> ("bits " ++ show n)
 
 numberHelp :: String -> ParsecT String u Identity Int
-numberHelp prev =     (zero >> bits 4 >>= return . binToDec . read . (prev ++))
+numberHelp prev =     (zero >> bits 4 >>= return . binToDec . (prev ++))
                   <|> (one >> bits 4 >>= numberHelp . (prev ++) >>= return)
                   <?> ("numberHelp " ++ prev)
 
@@ -69,8 +70,8 @@ number =     (numberHelp "" >> return 0)
          <?> "number"
 
 operation :: ParsecT String u Identity Int
-operation =     (zero >> bits 15 >>= \l -> bits (binToDec $ read l) >>= return . decypher)
-            <|> (one >> bits 11 >>= \l -> manyx (binToDec $ read l) packet >>= return . foldl (+) 0)
+operation =     (zero >> bits 15 >>= \l -> bits (binToDec l) >>= return . decypher)
+            <|> (one >> bits 11 >>= \l -> manyx (binToDec l) packet >>= return . foldl (+) 0)
             <?> "operation"
 
 decode :: Int -> ParsecT String u Identity Int
@@ -80,11 +81,11 @@ decode n =     (operation >>= return)
            <?> ("decode operation " ++ show n)
 
 typeid :: ParsecT String u Identity Int
-typeid =     (bits 3 >>= return . binToDec . read)
+typeid =     (bits 3 >>= return . binToDec)
          <?> "typeid"
 
 version :: ParsecT String u Identity Int
-version =     (bits 3 >>= return . binToDec . read)
+version =     (bits 3 >>= return . binToDec)
           <?> "version"
 
 packet :: ParsecT String u Identity Int
