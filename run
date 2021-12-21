@@ -36,11 +36,11 @@ ghc Advent
 for testinput in testinput*
 do
 #  ./Advent +RTS -xc < $testinput
-	./Advent < $testinput
+	time ./Advent < $testinput
 done
 
 if $PROD
 then
 #  ./Advent +RTS -xc < input
-	./Advent < input
+	time ./Advent < input
 fi
