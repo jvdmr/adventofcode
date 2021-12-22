@@ -30,8 +30,8 @@ dir="$@"
 
 cd $dir
 
-#ghc Advent -prof -fprof-auto -fprof-cafs
-ghc Advent
+#ghc Advent -prof -fprof-auto -fprof-cafs || exit 1
+ghc Advent || exit 1
 
 for testinput in testinput*
 do
