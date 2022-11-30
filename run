@@ -6,17 +6,24 @@ function show_help () {
 -h            help (this)
 
 -t            Only run tests
+
+-d            Run profiling, debugging
   "
 }
 
 PROD=true
-while getopts "ht" opt; do
+while getopts "htd" opt; do
   case "$opt" in
   h|\?)
     show_help
     exit 0
     ;;
-  t)  PROD=false
+  t)
+    PROD=false
+    ;;
+  d)
+    GHCOPTS="-prof -fprof-auto -fprof-cafs"
+    RUNOPTS="+RTS -xc"
     ;;
   :)
     echo "Option -$OPTARG requires an argument." >&2
@@ -30,17 +37,14 @@ dir="$@"
 
 cd $dir
 
-#ghc Advent -prof -fprof-auto -fprof-cafs || exit 1
-ghc Advent || exit 1
+ghc Advent $GHCOPTS || exit 1
 
 for testinput in testinput*
 do
-#  ./Advent +RTS -xc < $testinput
-	time ./Advent < $testinput
+  time ./Advent $RUNOPTS < $testinput
 done
 
 if $PROD
 then
-#  ./Advent +RTS -xc < input
-	time ./Advent < input
+  time ./Advent $RUNOPTS < input
 fi
