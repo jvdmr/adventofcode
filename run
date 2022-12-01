@@ -7,18 +7,25 @@ function show_help () {
 
 -t            Only run tests
 
+-c            Only compile
+
 -d            Run profiling, debugging
   "
 }
 
+TEST=true
 PROD=true
-while getopts "htd" opt; do
+while getopts "htdc" opt; do
   case "$opt" in
   h|\?)
     show_help
     exit 0
     ;;
   t)
+    PROD=false
+    ;;
+  c)
+    TEST=false
     PROD=false
     ;;
   d)
@@ -39,10 +46,13 @@ cd $dir
 
 ghc Advent $GHCOPTS || exit 1
 
-for testinput in testinput*
-do
-  time ./Advent $RUNOPTS < $testinput
-done
+if $TEST
+then
+	for testinput in testinput*
+	do
+		time ./Advent $RUNOPTS < $testinput
+	done
+fi
 
 if $PROD
 then
