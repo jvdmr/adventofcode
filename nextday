@@ -2,7 +2,7 @@
 
 cwd=$(pwd)
 dir=$(basename ${cwd})
-nwd=${cwd%"/${dir}"}/$((${dir%"-B"} + 1))-A
+nwd=${cwd%"/${dir}"}/$(printf "%02d" $((${dir%"-B"} + 1)))-A
 
 echo $nwd
 cp -r ../../template/01-A $nwd
