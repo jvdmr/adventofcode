@@ -2,3 +2,5 @@
 *.o
 Advent
 .*
+dist-newstyle
+input
