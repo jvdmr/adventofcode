@@ -5,6 +5,8 @@ function show_help () {
 
 -h            help (this)
 
+-p            Don't run tests
+
 -t            Only run tests
 
 -c            Only compile
@@ -15,11 +17,14 @@ function show_help () {
 
 TEST=true
 PROD=true
-while getopts "htdc" opt; do
+while getopts "htdcp" opt; do
   case "$opt" in
   h|\?)
     show_help
     exit 0
+    ;;
+  p)
+    TEST=false
     ;;
   t)
     PROD=false
@@ -50,11 +55,13 @@ if $TEST
 then
 	for testinput in testinput*
 	do
+		echo Running $testinput
 		time ./Advent $RUNOPTS < $testinput
 	done
 fi
 
 if $PROD
 then
+	echo Running actual input
   time ./Advent $RUNOPTS < input
 fi
