@@ -8,8 +8,8 @@ idtrace x = trace (show x) x
 flatten :: [[a]] -> [a]
 flatten = foldl (++) []
 
-rotate :: [[a]] -> [[a]]
-rotate = transpose . map reverse
+rotateCCW :: [[a]] -> [[a]]
+rotateCCW = transpose . map reverse
 
 type AstronomyData = [[Char]]
 
@@ -19,7 +19,7 @@ expandY (y:ys) | all (== '.') y = y:y:expandY ys
                | otherwise = y:expandY ys
 
 expand :: AstronomyData -> AstronomyData
-expand = expandY . rotate . expandY
+expand = expandY . rotateCCW . expandY
 
 type Coord = (Int, Int)
 
