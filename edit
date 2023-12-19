@@ -1,0 +1,6 @@
+#!/bin/bash
+
+datestr=$1
+
+vim -p ${datestr}.hs ${datestr}/testinput* ${datestr}/input
+

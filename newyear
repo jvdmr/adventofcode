@@ -1,0 +1,17 @@
+#!/bin/bash
+
+year=$1
+
+cp -r template ${year}
+cd ${year}
+
+sed -e "s/AoCxxxx/AoC${year}/" AoCxxxx.hs > AoC${year}.hs
+rm AoCxxxx.hs
+
+for day in $(seq 2 25)
+do
+	daystr=Day$(printf "%02d" ${day})
+	cp -r Day01 ${daystr}
+	sed -e "s/Day01/${daystr}/" Day01.hs > ${daystr}.hs
+done
+
