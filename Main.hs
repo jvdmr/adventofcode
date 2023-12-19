@@ -30,10 +30,10 @@ main = do
   input <- getContents
   case part args of
        0 -> do
-         print $ solve1 input
-         print $ solve2 input
+         putStrLn $ "Part 1: " ++ solve1 input
+         putStrLn $ "Part 2: " ++ solve2 input
        1 -> do
-         print $ solve1 input
+         putStrLn $ "Part 1: " ++ solve1 input
        2 -> do
-         print $ solve2 input
+         putStrLn $ "Part 2: " ++ solve2 input
 

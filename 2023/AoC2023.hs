@@ -5,7 +5,7 @@ module AoC2023
 import Vdmr.Generic (Year)
 import Day01
 import Day02
--- import Day03
+import Day03
 -- import Day04
 -- import Day05
 -- import Day06
@@ -36,7 +36,7 @@ days =
   fromList
     [ (1, (Day01.part1, Day01.part2))
     , (2, (Day02.part1, Day02.part2))
---     , (3, (Day03.part1, Day03.part2))
+    , (3, (Day03.part1, Day03.part2))
 --     , (4, (Day04.part1, Day04.part2))
 --     , (5, (Day05.part1, Day05.part2))
 --     , (6, (Day06.part1, Day06.part2))

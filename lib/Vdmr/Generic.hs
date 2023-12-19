@@ -6,6 +6,7 @@ module Vdmr.Generic
   , idtrace
   , ftrace
   , flatten
+  , uniq
   , between
   , unjust
   , bfs
@@ -29,6 +30,13 @@ ftrace f x = trace (f x) x
 
 flatten :: [[a]] -> [a]
 flatten = foldl (++) []
+
+-- uniq is better than nub on sorted lists
+uniq :: (Eq a) => [a] -> [a]
+uniq [] = []
+uniq [a] = [a]
+uniq (a:b:rst) | a == b = uniq (b:rst)
+               | otherwise = a:uniq (b:rst)
 
 between :: Int -> Int -> Int -> Bool
 between a b c = a <= b && b <= c
