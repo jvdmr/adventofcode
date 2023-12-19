@@ -6,60 +6,47 @@ import Data.List.Split (splitOn)
 import Debug.Trace
 idtrace x = trace (show x) x
 
+ftrace :: (a -> String) -> a -> a
+ftrace f x = trace (f x) x
+
 flatten :: [[a]] -> [a]
 flatten = foldl (++) []
 
-possibilities :: Int -> [String]
-possibilities n = possibilities' !! (n - 1)
-  where possibilities' = hs:[flatten [map (h:) hs' | h <- "#."] | hs' <- possibilities']
-        hs = [[h] | h <- "#."]
+-- not needed here but we're keeping it anyway
+-- splitN calculates how many possible ways a number n can be split in m parts, where every part >= 1
+splitN :: Int -> Int -> Int
+splitN n m = (splitN' !! (m - 1)) !! (n - 1)
+  where splitN' = (repeat 1):map (map sum . inits) splitN'
 
-expand :: String -> [String]
-expand h@('.':_) = [h]
-expand h@('#':_) = [h]
-expand h@('?':_) = possibilities $ length h
+match :: (Char, Char) -> Bool
+match ('?', _) = True
+match (a, b) = a == b
 
-match :: ([Int], String) -> String -> [([Int], String)]
-match (ns, r) s = skip (ns, gr)
-  where gr = group  $ r ++ s
-        skip (nss, []) = [(nss, ".")]
-        skip ([], [g]) | '.' == head g = [([], g)]
-                       | otherwise = []
-        skip ([], _) = []
-        skip (n:nss, g:grs) | '.' == head g && [] == grs = [(n:nss, g)]
-                            | '.' == head g = skip (n:nss, grs)
-                            | n == length g && [] == grs = [(n:nss, g)]
-                            | n == length g = skip (nss, grs)
-                            | n > length g && [] == grs = [(n:nss, g)]
-                            | otherwise = []
+matchFill :: String -> String -> Bool
+matchFill springs = all match . zipWith (,) springs
 
-count :: [[(a, Int)]] -> [(a, Int)]
-count [] = []
-count (a:rest) = (fst $ head a, sum $ map snd a):count rest
+generate :: Int -> (String, [String]) -> Int
+generate result (springs, []) | matchFill springs suffix = result + 1
+                              | otherwise = result
+  where suffix = take (length springs) $ repeat '.'
+generate result ("", _) = result
+generate result (springs, (s:pattern)) | maxFill < 0 = result
+                                       | otherwise = foldl generate result [(drop p springs, pattern) | p <- map length $ filter (matchFill springs) fills]
+  where baseLength = sum $ map length (s:pattern)
+        maxFill = length springs - baseLength
+        fills = map ((++ s) . (flip take $ repeat '.')) [0..maxFill]
 
-groupWith :: (Eq b) => (a -> b) -> [a] -> [[a]]
-groupWith f = groupBy f'
-  where f' a b = f a == f b
-
-sortWith :: (Ord b) => (a -> b) -> [a] -> [a]
-sortWith f = sortBy f'
-  where f' a b = compare (f a) (f b)
-
-combine :: [(([Int], String), Int)] -> [[String]] -> Int
-combine rs [] = sum $ map snd $ filter ((== []) . fst . fst) $ flatten [map (flip (,) n) $ match r "." | (r, n) <- rs]
-combine rs (s:ss) = combine rs' ss
-  where rs' = count $ groupWith fst $ sortWith fst $ flatten $ flatten [map (map (flip (,) n) . match r) s | (r, n) <- rs]
-
-arrange :: ([String], [Int]) -> Int
-arrange (springGroups, ns) = combine [((ns, "."), 1)] $ map expand springGroups
+arrange :: (String, [Int]) -> Int
+arrange (springs, ns) = generate 0 $ idtrace (springs, head pattern:(map ('.':) $ tail pattern))
+  where pattern = map (flip take $ repeat '#') ns
 
 join :: [a] -> [[a]] -> [a]
 join i = flatten . intersperse i
 
-unfold :: String -> ([String], [Int])
-unfold s = (springGroups, flatten $ take 5 $ repeat ns)
-  where [springs, nsStr] = splitOn " " s
-        springGroups = group $ join "?" $ take 5 $ repeat springs
+unfold :: String -> (String, [Int])
+unfold s = (springs, flatten $ take 5 $ repeat ns)
+  where [springsStr, nsStr] = splitOn " " s
+        springs = join "?" $ take 5 $ repeat springsStr
         ns = map read $ splitOn "," nsStr
 
 main = do

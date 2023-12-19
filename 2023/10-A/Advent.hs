@@ -41,8 +41,8 @@ surround (x, y) = [(xn, yn) | xn <- map (+x) [-1, 0, 1], yn <- map (+y) [-1, 0, 
 
 inGrid :: Grid a -> Coord -> Bool
 inGrid (Grid g) (x, y) = between 0 x maxX && between 0 y maxY
-  where maxX = length $ head g
-        maxY = length g
+  where maxX = (length $ head g) - 1
+        maxY = (length g) - 1
 
 type Pipe = Char
 
