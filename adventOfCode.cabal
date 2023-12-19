@@ -1,0 +1,41 @@
+cabal-version:      2.4
+name:               adventOfCode
+version:            2023
+
+-- A short (one-line) description of the package.
+-- synopsis:
+
+-- A longer description of the package.
+-- description:
+
+-- A URL where users can report bugs.
+-- bug-reports:
+
+-- The license under which the package is released.
+-- license:
+author:             jvdmr
+maintainer:         joris@vdmr.be
+
+-- A copyright notice.
+-- copyright:
+-- category:
+extra-source-files:
+  Readme.md
+
+library vdmr
+  hs-source-dirs: lib
+  exposed-modules: Vdmr.Generic
+                 , Vdmr.Grid
+                 --, Vdmr.Dijkstra
+  build-depends: base, containers
+  default-language: Haskell2010
+
+executable aoc
+  main-is: Main.hs
+  hs-source-dirs: .
+                , 2023
+  -- LANGUAGE extensions used by modules in this package.
+  other-extensions: FlexibleInstances, TypeSynonymInstances, FlexibleContexts
+  build-depends: base, cmdargs, containers, split, vdmr
+  ghc-options: -threaded
+  default-language: Haskell2010
