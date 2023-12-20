@@ -143,7 +143,9 @@ countCycle ntw name = length $ takeWhile noLowConj $ iterate pulse' (ntw, [])
         lowConj _ = False
 
 cycles :: Network -> [Int]
-cycles ntw = map (countCycle ntw) $ tgts $ ntw ! "broadcaster"
+cycles ntw | hasRx = map (countCycle ntw) $ tgts $ ntw ! "broadcaster"
+           | otherwise = [1]
+           where hasRx = elem "rx" $ flatten $ map tgts $ M.elems ntw
 
 part2 :: Solver
 part2 = show . foldl lcm 1 . cycles . parseInput . lines
