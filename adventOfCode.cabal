@@ -26,16 +26,29 @@ library vdmr
   hs-source-dirs: lib
   exposed-modules: Vdmr.Generic
                  , Vdmr.Grid
+                 , Vdmr.Parsec
                  --, Vdmr.Dijkstra
-  build-depends: base, containers
+  build-depends: base
+               , containers
+               , parsec
   default-language: Haskell2010
 
 executable aoc
   main-is: Main.hs
   hs-source-dirs: .
                 , 2023
+  other-modules: AoC2023, Day01, Day02, Day03, Day04, Day05
+               , Day06, Day07, Day08, Day09, Day10, Day11
+               , Day12, Day13, Day14, Day15, Day16
+               --, Day17
+               , Day18, Day19, Day20, Day21, Day22, Day23
+               , Day24, Day25
   -- LANGUAGE extensions used by modules in this package.
   other-extensions: FlexibleInstances, TypeSynonymInstances, FlexibleContexts
-  build-depends: base, cmdargs, containers, split, vdmr
+  build-depends: base
+               , cmdargs
+               , containers
+               , split
+               , vdmr
   ghc-options: -threaded
   default-language: Haskell2010
