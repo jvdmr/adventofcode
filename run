@@ -58,7 +58,6 @@ then
 	for testinput in $dir/testinput*
 	do
 		echo Running $testinput
-		echo "time cabal new-run aoc -- $RUNARGS < $testinput"
 		time cabal new-run aoc -- $RUNARGS < $testinput
 	done
 fi
