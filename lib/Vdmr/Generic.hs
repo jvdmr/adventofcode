@@ -10,7 +10,9 @@ module Vdmr.Generic
   , between
   , unjust
   , bfs
+  , bfsState
   , hexToDec 
+  , none
   ) where
 
 import Data.Char (digitToInt)
@@ -47,5 +49,13 @@ bfs :: (Eq a) => (a -> [a]) -> [a] -> [a] -> [a]
 bfs _ result [] = result
 bfs neighbors result (node:queue) = bfs neighbors (node:result) (queue ++ (filter (flip notElem result) $ neighbors node))
 
+bfsState :: (Eq a) => b -> (b -> a -> (b, [a])) -> [a] -> [a] -> (b, [a])
+bfsState state _ result [] = (state, result)
+bfsState state neighbors result (node:queue) = bfsState state' neighbors (node:result) (queue ++ filter (flip notElem result) neighbors')
+  where (state', neighbors') = neighbors state node
+
 hexToDec :: String -> Int
 hexToDec = sum . zipWith (*) (iterate (* 16) 1) . reverse . map digitToInt
+
+none :: Foldable t => (a -> Bool) -> t a -> Bool
+none f as = all (not . f) as
