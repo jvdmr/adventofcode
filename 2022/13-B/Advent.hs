@@ -13,13 +13,13 @@ data Packet = PacketLst [Packet]
             deriving (Eq, Show)
 
 parens :: Stream s m Char => ParsecT s u m a -> ParsecT s u m a
-parens = between (string "(") (string ")")
+parens = between (char '(') (char ')')
 
 brackets :: Stream s m Char => ParsecT s u m a -> ParsecT s u m a
-brackets = between (string "[") (string "]")
+brackets = between (char '[') (char ']')
 
 commaSep :: Stream s m Char => ParsecT s u m a -> ParsecT s u m [a]
-commaSep = flip sepBy (string ",")
+commaSep = flip sepBy (char ',')
 
 packet =     (brackets (commaSep packet) >>= return . PacketLst)
          <|> (many1 digit >>= return . PacketNum . read)
