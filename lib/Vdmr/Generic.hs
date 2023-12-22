@@ -13,6 +13,7 @@ module Vdmr.Generic
   , bfsState
   , hexToDec 
   , none
+  , andF
   ) where
 
 import Data.Char (digitToInt)
@@ -59,3 +60,6 @@ hexToDec = sum . zipWith (*) (iterate (* 16) 1) . reverse . map digitToInt
 
 none :: Foldable t => (a -> Bool) -> t a -> Bool
 none f as = all (not . f) as
+
+andF :: a -> [a -> Bool] -> Bool
+andF x = and . map ($ x)
