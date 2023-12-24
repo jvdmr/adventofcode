@@ -1,4 +1,4 @@
-{-# LANGUAGE FlexibleInstances, TypeSynonymInstances, FlexibleContexts #-}
+{-# LANGUAGE FlexibleInstances, TypeSynonymInstances, FlexibleContexts, TypeFamilies #-}
 module Day17
   ( part1
   , part2
@@ -9,9 +9,9 @@ import Data.Map ((!))
 import qualified Data.Map as M
 
 import Vdmr.Generic
-import Vdmr.Grid hiding ((!))
+import Vdmr.Grid hiding ((!), Direction)
 import qualified Vdmr.Grid as J ((!))
-import Vdmr.Dijkstra hiding (GName)
+import Vdmr.Dijkstra
 
 data Direction = H | V | Q
   deriving (Show, Eq, Ord)
@@ -34,12 +34,13 @@ glines = snd
 
 instance GName Block
 
-instance GGraph (Graph Block Lines) where
-  distance g a b = Dist $ snd $ unjust $ find ((== coord b) . coord . fst) $ glines $ val g a
-  neighbors graph n = map fst $ glines $ val graph n
+type Graph = M.Map Block Lines
 
-instance GNode Lines where
-  name (b, _) = b
+instance GGraph Graph where
+  type GNodeName Graph = Block
+  distance graph a b = Dist $ snd $ unjust $ find ((== coord b) . coord . fst) $ glines $ graph ! a
+  neighbors graph n = map fst $ glines $ graph ! n
+  nodes = M.keys
 
 gridNeighbors :: [Int] -> Grid Int -> Direction -> Coord -> [Line]
 gridNeighbors boundaries g V (x, y) = sortBy compareLine [(((x', y), H), d) |
@@ -52,7 +53,7 @@ gridNeighbors boundaries g H (x, y) = sortBy compareLine [(((x, y'), V), d) |
   inGrid g (x, y')]
 gridNeighbors _ g Q (x, y) = [(((x, y), d), 0) | d <- [H, V]]
 
-graphify :: [Int] -> Grid Int -> Graph Block Lines
+graphify :: [Int] -> Grid Int -> Graph
 graphify boundaries g = M.fromList [((c, dir), ((c, dir), gridNeighbors boundaries g dir c)) | c <- coords g, dir <- [H, V]]
 
 readInt :: Char -> Int
@@ -62,7 +63,7 @@ heatloss :: [Int] -> Grid Int -> Int
 heatloss boundaries g = d
   where gg = M.insert ((0, 0), Q) (((0, 0), Q), gridNeighbors boundaries g Q (0, 0)) $ graphify boundaries g
         dg = dijkstra gg ((0, 0), Q)
-        (Dist d) = snd $ minimum $ map (val dg) [(maxCoord g, d) | d <- [V, H]]
+        (Dist d) = snd $ minimum $ map (dg !) [(maxCoord g, d) | d <- [V, H]]
 
 part1 :: Solver
 part1 = show . heatloss boundaries . mapG readInt . Grid . lines

@@ -1,13 +1,11 @@
-{-# LANGUAGE FlexibleInstances, TypeSynonymInstances, FlexibleContexts #-}
+{-# LANGUAGE FlexibleInstances, TypeSynonymInstances, FlexibleContexts, TypeFamilies #-}
 
 module Vdmr.Dijkstra
   ( dijkstra
-  , GName(..)
-  , GGraph(..)
-  , Graph
-  , GNode(..)
-  , Distance(..)
-  , val
+  , GName (..)
+  , GGraph (..)
+--   , GNode (..)
+  , Distance (..)
   ) where
 
 import Data.List (sort)
@@ -15,25 +13,16 @@ import Data.Map ((!))
 import qualified Data.Map as M
 
 -- Define according to your node's id - coordinates, labels, ...
-class GName a
+class (Eq a, Ord a) => GName a
 
-class GNode a where
-  name :: (GName b) => a -> b
+-- class GNode a where
+--   type GNodeName a
 
-class GGraph a where
-  distance :: (GName b) => a -> b -> b -> Distance
-  neighbors :: (GName b) => a -> b -> [b]
-
-type Graph k a = M.Map k a
-
-val :: (GName k, GNode a) => Graph k a -> k -> a
-val graph n = graph ! n
-
-setval :: (GName k, GNode a) => Graph k a -> a -> Graph k a
-setval g v = M.insert (name v) v g
-
-gmap :: (GName k) => (a -> b) -> Graph k a -> Graph k b
-gmap = M.map
+class GGraph g where
+  type GNodeName g
+  nodes :: g -> [GNodeName g]
+  neighbors :: g -> GNodeName g -> [GNodeName g]
+  distance :: g -> GNodeName g -> GNodeName g -> Distance
 
 data Distance = Dist Int
               | Infinity
@@ -62,19 +51,20 @@ instance Num Distance where
   signum Infinity = 1
   signum (Dist a) = Dist $ signum a
 
-type Explored = [GName]
-type Queue = [(Distance, GName)]
-type Result = Graph GName (GName, Distance)
-type Node = (GName, [(Distance, GName)])
+type DGraph k a = M.Map k a
+type Explored gname = [gname]
+type Queue gname = [(Distance, gname)]
+type Result gname = M.Map gname (gname, Distance)
+type Node gname = (gname, [(Distance, gname)])
 
-instance GNode (GName, Distance) where
-  name (n, _) = n
+-- instance GName k => GNode (k, Distance) where
+--   type GNodeName (k, Distance) = k
 
-instance GNode Node where
-  name (n, _) = n
+-- instance GName k => GNode (Node k) where
+--   type GNodeName (Node k) = k
 
-updateResult :: Result -> (Distance, GName) -> Result
-updateResult r (d, n) | snd (val r n) > d = setval r (n, d)
+updateResult :: GName a => Result a -> (Distance, a) -> Result a
+updateResult r (d, n) | snd (r ! n) > d = M.insert n (n, d) r
                       | otherwise = r
 
 keepFirst :: Eq b => (a -> b) -> [a] -> [a]
@@ -83,14 +73,14 @@ keepFirst f a = keepFirst' [] a
         keepFirst' begin (x:rest) | notElem (f x) (map f begin) = keepFirst' (x:begin) rest
                                   | otherwise = keepFirst' begin rest
 
-dijkstraLoop :: (GName k) => Graph k Node -> Explored -> Queue -> Result -> Result
+dijkstraLoop :: GName k => DGraph k (Node k) -> Explored k -> Queue k -> Result k -> Result k
 dijkstraLoop _ _ [] r = r
 dijkstraLoop g e ((d, n):q) r = dijkstraLoop g (n:e) (keepFirst snd $ sort (q ++ nxt)) (foldl updateResult r nxt)
-  where nxt = filter unseen $ map totalDistance $ snd $ val g n
+  where nxt = filter unseen $ map totalDistance $ snd $ g ! n
         totalDistance (nd, nn) = (nd + d, nn)
         unseen (_, nn) = notElem nn e
 
-dijkstra :: (GName k, GGraph (Graph k a), GNode a, Show a) => Graph k a -> k -> Result
-dijkstra g s = dijkstraLoop nodified [] [(0, s)] $ flip updateResult (0, s) $ gmap (\n -> (name n, Infinity)) g
-  where nodified = gmap (nodify . name) g
-        nodify n = (n, map (\n' -> (distance g n n', n')) $ neighbors g n)
+dijkstra :: (GName (GNodeName g), GGraph g) => g -> GNodeName g -> Result (GNodeName g)
+dijkstra graph start = dijkstraLoop nodified [] [(0, start)] $ flip updateResult (0, start) $ M.fromList $ map (\n -> (n, (n, Infinity))) $ nodes graph
+  where nodified = M.fromList $ map nodify $ nodes graph
+        nodify n = (n, (n, map (\n' -> (distance graph n n', n')) $ neighbors graph n))
