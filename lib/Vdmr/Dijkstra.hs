@@ -4,7 +4,6 @@ module Vdmr.Dijkstra
   ( dijkstra
   , GName (..)
   , GGraph (..)
---   , GNode (..)
   , Distance (..)
   ) where
 
@@ -14,9 +13,6 @@ import qualified Data.Map as M
 
 -- Define according to your node's id - coordinates, labels, ...
 class (Eq a, Ord a) => GName a
-
--- class GNode a where
---   type GNodeName a
 
 class GGraph g where
   type GNodeName g
@@ -56,12 +52,6 @@ type Explored gname = [gname]
 type Queue gname = [(Distance, gname)]
 type Result gname = M.Map gname (gname, Distance)
 type Node gname = (gname, [(Distance, gname)])
-
--- instance GName k => GNode (k, Distance) where
---   type GNodeName (k, Distance) = k
-
--- instance GName k => GNode (Node k) where
---   type GNodeName (Node k) = k
 
 updateResult :: GName a => Result a -> (Distance, a) -> Result a
 updateResult r (d, n) | snd (r ! n) > d = M.insert n (n, d) r

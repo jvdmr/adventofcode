@@ -10,6 +10,8 @@ import Data.List.Split (splitOn)
 import Vdmr.Generic
 import Vdmr.Grid
 
+type GCoord = Coord Int
+
 data Instruction = Dig Direction Int
   deriving (Show, Eq)
 
@@ -29,13 +31,13 @@ parseInstruction2 s = Dig (dir ds) (hexToDec ls)
 
 type Instructions = [Instruction]
 
-goFar :: Direction -> Int -> Coord -> Coord
+goFar :: Direction -> Int -> GCoord -> GCoord
 goFar D n = add (0, n)
 goFar R n = add (n, 0)
 goFar U n = add (0, -n)
 goFar L n = add (-n, 0)
 
-loopL :: Coord -> Instruction -> Instructions -> [Coord]
+loopL :: GCoord -> Instruction -> Instructions -> [GCoord]
 loopL c _ [_] = [c]
 loopL c (Dig pd _) (i@(Dig d l):rest@((Dig nd _):_)) = c:loopL c' i rest
   where c' = goFar d (l + doubleTurn pd d nd) c
@@ -49,7 +51,7 @@ loopL c (Dig pd _) (i@(Dig d l):rest@((Dig nd _):_)) = c:loopL c' i rest
         doubleTurn L D R = -1
         doubleTurn _ _ _ = 0
 
-loopR :: Coord -> Instruction -> Instructions -> [Coord]
+loopR :: GCoord -> Instruction -> Instructions -> [GCoord]
 loopR c _ [_] = [c]
 loopR c (Dig pd _) (i@(Dig d l):rest@((Dig nd _):_)) = c:loopR c' i rest
   where c' = goFar d (l + doubleTurn pd d nd) c
@@ -63,7 +65,7 @@ loopR c (Dig pd _) (i@(Dig d l):rest@((Dig nd _):_)) = c:loopR c' i rest
         doubleTurn L D R = 1
         doubleTurn _ _ _ = 0
 
-shoelace :: [Coord] -> Int
+shoelace :: [GCoord] -> Int
 shoelace cs = (a - b) `div` 2
   where a = sum $ zipWith (*) (map fst cs) (map snd cs')
         b = sum $ zipWith (*) (map fst cs') (map snd cs)

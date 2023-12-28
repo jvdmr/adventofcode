@@ -1,0 +1,9 @@
+broadcaster -> a, b, c, d, e, f, g
+%a -> con
+%b -> con
+%c -> con
+%d -> con
+%e -> con
+%f -> con
+%g -> con
+&con -> output

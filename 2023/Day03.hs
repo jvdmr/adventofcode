@@ -10,7 +10,9 @@ import Data.Char
 import Vdmr.Generic
 import Vdmr.Grid
 
-surroundAll :: [Coord] -> [Coord]
+type GCoord = Coord Int
+
+surroundAll :: [GCoord] -> [GCoord]
 surroundAll cs = filter (flip notElem cs) $ uniq $ sort $ flatten $ map surround cs
 
 --
@@ -28,12 +30,12 @@ dotsAreSpaces c = c
 
 --
 
-isFirstDigit :: Grid Char -> Coord -> Bool
+isFirstDigit :: Grid Char -> GCoord -> Bool
 isFirstDigit g c = isDigit v && not (isDigit v')
   where v = g ! c
         v' = g ! (add c (-1, 0))
 
-digitsAndBorder :: Grid Char -> Coord -> (Int, String)
+digitsAndBorder :: Grid Char -> GCoord -> (Int, String)
 digitsAndBorder g c = (read $ map ((!) g) digits, map ((!) g) $ surroundAll digits)
   where digits = takeWhile (isDigit . (!) g) $ map (add c . flip (,) 0) $ [0..]
 
@@ -50,19 +52,19 @@ findPartNumbers g = map fst $ filter ((<) 0 . length . filter isValidSymbol . sn
 part1 :: Solver
 part1 = show . sum . findPartNumbers . Grid . pad ' ' . lines . map dotsAreSpaces
 
-firstDigit :: Grid Char -> Coord -> Coord
+firstDigit :: Grid Char -> GCoord -> GCoord
 firstDigit g c | isFirstDigit g c = c
                | otherwise = firstDigit g c'
   where c' = add c (-1, 0)
 
-number :: Grid Char -> Coord -> Int
+number :: Grid Char -> GCoord -> Int
 number g c = read $ takeWhile isDigit $ map ((!) g . add c . flip (,) 0) $ [0..]
 
 isGearSymbol :: Char -> Bool
 isGearSymbol '*' = True
 isGearSymbol _ = False
 
-gearSymbols :: Grid Char -> [Coord]
+gearSymbols :: Grid Char -> [GCoord]
 gearSymbols g = filter (isGearSymbol . (!) g) xys
   where xys = coords g
 
@@ -71,7 +73,7 @@ type Gear = [Int]
 isGear :: Gear -> Bool
 isGear g = 2 == length g
 
-gear :: Grid Char -> Coord -> Gear
+gear :: Grid Char -> GCoord -> Gear
 gear g c = map (number g) $ uniq $ sort $ map (firstDigit g) $ filter (isDigit . (!) g) $ surround c
 
 gears :: Grid Char -> [Gear]

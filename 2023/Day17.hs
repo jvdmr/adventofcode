@@ -13,12 +13,14 @@ import Vdmr.Grid hiding ((!), Direction)
 import qualified Vdmr.Grid as J ((!))
 import Vdmr.Dijkstra
 
+type GCoord = Coord Int
+
 data Direction = H | V | Q
   deriving (Show, Eq, Ord)
 
-type Block = (Coord, Direction)
+type Block = (GCoord, Direction)
 
-coord :: Block -> Coord
+coord :: Block -> GCoord
 coord = fst
 
 dir :: Block -> Direction
@@ -32,9 +34,9 @@ type Lines = (Block, [Line])
 glines :: Lines -> [Line]
 glines = snd
 
-instance GName Block
-
 type Graph = M.Map Block Lines
+
+instance GName Block
 
 instance GGraph Graph where
   type GNodeName Graph = Block
@@ -42,7 +44,7 @@ instance GGraph Graph where
   neighbors graph n = map fst $ glines $ graph ! n
   nodes = M.keys
 
-gridNeighbors :: [Int] -> Grid Int -> Direction -> Coord -> [Line]
+gridNeighbors :: [Int] -> Grid Int -> Direction -> GCoord -> [Line]
 gridNeighbors boundaries g V (x, y) = sortBy compareLine [(((x', y), H), d) |
   x' <- map (x +) boundaries,
   d <- [sum $ map (g J.!) [(x'', y) | x'' <- [min x x'..max x x'], x'' /= x]],

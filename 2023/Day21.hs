@@ -9,6 +9,8 @@ import Data.List
 import Vdmr.Generic
 import Vdmr.Grid
 
+type GCoord = Coord Int
+
 data Tile = Plot
           | Rock
           deriving (Eq)
@@ -25,13 +27,13 @@ tile 'S' = Plot
 garden :: Grid Char -> Grid Tile
 garden = mapG tile
 
-start :: Grid Char -> Coord
+start :: Grid Char -> GCoord
 start g = head $ filter ((== 'S') . (g !)) $ coords g
 
-goAll :: Coord -> [Coord]
+goAll :: GCoord -> [GCoord]
 goAll c = map (flip go c) [D, R, U, L]
 
-type Reachable = (Grid Tile, [Coord])
+type Reachable = (Grid Tile, [GCoord])
 
 step :: Reachable -> Reachable
 step (g, cs) = (g, nub $ flatten $ map (filter (flip andF [inGrid g, (== Plot) . (g !)]) . goAll) cs)
@@ -49,7 +51,7 @@ reachP1 g = map (rs !!) [6, 64]
 part1 :: Solver
 part1 = show . map idtrace . reachP1 . Grid . lines
 
-gridmod :: Grid a -> Coord -> Coord
+gridmod :: Grid a -> GCoord -> GCoord
 gridmod (Grid g) (x, y) = (mod x mx, mod y my)
   where my = length g
         mx = length (head g)

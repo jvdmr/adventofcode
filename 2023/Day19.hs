@@ -133,7 +133,7 @@ apply parts = foldl apply' parts
         apply' ps (_, 'x', _) = ps
 
 possibleParts :: Workflows -> Int
-possibleParts wfs = sum $ map (countParts . apply allParts . flatten . map snd) $ filter accepted $ bfs nb [] [[(Label "in", [defaultRule])]]
+possibleParts wfs = sum $ map (countParts . apply allParts . flatten . map snd) $ filter accepted $ bfs nb id [] [[(Label "in", [defaultRule])]]
   where nb ((Accepted, _):_) = []
         nb ((Rejected, _):_) = []
         nb rest@((n, _):_) = map ((:rest) . ruleToBounds) $ wfs ! n

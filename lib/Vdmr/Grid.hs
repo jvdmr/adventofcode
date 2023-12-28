@@ -1,6 +1,7 @@
 {-# LANGUAGE FlexibleInstances, TypeSynonymInstances, FlexibleContexts #-}
 module Vdmr.Grid
   ( (!)
+  , Axis (..)
   , Coord (..)
   , Direction (..)
   , Grid (..)
@@ -19,17 +20,30 @@ module Vdmr.Grid
   , inside
   , mapG
   , maxCoord
+  , neg
   , noborder
   , outside
   , surround
   ) where
 
+import qualified Data.Map as M
+
 import Vdmr.Generic
 
-type Coord = (Int, Int)
+data Axis = X | Y | Z
+  deriving (Show, Eq)
 
-add :: Coord -> Coord -> Coord
+type Coord a = (a, a)
+
+cget :: Axis -> Coord a -> a
+cget X (x, _) = x
+cget Y (_, y) = y
+
+add :: Num a => Coord a -> Coord a -> Coord a
 add (a, b) (c, d) = (a + c, b + d)
+
+neg :: Num a => Coord a -> Coord a
+neg (a, b) = (-a, -b)
 
 data Grid a = Grid [[a]]
 
@@ -39,52 +53,52 @@ drawGrid (Grid g) = flatten $ map ((++ "\n") . show) g
 instance (Show a, Eq a) => Show (Grid a) where
   show (Grid g) = flatten $ map ((++ "\n") . flatten . map show) g
 
-(!) :: Grid a -> Coord -> a
-(!) (Grid g) (x, y) = (g !! y) !! x
+(!) :: Integral b => Grid a -> Coord b -> a
+(!) (Grid g) (x, y) = (g !! fromIntegral y) !! fromIntegral x
 
-coords :: Grid a -> [Coord]
+coords :: (Enum b, Num b) => Grid a -> [Coord b]
 coords (Grid g) = [(x, y) | x <- [0..mx], y <- [0..my]] 
-  where my = length g - 1
-        mx = length (head g) - 1
+  where my = fromIntegral $ length g - 1
+        mx = fromIntegral $ length (head g) - 1
 
-coordsG :: Grid a -> Grid Coord
+coordsG :: (Enum b, Num b) => Grid a -> Grid (Coord b)
 coordsG (Grid g) = Grid [[(x, y) | x <- [0..mx]] | y <- [0..my]] 
-  where my = length g - 1
-        mx = length (head g) - 1
+  where my = fromIntegral $ length g - 1
+        mx = fromIntegral $ length (head g) - 1
 
-maxCoord :: Grid a -> Coord
+maxCoord :: Num b => Grid a -> Coord b
 maxCoord (Grid g) = (mx, my)
-  where my = length g - 1
-        mx = length (head g) - 1
+  where my = fromIntegral $ length g - 1
+        mx = fromIntegral $ length (head g) - 1
 
 mapG :: (a -> b) -> Grid a -> Grid b
 mapG f (Grid g) = Grid $ map (map f) g
 
-inGrid :: Grid a -> Coord -> Bool
+inGrid :: (Ord b, Num b) => Grid a -> Coord b -> Bool
 inGrid (Grid g) (x, y) = between 0 x mx && between 0 y my
-  where my = length g - 1
-        mx = length (head g) - 1
+  where my = fromIntegral $ length g - 1
+        mx = fromIntegral $ length (head g) - 1
 
-surround :: Coord -> [Coord]
+surround :: (Eq a, Num a) => Coord a -> [Coord a]
 surround (x, y) = [(xn, yn) | xn <- map (+x) [-1, 0, 1], yn <- map (+y) [-1, 0, 1], xn /= x || yn /= y]
 
 data Direction = D | R | U | L
   deriving (Show, Eq, Read)
 
-go :: Direction -> Coord -> Coord
+go :: Num a => Direction -> Coord a -> Coord a
 go D c = add c (0, 1)
 go R c = add c (1, 0)
 go U c = add c (0, -1)
 go L c = add c (-1, 0)
 
-fromCoords :: [Coord] -> Grid Coord
+fromCoords :: (Ord a, Enum a) => [Coord a] -> Grid (Coord a)
 fromCoords cs = Grid [[(x, y) | x <- [minX..maxX]] | y <- [minY..maxY]]
   where minX = minimum $ map fst cs
         minY = minimum $ map snd cs
         maxX = maximum $ map fst cs
         maxY = maximum $ map snd cs
 
-drawCoords :: a -> a -> [Coord] -> Grid a
+drawCoords :: (Eq b, Ord b, Enum b) => a -> a -> [Coord b] -> Grid a
 drawCoords yes no cs = mapG draw $ fromCoords cs
   where draw c | elem c cs = yes
                | otherwise = no
@@ -105,7 +119,7 @@ instance Show InOrOut where
   show I = "I"
   show O = " "
 
-inorout :: [Coord] -> Grid a -> Grid InOrOut
+inorout :: (Enum b, Eq b, Num b) => [Coord b] -> Grid a -> Grid InOrOut
 inorout outC g = mapG ioo $ coordsG g
   where ioo c | elem c outC = O
               | otherwise = I
@@ -113,8 +127,8 @@ inorout outC g = mapG ioo $ coordsG g
 countIOO :: InOrOut -> Grid InOrOut -> Int
 countIOO x (Grid g) = length $ filter (== x) $ flatten g
 
-outside :: [Coord] -> [Coord]
-outside l = filter (inGrid g) $ map (add (-1, -1)) $ bfs nb l' [(0, 0)]
+outside :: (Ord a, Eq a, Num a, Enum a) => [Coord a] -> [Coord a]
+outside l = filter (inGrid g) $ map (add (-1, -1)) $ bfs nb id l' [(0, 0)]
   where nb c = filter (inGrid g') [go d c | d <- [D, R, U, L]]
         g = drawCoords 1 0 l
         g' = border 0 g
@@ -122,7 +136,7 @@ outside l = filter (inGrid g) $ map (add (-1, -1)) $ bfs nb l' [(0, 0)]
         mx = minimum $ map fst l
         my = minimum $ map snd l
 
-inside :: [Coord] -> [Coord]
+inside :: (Ord a, Eq a, Num a, Enum a, Integral a) => [Coord a] -> [Coord a]
 inside l = l ++ (filter ((== I) . (g !)) $ coords g)
   where outC = outside l
         g = drawCoords O I outC

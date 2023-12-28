@@ -105,7 +105,7 @@ type SentPulse = (Int, (MName, (Pulse, MName)))
 
 buttonPulse :: (Network, [SentPulse]) -> (Network, [SentPulse])
 buttonPulse (ntw, _) = (ntw', pulses')
-  where (ntw', pulses') = bfsState ntw neighbors [] [(0, ("broadcaster", (Low, "button")))]
+  where (ntw', pulses') = bfsState ntw neighbors id [] [(0, ("broadcaster", (Low, "button")))]
 
 countPulses :: [SentPulse] -> (Int, Int)
 countPulses lst = (lows, highs)
@@ -125,7 +125,7 @@ data CycleNodeType = Sending
 
 cyclePulse :: (Network -> SentPulse -> (Network, [SentPulse])) -> [SentPulse] -> (Network, [SentPulse]) -> (Network, [SentPulse])
 cyclePulse nbf pulses (ntw, _) = (ntw', pulses')
-  where (ntw', pulses') = bfsState ntw nbf [] pulses
+  where (ntw', pulses') = bfsState ntw nbf id [] pulses
 
 cycleNb :: MName -> Network -> SentPulse -> (Network, [SentPulse])
 cycleNb conj ntw p@(i, (to, (Low, from))) | conj == from = (ntw, [])
