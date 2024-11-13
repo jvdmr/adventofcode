@@ -1,0 +1,9 @@
+#!/bin/bash
+
+newdir="$1"
+datestr=${newdir#src/AoC}
+year=${datestr%/Day*}
+day=${datestr#*/Day}
+
+vim -p old/${year}/${day}-*/Advent.hs ${newdir}.hs ${newdir}/testinput* ${newdir}/input
+
