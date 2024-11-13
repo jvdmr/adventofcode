@@ -1,5 +1,5 @@
 {-# LANGUAGE FlexibleInstances, TypeSynonymInstances, FlexibleContexts #-}
-module Day21
+module AoC2023.Day21
   ( part1
   , part2
   ) where
@@ -36,7 +36,7 @@ goAll c = map (flip go c) [D, R, U, L]
 type Reachable = (Grid Tile, [GCoord])
 
 step :: Reachable -> Reachable
-step (g, cs) = (g, nub $ flatten $ map (filter (flip andF [inGrid g, (== Plot) . (g !)]) . goAll) cs)
+step (g, cs) = (g, nub $ concat $ map (filter (flip andF [inGrid g, (== Plot) . (g !)]) . goAll) cs)
 
 reach :: (Reachable -> Reachable) -> Grid Char -> [Int]
 reach stepF gc = map (length . snd) cs
@@ -57,7 +57,7 @@ gridmod (Grid g) (x, y) = (mod x mx, mod y my)
         mx = length (head g)
 
 stepInf :: Reachable -> Reachable
-stepInf (g, cs) = (g, uniq $ sort $ flatten $ map (filter (flip andF [(== Plot) . (g !)] . gridmod g) . goAll) cs)
+stepInf (g, cs) = (g, uniq $ sort $ concat $ map (filter (flip andF [(== Plot) . (g !)] . gridmod g) . goAll) cs)
 
 reachP2 :: Grid Char -> [Int]
 reachP2 g = map (rs !!) [6, 10, 50, 100, 500, 1000, 5000, 26501365]

@@ -1,5 +1,5 @@
 {-# LANGUAGE FlexibleInstances, TypeSynonymInstances, FlexibleContexts #-}
-module Day19
+module AoC2023.Day19
   ( part1
   , part2
   ) where
@@ -76,7 +76,7 @@ expandRules :: Workflow -> Workflow
 expandRules (n, rs) = (n, rs')
   where rs' = reverse $ expand $ reverse rs
         expand [] = []
-        expand (Rule rc t:rst) = Rule (rc ++ (map switch $ flatten $ map checks rst)) t:expand rst
+        expand (Rule rc t:rst) = Rule (rc ++ (map switch $ concat $ map checks rst)) t:expand rst
 
 parseWorkflow :: String -> Workflow
 parseWorkflow = expandRules . right . parse workflow "(source)"
@@ -133,7 +133,7 @@ apply parts = foldl apply' parts
         apply' ps (_, 'x', _) = ps
 
 possibleParts :: Workflows -> Int
-possibleParts wfs = sum $ map (countParts . apply allParts . flatten . map snd) $ filter accepted $ bfs nb id [] [[(Label "in", [defaultRule])]]
+possibleParts wfs = sum $ map (countParts . apply allParts . concat . map snd) $ filter accepted $ bfs nb id [] [[(Label "in", [defaultRule])]]
   where nb ((Accepted, _):_) = []
         nb ((Rejected, _):_) = []
         nb rest@((n, _):_) = map ((:rest) . ruleToBounds) $ wfs ! n

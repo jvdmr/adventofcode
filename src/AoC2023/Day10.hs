@@ -1,5 +1,5 @@
 {-# LANGUAGE FlexibleInstances, TypeSynonymInstances, FlexibleContexts #-}
-module Day25
+module AoC2023.Day10
   ( part1
   , part2
   ) where

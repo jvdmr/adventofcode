@@ -1,5 +1,5 @@
 {-# LANGUAGE FlexibleInstances, TypeSynonymInstances, FlexibleContexts #-}
-module Day20
+module AoC2023.Day20
   ( part1
   , part2
   ) where
@@ -116,7 +116,7 @@ showPulse :: SentPulse -> String
 showPulse (i, (to, (p, from))) = show i ++ " :: " ++ from ++ " -" ++ show p ++ "-> " ++ to
 
 part1 :: Solver
-part1 = show . uncurry (*) . countPulses . reverse . flatten . map snd . take 1001 . iterate buttonPulse . flip (,) [] . parseInput . lines
+part1 = show . uncurry (*) . countPulses . reverse . concat . map snd . take 1001 . iterate buttonPulse . flip (,) [] . parseInput . lines
 
 data CycleNodeType = Sending
                    | Receiving
@@ -145,7 +145,7 @@ countCycle ntw name = length $ takeWhile noLowConj $ iterate pulse' (ntw, [])
 cycles :: Network -> [Int]
 cycles ntw | hasRx = map (countCycle ntw) $ tgts $ ntw ! "broadcaster"
            | otherwise = [1]
-           where hasRx = elem "rx" $ flatten $ map tgts $ M.elems ntw
+           where hasRx = elem "rx" $ concat $ map tgts $ M.elems ntw
 
 part2 :: Solver
 part2 = show . foldl lcm 1 . cycles . parseInput . lines

@@ -3,31 +3,31 @@ module AoC2023
   ) where
 
 import Vdmr.Generic (Year)
-import Day01
-import Day02
-import Day03
--- import Day04
--- import Day05
--- import Day06
--- import Day07
--- import Day08
--- import Day09
--- import Day10
--- import Day11
--- import Day12
--- import Day13
--- import Day14
--- import Day15
--- import Day16
-import Day17
-import Day18
-import Day19
-import Day20
-import Day21
-import Day22
-import Day23
-import Day24
-import Day25
+import AoC2023.Day01 as Day01
+import AoC2023.Day02 as Day02
+import AoC2023.Day03 as Day03
+-- import AoC2023.Day04 as Day04
+-- import AoC2023.Day05 as Day05
+-- import AoC2023.Day06 as Day06
+-- import AoC2023.Day07 as Day07
+-- import AoC2023.Day08 as Day08
+-- import AoC2023.Day09 as Day09
+-- import AoC2023.Day10 as Day10
+-- import AoC2023.Day11 as Day11
+-- import AoC2023.Day12 as Day12
+-- import AoC2023.Day13 as Day13
+-- import AoC2023.Day14 as Day14
+-- import AoC2023.Day15 as Day15
+-- import AoC2023.Day16 as Day16
+import AoC2023.Day17 as Day17
+import AoC2023.Day18 as Day18
+import AoC2023.Day19 as Day19
+import AoC2023.Day20 as Day20
+import AoC2023.Day21 as Day21
+import AoC2023.Day22 as Day22
+import AoC2023.Day23 as Day23
+import AoC2023.Day24 as Day24
+import AoC2023.Day25 as Day25
 
 import Data.Map (fromList)
 

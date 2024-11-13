@@ -1,5 +1,5 @@
 {-# LANGUAGE FlexibleInstances, TypeSynonymInstances, FlexibleContexts, TypeFamilies #-}
-module Day23
+module AoC2023.Day23
   ( part1
   , part2
   ) where
@@ -82,7 +82,7 @@ fromGrid grid = M.fromList $ zip nodes $ map nb nodes
         nb = reverse . sortOn length . trails grid
 
 hike :: GCoord -> GCoord -> Graph -> Int
-hike s e g = pred $ maximum $ map (length . flatten) $ filter ((== e) . head . head) $ bfs nb prune [] [[[s]]]
+hike s e g = pred $ maximum $ map (length . concat) $ filter ((== e) . head . head) $ bfs nb prune [] [[[s]]]
   where nb trail@((xy:_):_) = map (:trail) $ filter (flip notElem (map head trail) . head) $ g M.! xy
         prune = id
 

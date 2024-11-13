@@ -1,5 +1,5 @@
 {-# LANGUAGE FlexibleInstances, TypeSynonymInstances, FlexibleContexts #-}
-module Day22
+module AoC2023.Day22
   ( part1
   , part2
   ) where
@@ -65,7 +65,7 @@ fromBlocks bs = mapG (cns !?) $ fromCoords [(0, 0, 0), (mx, my, mz)]
   where mx = maximum $ map (cget X) cs
         my = maximum $ map (cget Y) cs
         mz = maximum $ map (cget Z) cs
-        cs = flatten $ map snd bs
+        cs = concat $ map snd bs
         cns = M.fromList [(c, n) | (n, bcs) <- bs, c <- bcs]
 
 fall :: ExpandedBlocks -> ExpandedBlocks

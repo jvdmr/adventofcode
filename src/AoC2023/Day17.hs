@@ -1,5 +1,5 @@
 {-# LANGUAGE FlexibleInstances, TypeSynonymInstances, FlexibleContexts, TypeFamilies #-}
-module Day17
+module AoC2023.Day17
   ( part1
   , part2
   ) where
@@ -69,9 +69,9 @@ heatloss boundaries g = d
 
 part1 :: Solver
 part1 = show . heatloss boundaries . mapG readInt . Grid . lines
-  where boundaries = reverse $ sort $ flatten [[i, -i] | i <- [1..3]]
+  where boundaries = reverse $ sort $ concat [[i, -i] | i <- [1..3]]
 
 part2 :: Solver
 part2 = show . heatloss boundaries . mapG readInt . Grid . lines
-  where boundaries = reverse $ sort $ flatten [[i, -i] | i <- [4..10]]
+  where boundaries = reverse $ sort $ concat [[i, -i] | i <- [4..10]]
 

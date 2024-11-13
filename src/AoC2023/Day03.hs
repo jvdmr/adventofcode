@@ -1,5 +1,5 @@
 {-# LANGUAGE FlexibleInstances, TypeSynonymInstances, FlexibleContexts #-}
-module Day03
+module AoC2023.Day03
   ( part1
   , part2
   ) where
@@ -13,7 +13,7 @@ import Vdmr.Grid
 type GCoord = Coord Int
 
 surroundAll :: [GCoord] -> [GCoord]
-surroundAll cs = filter (flip notElem cs) $ uniq $ sort $ flatten $ map surround cs
+surroundAll cs = filter (flip notElem cs) $ uniq $ sort $ concat $ map surround cs
 
 --
 
