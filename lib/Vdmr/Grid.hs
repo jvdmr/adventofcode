@@ -48,10 +48,10 @@ neg (a, b) = (-a, -b)
 data Grid a = Grid [[a]]
 
 drawGrid :: Grid Char -> String
-drawGrid (Grid g) = flatten $ map ((++ "\n") . show) g
+drawGrid (Grid g) = concat $ map ((++ "\n") . show) g
 
 instance (Show a, Eq a) => Show (Grid a) where
-  show (Grid g) = flatten $ map ((++ "\n") . flatten . map show) g
+  show (Grid g) = concat $ map ((++ "\n") . concat . map show) g
 
 (!) :: Integral b => Grid a -> Coord b -> a
 (!) (Grid g) (x, y) = (g !! fromIntegral y) !! fromIntegral x
@@ -125,7 +125,7 @@ inorout outC g = mapG ioo $ coordsG g
               | otherwise = I
 
 countIOO :: InOrOut -> Grid InOrOut -> Int
-countIOO x (Grid g) = length $ filter (== x) $ flatten g
+countIOO x (Grid g) = length $ filter (== x) $ concat g
 
 outside :: (Ord a, Eq a, Num a, Enum a) => [Coord a] -> [Coord a]
 outside l = filter (inGrid g) $ map (add (-1, -1)) $ bfs nb id l' [(0, 0)]

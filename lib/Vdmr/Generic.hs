@@ -5,7 +5,6 @@ module Vdmr.Generic
   , Year (..)
   , idtrace
   , ftrace
-  , flatten
   , uniq
   , between
   , unjust
@@ -34,9 +33,6 @@ idtrace x = trace (show x) x
 
 ftrace :: (a -> String) -> a -> a
 ftrace f x = trace (f x) x
-
-flatten :: [[a]] -> [a]
-flatten = foldl (++) []
 
 -- uniq is better than nub on sorted lists
 uniq :: (Eq a) => [a] -> [a]
