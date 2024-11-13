@@ -1,0 +1,6 @@
+#!/bin/bash
+
+migrate src/AoC2015/Day18  # fix part2
+# migrate src/AoC2020/Day17  # fix both
+# migrate src/AoC2020/Day20  # fix part2
+# migrate src/AoC2022/Day18  # fix part2
