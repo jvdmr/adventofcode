@@ -3,15 +3,27 @@
 year=$1
 
 cp -r template ${year}
-cd ${year}
+(
+	cd ${year}
 
-sed -e "s/AoCxxxx/AoC${year}/" AoCxxxx.hs > AoC${year}.hs
-rm AoCxxxx.hs
+	sed -e "s/AoCxxxx/AoC${year}/g" AoCxxxx.hs > AoC${year}.hs
+	rm AoCxxxx.hs
 
-for day in $(seq 2 25)
-do
-	daystr=Day$(printf "%02d" ${day})
-	cp -r Day01 ${daystr}
-	sed -e "s/Day01/${daystr}/" Day01.hs > ${daystr}.hs
-done
+	mv AoCxxxx AoC${year}
+	(
+		cd AoC${year}
+
+		for day in $(seq 1 25)
+		do
+			daystr=Day$(printf "%02d" ${day})
+			cp -r Dayxx ${daystr}
+			sed -e "s/AoCxxxx/AoC${year}/g" -e "s/Dayxx/${daystr}/" Dayxx.hs > ${daystr}.hs
+		done
+		rm -rf Dayxx Dayxx.hs
+	)
+
+)
+
+mv ${year}/* src/
+rmdir ${year}
 

@@ -40,7 +40,10 @@ done
 
 shift $(($OPTIND - 1))
 dir="$1"
-RUNARGS="--yeardaystr=${dir}"
+datestr=${dir#src/AoC}
+year=${datestr%/Day*}
+day=${datestr#*/Day}
+RUNARGS="--yearstr=${year} --daystr=${day}"
 part="$2"
 if [ -n "$part" ]
 then

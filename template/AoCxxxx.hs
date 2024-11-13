@@ -3,31 +3,31 @@ module AoCxxxx
   ) where
 
 import Vdmr.Generic (Year)
-import Day01
-import Day02
-import Day03
-import Day04
-import Day05
-import Day06
-import Day07
-import Day08
-import Day09
-import Day10
-import Day11
-import Day12
-import Day13
-import Day14
-import Day15
-import Day16
-import Day17
-import Day18
-import Day19
-import Day20
-import Day21
-import Day22
-import Day23
-import Day24
-import Day25
+import AoCxxxx.Day01 as Day01
+import AoCxxxx.Day02 as Day02
+import AoCxxxx.Day03 as Day03
+import AoCxxxx.Day04 as Day04
+import AoCxxxx.Day05 as Day05
+import AoCxxxx.Day06 as Day06
+import AoCxxxx.Day07 as Day07
+import AoCxxxx.Day08 as Day08
+import AoCxxxx.Day09 as Day09
+import AoCxxxx.Day10 as Day10
+import AoCxxxx.Day11 as Day11
+import AoCxxxx.Day12 as Day12
+import AoCxxxx.Day13 as Day13
+import AoCxxxx.Day14 as Day14
+import AoCxxxx.Day15 as Day15
+import AoCxxxx.Day16 as Day16
+import AoCxxxx.Day17 as Day17
+import AoCxxxx.Day18 as Day18
+import AoCxxxx.Day19 as Day19
+import AoCxxxx.Day20 as Day20
+import AoCxxxx.Day21 as Day21
+import AoCxxxx.Day22 as Day22
+import AoCxxxx.Day23 as Day23
+import AoCxxxx.Day24 as Day24
+import AoCxxxx.Day25 as Day25
 
 import Data.Map (fromList)
 
