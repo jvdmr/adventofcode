@@ -14,9 +14,15 @@ module Vdmr.Generic
   , strings
   , iterateUntilIdempotent 
   , groupOn
+  , pascal
+  , countablePairs
+  , limitedCountablePairs
+  , combine
+  , combineLimited
   ) where
 
-import Data.List (groupBy)
+import Data.List (groupBy, inits, sortBy, (!!))
+import Data.Ord (comparing)
 import Data.Char (digitToInt)
 import Data.Map (Map)
 
@@ -64,4 +70,31 @@ iterateUntilIdempotent f x = x:(map snd $ takeWhile (uncurry (/=)) $ zip results
 groupOn :: Eq a => (b -> a) -> [b] -> [[b]]
 groupOn f lst = map (map fst) $ groupBy eq $ zip lst $ map f lst
   where eq (_, a) (_, b) = a == b
+
+-- Pascal's triangle - line n, position m
+pascal :: Int -> Int -> Int
+pascal n m = (triangle !! (m - 1)) !! (n - 1)
+  where triangle = (repeat 1):map (map sum . inits) triangle
+
+-- infinite list of pairs of numbers, starting at (0, 0)
+countablePairs :: [(Int, Int)]
+countablePairs = cp 0 0
+  where cp 0 j = (0, j):cp (j + 1) 0
+        cp i j = (i, j):cp (i - 1) (j + 1)
+
+limitedCountablePairs :: Int -> Int -> [(Int, Int)]
+limitedCountablePairs x y = limit countablePairs
+  where limit (fst@(a, b):rst) | a == x && b == y = [fst]
+                               | a > x || b > y = limit rst
+                               | otherwise = fst:limit rst
+
+-- combine two infinite lists in all possible combinations (1-dimensional grid)
+combine :: [a] -> [b] -> [(a, b)]
+combine a b = [(a !! i, b !! j) | (i, j) <- countablePairs]
+
+-- combine two finite lists in all possible combinations (1-dimensional grid)
+combineLimited :: [a] -> [b] -> [(a, b)]
+combineLimited a b = [(a !! i, b !! j) | (i, j) <- limitedCountablePairs x y]
+  where x = length a - 1
+        y = length b - 1
 
