@@ -25,10 +25,10 @@ extra-source-files:
 library vdmr
   hs-source-dirs: lib
   exposed-modules: Vdmr.Generic
+                 , Vdmr.Dijkstra
                  , Vdmr.Grid
                  , Vdmr.Grid3D
                  , Vdmr.Parsec
-                 , Vdmr.Dijkstra
                  , Vdmr.Trace
   build-depends: base
                , containers
