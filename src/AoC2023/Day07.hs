@@ -6,7 +6,7 @@ module AoC2023.Day07
 
 import Data.List
 
-import Vdmr.Generic
+import Vdmr.Generic (Solver)
 
 part1 :: Solver
 part1 = show . lines

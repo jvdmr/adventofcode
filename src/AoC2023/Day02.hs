@@ -9,7 +9,7 @@ import Data.List.Split (splitOn)
 import Data.Map ((!))
 import qualified Data.Map as M
 
-import Vdmr.Generic
+import Vdmr.Generic (Solver)
 
 data Color = Red | Green | Blue
   deriving (Show, Eq, Ord)

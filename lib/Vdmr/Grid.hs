@@ -28,7 +28,7 @@ module Vdmr.Grid
 
 import qualified Data.Map as M
 
-import Vdmr.Generic
+import Vdmr.Generic (Solver, between, bfs)
 
 data Axis = X | Y | Z
   deriving (Show, Eq)

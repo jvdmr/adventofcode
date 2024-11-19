@@ -3,8 +3,6 @@ module Vdmr.Generic
   ( Solver (..)
   , Day (..)
   , Year (..)
-  , idtrace
-  , ftrace
   , uniq
   , between
   , unjust
@@ -22,17 +20,9 @@ import Data.List (groupBy)
 import Data.Char (digitToInt)
 import Data.Map (Map)
 
-import Debug.Trace (trace)
-
 type Solver = (String -> String)
 type Day = (Solver, Solver)
 type Year = Map Int Day
-
-idtrace :: (Show a) => a -> a
-idtrace x = trace (show x) x
-
-ftrace :: (a -> String) -> a -> a
-ftrace f x = trace (f x) x
 
 -- uniq is better than nub on sorted lists
 uniq :: (Eq a) => [a] -> [a]

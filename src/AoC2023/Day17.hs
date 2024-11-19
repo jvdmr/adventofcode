@@ -8,7 +8,7 @@ import Data.List
 import Data.Map ((!))
 import qualified Data.Map as M
 
-import Vdmr.Generic
+import Vdmr.Generic (Solver, unjust)
 import Vdmr.Grid hiding ((!), Direction)
 import qualified Vdmr.Grid as J ((!))
 import Vdmr.Dijkstra

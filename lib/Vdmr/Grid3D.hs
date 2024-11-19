@@ -19,7 +19,7 @@ module Vdmr.Grid3D
   , surround
   ) where
 
-import Vdmr.Generic
+import Vdmr.Generic (Solver, between)
 
 data Axis = X | Y | Z
   deriving (Show, Eq)

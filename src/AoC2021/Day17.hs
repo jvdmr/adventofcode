@@ -6,7 +6,7 @@ module AoC2021.Day17
 
 import Data.List
 
-import Vdmr.Generic
+import Vdmr.Generic (Solver)
 
 part1 :: Solver
 part1 = ("Not yet solved! " ++) . show . length . lines

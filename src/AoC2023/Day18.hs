@@ -7,7 +7,7 @@ module AoC2023.Day18
 import Data.List
 import Data.List.Split (splitOn)
 
-import Vdmr.Generic
+import Vdmr.Generic (Solver, hexToDec)
 import Vdmr.Grid
 
 type GCoord = Coord Int

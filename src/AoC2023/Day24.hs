@@ -7,7 +7,7 @@ module AoC2023.Day24
 import Data.List
 import Data.List.Split (splitOn)
 
-import Vdmr.Generic
+import Vdmr.Generic (Solver, between)
 import Vdmr.Grid3D
 
 parseCoord :: String -> (Double, Double, Double)

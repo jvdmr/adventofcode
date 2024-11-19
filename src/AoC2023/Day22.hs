@@ -9,7 +9,7 @@ import Data.List.Split (splitOn)
 -- import Data.Map ((!))
 import qualified Data.Map as M
 
-import Vdmr.Generic
+import Vdmr.Generic (Solver, strings, iterateUntilIdempotent)
 import Vdmr.Grid3D --(Coord, strings, add, Direction, go)
 
 type Range = (Coord Int, Coord Int)

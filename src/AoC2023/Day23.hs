@@ -7,7 +7,7 @@ module AoC2023.Day23
 import Data.List
 import qualified Data.Map as M
 
-import Vdmr.Generic
+import Vdmr.Generic (Solver, bfs)
 import Vdmr.Grid
 
 type GCoord = Coord Int

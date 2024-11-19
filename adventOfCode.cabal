@@ -29,6 +29,7 @@ library vdmr
                  , Vdmr.Grid3D
                  , Vdmr.Parsec
                  , Vdmr.Dijkstra
+                 , Vdmr.Trace
   build-depends: base
                , containers
                , parsec

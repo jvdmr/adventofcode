@@ -7,7 +7,7 @@ module AoC2023.Day01
 import Data.List
 import Data.Char
 
-import Vdmr.Generic
+import Vdmr.Generic (Solver)
 
 fldigits :: [Char] -> Int
 fldigits l = read $ [head ds, last ds]

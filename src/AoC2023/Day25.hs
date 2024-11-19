@@ -9,7 +9,7 @@ import Data.List.Split (splitOn)
 import Data.Map ((!))
 import qualified Data.Map as M
 
-import Vdmr.Generic
+import Vdmr.Generic (Solver, groupOn)
 
 type Label = String
 type Link = (Label, [Label])
