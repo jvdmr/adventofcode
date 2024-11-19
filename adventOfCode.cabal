@@ -28,6 +28,7 @@ library vdmr
                  , Vdmr.Dijkstra
                  , Vdmr.Grid
                  , Vdmr.Grid3D
+                 , Vdmr.Memoize
                  , Vdmr.Parsec
                  , Vdmr.Trace
   build-depends: base
