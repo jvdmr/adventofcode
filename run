@@ -1,21 +1,23 @@
 #!/bin/bash
 
 function show_help () {
-  echo "$0 [-h] [-t] <year>/<day> [part]
+  echo "$0 [-h] [-t] [-c] [-i inputfile] <year>/<day> [part]
 
--h            help (this)
+-h              help (this)
 
--p            Don't run tests
+-p              Don't run tests
 
--t            Only run tests
+-i testfile     Only run with testfile as input
 
--c            Only compile
+-t              Only run tests
+
+-c              Only compile
   "
 }
 
 TEST=true
 PROD=true
-while getopts "htcp" opt; do
+while getopts "hti:cp" opt; do
   case "$opt" in
   h|\?)
     show_help
@@ -26,6 +28,10 @@ while getopts "htcp" opt; do
     ;;
   t)
     PROD=false
+    ;;
+  i)
+    input="${OPTARG}"
+    TEST=false
     ;;
   c)
     TEST=false
@@ -61,12 +67,40 @@ then
 	for testinput in $dir/testinput*
 	do
 		echo Running $testinput
-		time cabal new-run aoc -- $RUNARGS < $testinput
+    if [ -n "$part" ]
+    then
+      time cabal run aoc -- $RUNARGS < $testinput
+    else
+      time cabal run aoc -- $RUNARGS --part=1 < $testinput
+      echo
+      time cabal run aoc -- $RUNARGS --part=2 < $testinput
+    fi
+    echo
 	done
 fi
 
 if $PROD
 then
-	echo Running actual input
-	time cabal new-run aoc -- $RUNARGS < $dir/input
+  if [ -n "$input" ]
+  then
+		echo Running $input
+    if [ -n "$part" ]
+    then
+      time cabal run aoc -- $RUNARGS < $input
+    else
+      time cabal run aoc -- $RUNARGS --part=1 < $input
+      echo
+      time cabal run aoc -- $RUNARGS --part=2 < $input
+    fi
+  else
+    echo Running actual input
+    if [ -n "$part" ]
+    then
+      time cabal run aoc -- $RUNARGS < $dir/input
+    else
+      time cabal run aoc -- $RUNARGS --part=1 < $dir/input
+      echo
+      time cabal run aoc -- $RUNARGS --part=2 < $dir/input
+    fi
+  fi
 fi

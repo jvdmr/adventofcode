@@ -37,7 +37,7 @@ main = do
         Arguments
           { yearstr = def &= help "Which year to process"
           , daystr = def &= help "Which day of the year to process"
-          , part = def &= help "Which part to run. If not specified, both parts are run" &= opt (0::Int)
+          , part = def &= help "Which part to run"
           }
   args <- cmdArgs arguments
   let theYear = read $ yearstr args
@@ -45,9 +45,6 @@ main = do
       (solve1, solve2) = years ! theYear ! theDay
   input <- getContents
   case part args of
-       0 -> do
-         putStrLn $ "Part 1: " ++ solve1 input
-         putStrLn $ "Part 2: " ++ solve2 input
        1 -> do
          putStrLn $ "Part 1: " ++ solve1 input
        2 -> do
