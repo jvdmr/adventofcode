@@ -10,10 +10,9 @@ import Data.Map ((!))
 import qualified Data.Map as M (fromList)
 
 import AoC (Solver, combineLimited)
-import AoC.Memoize (MemoizableFunction, memoize)
-import AoC.Trace (idtrace)
+import AoC.Memoize
 
-type CheckFunction = MemoizableFunction (String, [Int]) Int
+type CheckFunction = ((String, [Int]) -> Int) -> (String, [Int]) -> Int
 
 skip :: CheckFunction
 skip checkf ([], p) = checkf ([], p)
@@ -39,13 +38,19 @@ check checkf (s@('?':_), p) = skip checkf (s, p) + block checkf (s, p)
 check checkf (s@('#':_), p) = block checkf (s, p)
 check checkf (s@('.':_), p) = skip checkf (s, p)
 
-check' :: String -> [Int] -> Int
-check' springs pattern = check'' (springs, pattern)
-  where check'' (s', p') = [[check check'' (s, p) | p <- reverse $ tails pattern] | s <- reverse $ tails springs] !! length s' !! length p'
---   where check'' = memoize check index combined
---         combined = combineLimited (reverse $ tails springs) (reverse $ tails pattern)
---         index (a, b) = M.fromList (zip combined' [0..]) ! (length a, length b)
---         combined' = [(length a, length b) | (a, b) <- combined]
+-- memoization
+checkm :: String -> [Int] -> Int
+checkm springs pattern = checkm' $ index ! lpair (springs, pattern)
+  where checkm' = memoize check'
+        springsTails = reverse $ tails springs
+        patternTails = reverse $ tails pattern
+        combinedTails = combineLimited springsTails patternTails
+        combinedLengths = combineLimited (map length springsTails) (map length patternTails)
+        index = M.fromList $ zip combinedLengths [0..]
+        lpair (a, b) = (length a, length b)
+        check' f = check (f . (index !) . lpair) . (combinedTails !!)
+-- checkm springs pattern = check' (springs, pattern)
+--   where check' (s', p') = [[check check' (s, p) | p <- reverse $ tails pattern] | s <- reverse $ tails springs] !! length s' !! length p'
 
 unfold :: Int -> String -> (String, [Int])
 unfold i s = (intercalate "?" $ take i $ repeat springs, concat $ take i $ repeat ns)
@@ -53,8 +58,8 @@ unfold i s = (intercalate "?" $ take i $ repeat springs, concat $ take i $ repea
         ns = map read $ splitOn "," nsStr
 
 part1 :: Solver
-part1 = show . sum . map (uncurry check' . unfold 1) . lines
+part1 = show . sum . map (uncurry checkm . unfold 1) . lines
 
 part2 :: Solver
-part2 = show . sum . map (uncurry check' . unfold 5) . lines
+part2 = show . sum . map (uncurry checkm . unfold 5) . lines
 

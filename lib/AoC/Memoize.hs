@@ -4,14 +4,13 @@ module AoC.Memoize
   , memoize
   ) where
 
-import Data.Map
+import Data.Function (fix)
 
-import Vdmr.Trace
+type MemoizableFunction b = (Int -> b) -> (Int -> b)
 
-type MemoizableFunction a b = ((a -> b) -> a -> b)
+memoize' :: (Int -> b) -> (Int -> b)
+memoize' f = (map f [0..] !!)
 
-memoize :: (Ord a) => MemoizableFunction a b -> [a] -> (a -> b)
-memoize f l = f'
-  where mem = fromList [(n, f f' n) | n <- l]
-        f' a = mem ! a
+memoize :: MemoizableFunction b -> (Int -> b)
+memoize f = fix (memoize' . f)
 
