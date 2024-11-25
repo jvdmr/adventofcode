@@ -4,11 +4,10 @@ module AoC2023.Day24
   , part2
   ) where
 
-import Data.List
 import Data.List.Split (splitOn)
 
-import Vdmr.Generic (Solver, between)
-import Vdmr.Grid3D
+import AoC (Solver, between)
+import AoC.Grid3D
 
 parseCoord :: String -> (Double, Double, Double)
 parseCoord s = read $ "(" ++ s ++ ")"

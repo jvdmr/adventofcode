@@ -24,13 +24,13 @@ library
   import:           warnings
   hs-source-dirs:   lib
   exposed-modules:
-    Vdmr.Generic
-    , Vdmr.Dijkstra
-    , Vdmr.Grid
-    , Vdmr.Grid3D
-    , Vdmr.Memoize
-    , Vdmr.Parsec
-    , Vdmr.Trace
+    AoC
+    , AoC.Dijkstra
+    , AoC.Grid
+    , AoC.Grid3D
+    , AoC.Memoize
+    , AoC.Parsec
+    , AoC.Trace
 
   -- Modules included in this library but not exported.
   -- other-modules:

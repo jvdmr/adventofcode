@@ -1,6 +1,6 @@
 module Main where
 
-import Data.List
+-- import Data.List
 
 binToPair '0' = (1, 0)
 binToPair '1' = (0, 1)

@@ -1,5 +1,5 @@
 {-# LANGUAGE FlexibleInstances, TypeSynonymInstances, FlexibleContexts #-}
-module Vdmr.Parsec
+module AoC.Parsec
   ( module Text.Parsec
   , parens
   , brackets

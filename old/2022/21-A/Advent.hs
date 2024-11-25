@@ -2,7 +2,7 @@ module Main where
 
 import Data.Map ((!), fromList)
 import qualified Data.Map as M
-import Data.List
+-- import Data.List
 import Data.List.Split
 
 import Debug.Trace

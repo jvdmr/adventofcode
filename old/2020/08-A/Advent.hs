@@ -1,6 +1,6 @@
 module Main where
 
-import Data.List
+-- import Data.List
 
 data Instruction = Nop {value::Int}
                  | Acc {value::Int}

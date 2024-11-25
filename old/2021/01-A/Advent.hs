@@ -1,6 +1,6 @@
 module Main where
 
-import Data.List
+-- import Data.List
 import Debug.Trace
 
 countInc :: Int -> [Int] -> Int

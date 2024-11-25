@@ -2,7 +2,7 @@ module AoC2023
   ( days
   ) where
 
-import Vdmr.Generic (Year)
+import AoC (Year)
 import AoC2023.Day01 as Day01
 import AoC2023.Day02 as Day02
 import AoC2023.Day03 as Day03

@@ -4,11 +4,10 @@ module AoC2023.Day18
   , part2
   ) where
 
-import Data.List
 import Data.List.Split (splitOn)
 
-import Vdmr.Generic (Solver, hexToDec)
-import Vdmr.Grid
+import AoC (Solver, hexToDec)
+import AoC.Grid
 
 type GCoord = Coord Int
 

@@ -1,5 +1,5 @@
 {-# LANGUAGE FlexibleInstances, TypeSynonymInstances, FlexibleContexts #-}
-module Vdmr.Memoize
+module AoC.Memoize
   ( MemoizeableFunction (..)
   , memoize
   ) where

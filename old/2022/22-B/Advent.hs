@@ -1,7 +1,7 @@
 module Main where
 
 import Data.Char
-import Data.List
+-- import Data.List
 import Data.List.Split
 
 import Data.Map ((!), fromList, member)

@@ -2,7 +2,7 @@ module Main where
 
 import Debug.Trace
 
-import Data.List
+-- import Data.List
 import Data.List.Split
 
 idtrace x = trace (show x) x

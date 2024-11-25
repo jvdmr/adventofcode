@@ -4,13 +4,13 @@ module AoC2023.Day07
   , part2
   ) where
 
-import Data.List
+-- import Data.List
 
-import Vdmr.Generic (Solver)
+import AoC (Solver)
 
 part1 :: Solver
-part1 = show . lines
+part1 = ("Not yet solved! " ++) . show . length . lines
 
 part2 :: Solver
-part2 = show . lines
+part2 = ("Not yet solved! " ++) . show . length . lines
 

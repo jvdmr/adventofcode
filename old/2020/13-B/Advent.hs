@@ -1,6 +1,6 @@
 module Main where
 
-import Data.List
+-- import Data.List
 import Data.List.Split
 
 data Bus = Bus {index::Int, id::Int}

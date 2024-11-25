@@ -1,6 +1,6 @@
 module Main where
 
-import Data.List
+-- import Data.List
 import Data.Char
 
 row 'F' = 0

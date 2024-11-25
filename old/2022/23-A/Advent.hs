@@ -1,7 +1,7 @@
 module Main where
 
 import Data.Ord
-import Data.List
+-- import Data.List
 
 import Debug.Trace
 idtrace x = trace (show x) x

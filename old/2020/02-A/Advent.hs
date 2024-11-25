@@ -1,6 +1,6 @@
 module Main where
 
-import Data.List
+-- import Data.List
 
 between a b c | a <= b = b <= c
               | otherwise = False

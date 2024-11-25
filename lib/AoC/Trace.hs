@@ -1,5 +1,5 @@
 {-# LANGUAGE FlexibleInstances, TypeSynonymInstances, FlexibleContexts #-}
-module Vdmr.Trace
+module AoC.Trace
   ( idtrace
   , ftrace
   ) where

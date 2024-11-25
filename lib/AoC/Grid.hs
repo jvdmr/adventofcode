@@ -1,5 +1,5 @@
 {-# LANGUAGE FlexibleInstances, TypeSynonymInstances, FlexibleContexts #-}
-module Vdmr.Grid
+module AoC.Grid
   ( (!)
   , Axis (..)
   , Coord (..)
@@ -28,7 +28,7 @@ module Vdmr.Grid
 
 import qualified Data.Map as M
 
-import Vdmr.Generic (Solver, between, bfs)
+import AoC (Solver, between, bfs)
 
 data Axis = X | Y | Z
   deriving (Show, Eq)

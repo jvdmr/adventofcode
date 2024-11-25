@@ -1,6 +1,6 @@
 module Main where
 
-import Data.List
+-- import Data.List
 
 shift num lst = (drop num lst) ++ (take num lst)
 

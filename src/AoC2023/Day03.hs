@@ -7,8 +7,8 @@ module AoC2023.Day03
 import Data.List
 import Data.Char
 
-import Vdmr.Generic (Solver, uniq)
-import Vdmr.Grid
+import AoC (Solver, uniq)
+import AoC.Grid
 
 type GCoord = Coord Int
 

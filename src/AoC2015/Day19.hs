@@ -4,9 +4,9 @@ module AoC2015.Day19
   , part2
   ) where
 
-import Data.List
+-- import Data.List
 
-import Vdmr.Generic (Solver)
+import AoC (Solver)
 
 part1 :: Solver
 part1 = ("Not yet solved! " ++) . show . length . lines

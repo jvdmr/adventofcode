@@ -4,13 +4,12 @@ module AoC2023.Day20
   , part2
   ) where
 
-import Data.List
 import Data.Map ((!))
 import qualified Data.Map as M
 
-import Vdmr.Generic (Solver, none, bfsState)
-import Vdmr.Grid (add)
-import Vdmr.Parsec
+import AoC (Solver, none, bfsState)
+import AoC.Grid (add)
+import AoC.Parsec
 
 data Pulse = High
            | Low

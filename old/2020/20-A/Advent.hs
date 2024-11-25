@@ -1,7 +1,7 @@
 module Main where
 
 import Debug.Trace
-import Data.List
+-- import Data.List
 import Data.List.Split
 
 import Text.PrettyPrint hiding (empty)

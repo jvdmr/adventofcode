@@ -1,6 +1,6 @@
 module Main where
 
-import Data.List
+-- import Data.List
 
 checkSum [] _ _ _ = 0
 checkSum _ [] _ _ = 0

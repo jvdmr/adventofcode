@@ -1,5 +1,5 @@
 {-# LANGUAGE FlexibleInstances, TypeSynonymInstances, FlexibleContexts #-}
-module Vdmr.Grid3D
+module AoC.Grid3D
   ( (!)
   , Axis (..)
   , Coord (..)
@@ -19,7 +19,7 @@ module Vdmr.Grid3D
   , surround
   ) where
 
-import Vdmr.Generic (Solver, between)
+import AoC (Solver, between)
 
 data Axis = X | Y | Z
   deriving (Show, Eq)

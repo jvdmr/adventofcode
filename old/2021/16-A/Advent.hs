@@ -1,7 +1,7 @@
 {-# LANGUAGE BinaryLiterals #-}
 module Main where
 
-import Data.List
+-- import Data.List
 import Data.List.Split
 
 import Text.Parsec

@@ -1,6 +1,6 @@
 module Main where
 
-import Data.List
+-- import Data.List
 
 combineLines :: String -> [String] -> [String]
 combineLines cur [] = [cur]

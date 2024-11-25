@@ -1,7 +1,7 @@
 module Main where
 
 import Data.Ord (comparing)
-import Data.List
+-- import Data.List
 import Data.List.Split
 import Data.Map ((!))
 import qualified Data.Map as M

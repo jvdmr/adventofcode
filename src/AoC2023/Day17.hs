@@ -8,10 +8,10 @@ import Data.List
 import Data.Map ((!))
 import qualified Data.Map as M
 
-import Vdmr.Generic (Solver, unjust)
-import Vdmr.Grid hiding ((!), Direction)
-import qualified Vdmr.Grid as J ((!))
-import Vdmr.Dijkstra
+import AoC (Solver, unjust)
+import AoC.Grid hiding ((!), Direction)
+import qualified AoC.Grid as J ((!))
+import AoC.Dijkstra
 
 type GCoord = Coord Int
 

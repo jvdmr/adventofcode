@@ -2,7 +2,7 @@
 
 module Main where
 
-import Vdmr.Generic (Year)
+import AoC (Year)
 
 import AoC2015
 import AoC2016
@@ -12,9 +12,8 @@ import AoC2022
 import AoC2023
 import AoC2024
 
-import Data.List.Split (splitOn)
 import Data.Map (Map, fromList, (!))
-import System.Console.CmdArgs.Implicit (Data, Typeable, args, cmdArgs, def, help, opt, (&=))
+import System.Console.CmdArgs.Implicit (Data, Typeable, cmdArgs, def, help, (&=))
 
 data Arguments = Arguments { yearstr :: String, daystr :: String, part :: Int }
   deriving (Show, Data, Typeable)
@@ -49,4 +48,6 @@ main = do
          putStrLn $ "Part 1: " ++ solve1 input
        2 -> do
          putStrLn $ "Part 2: " ++ solve2 input
+       _ -> do
+         putStrLn $ "ERROR: Unknown part '" ++ (show $ part args) ++ "'!"
 

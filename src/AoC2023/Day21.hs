@@ -6,9 +6,9 @@ module AoC2023.Day21
 
 import Data.List
 
-import Vdmr.Generic (Solver, andF, uniq)
-import Vdmr.Grid
-import Vdmr.Trace (idtrace)
+import AoC (Solver, andF, uniq)
+import AoC.Grid
+import AoC.Trace (idtrace)
 
 type GCoord = Coord Int
 

@@ -1,6 +1,6 @@
 module Main where
 
-import Data.List
+-- import Data.List
 import Data.List.Split
 
 calcArea dimensions = smallest + 2 * (front + side + top)

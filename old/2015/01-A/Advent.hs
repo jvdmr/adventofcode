@@ -1,6 +1,6 @@
 module Main where
 
-import Data.List
+-- import Data.List
 
 findFloor f [] = f
 findFloor f ('(':rst) = findFloor (f + 1) rst

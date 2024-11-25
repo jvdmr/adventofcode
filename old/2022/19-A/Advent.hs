@@ -2,7 +2,7 @@ module Main where
 
 import Data.Char (toUpper)
 import Data.Ord (comparing)
-import Data.List
+-- import Data.List
 import Data.List.Split
 import Data.Map ((!), fromList)
 import qualified Data.Map as M

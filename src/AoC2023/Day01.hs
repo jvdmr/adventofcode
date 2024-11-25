@@ -4,10 +4,9 @@ module AoC2023.Day01
   , part2
   ) where
 
-import Data.List
 import Data.Char
 
-import Vdmr.Generic (Solver)
+import AoC (Solver)
 
 fldigits :: [Char] -> Int
 fldigits l = read $ [head ds, last ds]

@@ -1,7 +1,7 @@
 module Main where
 
 import Prelude hiding (showList)
-import Data.List
+-- import Data.List
 import Data.Char (toUpper)
 import Data.List.Split
 

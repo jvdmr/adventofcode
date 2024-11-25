@@ -1,7 +1,7 @@
 module Main where
 
 import Data.Char (chr)
-import Data.List
+-- import Data.List
 import Text.Parsec
 
 data Expr = AChar Char

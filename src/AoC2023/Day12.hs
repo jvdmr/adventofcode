@@ -9,9 +9,9 @@ import Data.List.Split (splitOn)
 import Data.Map ((!))
 import qualified Data.Map as M (fromList)
 
-import Vdmr.Generic (Solver, combineLimited)
-import Vdmr.Memoize (MemoizeableFunction, memoize)
-import Vdmr.Trace (idtrace)
+import AoC (Solver, combineLimited)
+import AoC.Memoize (MemoizeableFunction, memoize)
+import AoC.Trace (idtrace)
 
 type CheckFunction = MemoizeableFunction (String, [Int]) Int
 

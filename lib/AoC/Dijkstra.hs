@@ -1,6 +1,6 @@
 {-# LANGUAGE FlexibleInstances, TypeSynonymInstances, FlexibleContexts, TypeFamilies #-}
 
-module Vdmr.Dijkstra
+module AoC.Dijkstra
   ( dijkstra
   , GName (..)
   , GGraph (..)

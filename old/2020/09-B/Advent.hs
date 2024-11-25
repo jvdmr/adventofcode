@@ -1,6 +1,6 @@
 module Main where
 
-import Data.List
+-- import Data.List
 
 wrongNumber = 1124361034
 -- wrongNumber = 127

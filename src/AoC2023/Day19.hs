@@ -4,13 +4,12 @@ module AoC2023.Day19
   , part2
   ) where
 
-import Data.List
 import Data.List.Split (splitOn)
 import Data.Map ((!))
 import qualified Data.Map as M
 
-import Vdmr.Generic (Solver, bfs)
-import Vdmr.Parsec
+import AoC (Solver, bfs)
+import AoC.Parsec
 
 data MachinePart = MP { x :: Int, m :: Int, a :: Int, s :: Int }
   deriving (Show, Eq, Read)

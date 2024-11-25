@@ -1,6 +1,6 @@
 module Main where
 
-import Data.List
+-- import Data.List
 import qualified Data.ByteString.Lazy.UTF8 as BLU
 import qualified Data.ByteString.Lazy as BL
 import Data.Digest.Pure.MD5

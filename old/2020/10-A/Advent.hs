@@ -1,6 +1,6 @@
 module Main where
 
-import Data.List
+-- import Data.List
 
 findDiffs (_:[]) = [3]
 findDiffs (m:n:rst) = (n - m):(findDiffs (n:rst))

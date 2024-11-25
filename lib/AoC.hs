@@ -1,5 +1,5 @@
 {-# LANGUAGE FlexibleInstances, TypeSynonymInstances, FlexibleContexts #-}
-module Vdmr.Generic
+module AoC
   ( Solver (..)
   , Day (..)
   , Year (..)

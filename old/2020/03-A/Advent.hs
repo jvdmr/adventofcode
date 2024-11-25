@@ -1,6 +1,6 @@
 module Main where
 
-import Data.List
+-- import Data.List
 
 shift3 (a:b:c:rst) = rst ++ [a, b, c]
 

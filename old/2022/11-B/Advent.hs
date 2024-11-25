@@ -1,7 +1,7 @@
 module Main where
 
 import Prelude hiding (round)
-import Data.List
+-- import Data.List
 import Data.List.Split
 
 import Debug.Trace

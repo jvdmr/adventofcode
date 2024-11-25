@@ -1,6 +1,6 @@
 module Main where
 
-import Data.List
+-- import Data.List
 import Data.Strings
 
 niceRepeats [_, _] = False

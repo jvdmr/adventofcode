@@ -1,6 +1,6 @@
 module Main where
 
-import Data.List
+-- import Data.List
 
 findBasement p (-1) _ = p
 findBasement _ _ [] = 0

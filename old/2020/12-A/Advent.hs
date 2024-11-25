@@ -2,7 +2,7 @@ module Main where
 
 -- since we're only working with straight angles, I'll make my own cos and sin. With blackjack! And hookers!
 import Prelude hiding (Left, Right, cos, sin)
-import Data.List
+-- import Data.List
 
 cos 0 = 1
 cos 90 = 0

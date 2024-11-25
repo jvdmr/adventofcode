@@ -1,6 +1,6 @@
 module Main where
 
-import Data.List
+-- import Data.List
 import Text.PrettyPrint
 
 data Instruction = Nop {value::Int}

@@ -1,6 +1,6 @@
 module Main where
 
-import Data.List
+-- import Data.List
 
 crabcups :: Int -> Int -> [Int] -> [Int]
 crabcups min max (a:as) = as' ++ [a]

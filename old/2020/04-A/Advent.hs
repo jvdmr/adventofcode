@@ -1,6 +1,6 @@
 module Main where
 
-import Data.List
+-- import Data.List
 
 data Passport = Passport {byr::Bool, iyr::Bool, eyr::Bool, hgt::Bool, hcl::Bool, ecl::Bool, pid::Bool, cid::Bool, err::String}
               deriving Show

@@ -1,6 +1,6 @@
 module Main where
 
-import Data.List
+-- import Data.List
 
 data Password = Password {min::Int, max::Int, char::Char, pw::String}
               deriving Show

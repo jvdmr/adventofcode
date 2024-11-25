@@ -4,12 +4,11 @@ module AoC2023.Day02
   , part2
   ) where
 
-import Data.List
 import Data.List.Split (splitOn)
 import Data.Map ((!))
 import qualified Data.Map as M
 
-import Vdmr.Generic (Solver)
+import AoC (Solver)
 
 data Color = Red | Green | Blue
   deriving (Show, Eq, Ord)

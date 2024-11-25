@@ -1,7 +1,7 @@
 module Main where
 
 import Prelude hiding (Left, Right)
-import Data.List
+-- import Data.List
 
 data Instruction = North {value::Int}
                  | South {value::Int}

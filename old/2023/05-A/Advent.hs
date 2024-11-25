@@ -1,6 +1,6 @@
 module Main where
 
-import Data.List
+-- import Data.List
 import Data.List.Split (splitOn)
 import Data.Map ((!))
 import qualified Data.Map as M

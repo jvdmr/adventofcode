@@ -6,10 +6,9 @@ module AoC2023.Day25
 
 import Data.List
 import Data.List.Split (splitOn)
-import Data.Map ((!))
 import qualified Data.Map as M
 
-import Vdmr.Generic (Solver, groupOn)
+import AoC (Solver, groupOn)
 
 type Label = String
 type Link = (Label, [Label])
