@@ -27,9 +27,7 @@ module AoC.Grid
   , surround
   ) where
 
-import qualified Data.Map as M
-
-import AoC (Solver, between, bfs)
+import AoC (between, bfs)
 
 data Axis = X | Y | Z
   deriving (Show, Eq)
@@ -57,7 +55,7 @@ instance (Show a, Eq a) => Show (Grid a) where
 (!) :: Integral b => Grid a -> Coord b -> a
 (!) (Grid g) (x, y) = (g !! fromIntegral y) !! fromIntegral x
 
-size :: Num b => Grid a -> Coord b
+size :: (Num b) => Grid a -> Coord b
 size (Grid g) = (mx, my)
   where my = fromIntegral $ length g
         mx = fromIntegral $ length (head g)
