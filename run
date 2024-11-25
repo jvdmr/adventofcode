@@ -11,13 +11,16 @@ function show_help () {
 
 -t              Only run tests
 
+-d              Debug (enables profiling etc)
+
 -c              Only compile
   "
 }
 
 TEST=true
 PROD=true
-while getopts "hti:cp" opt; do
+DEBUG=false
+while getopts "hti:cpd" opt; do
   case "$opt" in
   h|\?)
     show_help
@@ -25,6 +28,9 @@ while getopts "hti:cp" opt; do
     ;;
   p)
     TEST=false
+    ;;
+  d)
+    DEBUG=true
     ;;
   t)
     PROD=false
@@ -44,19 +50,27 @@ while getopts "hti:cp" opt; do
   esac
 done
 
+BUILDARGS=""
+RUNARGS=""
+if $DEBUG
+then
+	BUILDARGS="${BUILDARGS} --enable-library-profiling --enable-executable-profiling --enable-tests --enable-benchmarks"
+	RUNARGS="${RUNARGS} +RTS -p --RTS"
+fi
+
 shift $(($OPTIND - 1))
 dir="$1"
 datestr=${dir#src/AoC}
 year=${datestr%/Day*}
 day=${datestr#*/Day}
-RUNARGS="--yearstr=${year} --daystr=${day}"
+RUNARGS="${RUNARGS} --yearstr=${year} --daystr=${day}"
 part="$2"
 if [ -n "$part" ]
 then
 	RUNARGS="${RUNARGS} --part=${part}"
 fi
 
-cabal new-build aoc
+cabal new-build ${BUILDARGS} aoc
 if [ $? -gt 0 ]
 then
 	exit 1
@@ -69,11 +83,11 @@ then
 		echo Running $testinput
     if [ -n "$part" ]
     then
-      time cabal run aoc -- $RUNARGS < $testinput
+      time cabal run aoc -- ${RUNARGS} < $testinput
     else
-      time cabal run aoc -- $RUNARGS --part=1 < $testinput
+      time cabal run aoc -- ${RUNARGS} --part=1 < $testinput
       echo
-      time cabal run aoc -- $RUNARGS --part=2 < $testinput
+      time cabal run aoc -- ${RUNARGS} --part=2 < $testinput
     fi
     echo
 	done
@@ -86,21 +100,21 @@ then
 		echo Running $input
     if [ -n "$part" ]
     then
-      time cabal run aoc -- $RUNARGS < $input
+      time cabal run aoc -- ${RUNARGS} < $input
     else
-      time cabal run aoc -- $RUNARGS --part=1 < $input
+      time cabal run aoc -- ${RUNARGS} --part=1 < $input
       echo
-      time cabal run aoc -- $RUNARGS --part=2 < $input
+      time cabal run aoc -- ${RUNARGS} --part=2 < $input
     fi
   else
     echo Running actual input
     if [ -n "$part" ]
     then
-      time cabal run aoc -- $RUNARGS < $dir/input
+      time cabal run aoc -- ${RUNARGS} < $dir/input
     else
-      time cabal run aoc -- $RUNARGS --part=1 < $dir/input
+      time cabal run aoc -- ${RUNARGS} --part=1 < $dir/input
       echo
-      time cabal run aoc -- $RUNARGS --part=2 < $dir/input
+      time cabal run aoc -- ${RUNARGS} --part=2 < $dir/input
     fi
   fi
 fi

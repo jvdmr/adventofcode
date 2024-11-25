@@ -4,3 +4,4 @@ Advent
 .*
 dist-newstyle
 input*
+*.prof
