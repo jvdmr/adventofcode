@@ -1,12 +1,17 @@
 {-# LANGUAGE FlexibleInstances, TypeSynonymInstances, FlexibleContexts #-}
 module AoC.Memoize
-  ( MemoizeableFunction (..)
+  ( MemoizableFunction (..)
   , memoize
   ) where
 
-type MemoizeableFunction a b = ((a -> b) -> a -> b)
+import Data.Map
 
-memoize :: MemoizeableFunction a b -> (a -> Int) -> [a] -> a -> b
-memoize f t l i = f' i
-  where f' a = [f f' n | n <- l] !! t a
+import Vdmr.Trace
+
+type MemoizableFunction a b = ((a -> b) -> a -> b)
+
+memoize :: (Ord a) => MemoizableFunction a b -> [a] -> (a -> b)
+memoize f l = f!
+  where mem = fromList [(n, f f' n) | n <- l]
+        f' a = mem ! a
 
