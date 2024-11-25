@@ -23,6 +23,7 @@ module AoC.Grid
   , neg
   , noborder
   , outside
+  , size
   , surround
   ) where
 
@@ -56,28 +57,28 @@ instance (Show a, Eq a) => Show (Grid a) where
 (!) :: Integral b => Grid a -> Coord b -> a
 (!) (Grid g) (x, y) = (g !! fromIntegral y) !! fromIntegral x
 
-coords :: (Enum b, Num b) => Grid a -> [Coord b]
-coords (Grid g) = [(x, y) | x <- [0..mx], y <- [0..my]] 
-  where my = fromIntegral $ length g - 1
-        mx = fromIntegral $ length (head g) - 1
-
-coordsG :: (Enum b, Num b) => Grid a -> Grid (Coord b)
-coordsG (Grid g) = Grid [[(x, y) | x <- [0..mx]] | y <- [0..my]] 
-  where my = fromIntegral $ length g - 1
-        mx = fromIntegral $ length (head g) - 1
+size :: Num b => Grid a -> Coord b
+size (Grid g) = (mx, my)
+  where my = fromIntegral $ length g
+        mx = fromIntegral $ length (head g)
 
 maxCoord :: Num b => Grid a -> Coord b
-maxCoord (Grid g) = (mx, my)
-  where my = fromIntegral $ length g - 1
-        mx = fromIntegral $ length (head g) - 1
+maxCoord = add (-1, -1) . size
+
+coords :: (Enum b, Num b) => Grid a -> [Coord b]
+coords g = [(x, y) | x <- [0..mx], y <- [0..my]] 
+  where (mx, my) = maxCoord g
+
+coordsG :: (Enum b, Num b) => Grid a -> Grid (Coord b)
+coordsG g = Grid [[(x, y) | x <- [0..mx]] | y <- [0..my]] 
+  where (mx, my) = maxCoord g
 
 mapG :: (a -> b) -> Grid a -> Grid b
 mapG f (Grid g) = Grid $ map (map f) g
 
 inGrid :: (Ord b, Num b) => Grid a -> Coord b -> Bool
-inGrid (Grid g) (x, y) = between 0 x mx && between 0 y my
-  where my = fromIntegral $ length g - 1
-        mx = fromIntegral $ length (head g) - 1
+inGrid g (x, y) = between 0 x mx && between 0 y my
+  where (mx, my) = maxCoord g
 
 surround :: (Eq a, Num a) => Coord a -> [Coord a]
 surround (x, y) = [(xn, yn) | xn <- map (+x) [-1, 0, 1], yn <- map (+y) [-1, 0, 1], xn /= x || yn /= y]
