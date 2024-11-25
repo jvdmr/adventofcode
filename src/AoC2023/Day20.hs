@@ -8,7 +8,6 @@ import Data.Map ((!))
 import qualified Data.Map as M
 
 import AoC (Solver, none, bfsState)
-import AoC.Grid (add)
 import AoC.Parsec
 
 data Pulse = High
