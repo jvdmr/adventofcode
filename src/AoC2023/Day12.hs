@@ -10,10 +10,10 @@ import Data.Map ((!))
 import qualified Data.Map as M (fromList)
 
 import AoC (Solver, combineLimited)
-import AoC.Memoize (MemoizeableFunction, memoize)
+import AoC.Memoize (MemoizableFunction, memoize)
 import AoC.Trace (idtrace)
 
-type CheckFunction = MemoizeableFunction (String, [Int]) Int
+type CheckFunction = MemoizableFunction (String, [Int]) Int
 
 skip :: CheckFunction
 skip checkf ([], p) = checkf ([], p)
