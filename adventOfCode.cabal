@@ -18,10 +18,25 @@ extra-source-files:
   Readme.md
 
 common warnings
-    ghc-options: -Wall
+--     ghc-options: -Wall
+    ghc-options:
+      -Wmissing-signatures
+      -Wunused-imports
+
+common optimize
+    ghc-options:
+      -O2
+      -threaded
+      -with-rtsopts=-N
+
+common debugging
+    ghc-options:
+      -prof
+      -fprof-auto
 
 library
-  import:           warnings
+  import:
+    warnings
   hs-source-dirs:   lib
   exposed-modules:
     AoC
@@ -45,7 +60,10 @@ library
   default-language: Haskell2010
 
 executable aoc
-  import:           warnings
+  import:
+    warnings
+    , optimize
+    , debugging
   main-is:          Main.hs
   hs-source-dirs: src
   other-modules:
