@@ -19,6 +19,7 @@ module AoC
   , limitedCountablePairs
   , combine
   , combineLimited
+  , longerThan
   ) where
 
 import Data.List (groupBy, inits, sortBy, (!!))
@@ -97,4 +98,8 @@ combineLimited :: [a] -> [b] -> [(a, b)]
 combineLimited a b = [(a !! i, b !! j) | (i, j) <- limitedCountablePairs x y]
   where x = length a - 1
         y = length b - 1
+
+-- test if a list is longer than x
+longerThan :: [a] -> Int -> Bool
+longerThan l n = not $ null $ drop n l
 
