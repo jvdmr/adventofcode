@@ -1,29 +1,28 @@
-cabal-version:      2.4
+cabal-version:      3.4
+-- The cabal-version field refers to the version of the .cabal specification,
+-- and can be different from the cabal-install (the tool) version and the
+-- Cabal (the library) version you are using. As such, the Cabal (the library)
+-- version used must be equal or greater than the version stated in this field.
+-- Starting from the specification version 2.2, the cabal-version field must be
+-- the first thing in the cabal file.
+
 name:               adventOfCode
 version:            2024
 
--- A short (one-line) description of the package.
--- synopsis:
-
--- A longer description of the package.
--- description:
-
--- A URL where users can report bugs.
--- bug-reports:
-
--- The license under which the package is released.
--- license:
 author:             jvdmr
 maintainer:         joris@vdmr.be
 
--- A copyright notice.
--- copyright:
--- category:
+build-type:         Simple
+
 extra-source-files:
   Readme.md
 
-library vdmr
-  hs-source-dirs: lib
+common warnings
+    ghc-options: -Wall
+
+library
+  import:           warnings
+  hs-source-dirs:   lib
   exposed-modules:
     Vdmr.Generic
     , Vdmr.Dijkstra
@@ -32,14 +31,22 @@ library vdmr
     , Vdmr.Memoize
     , Vdmr.Parsec
     , Vdmr.Trace
+
+  -- Modules included in this library but not exported.
+  -- other-modules:
+
+  -- LANGUAGE extensions used by modules in this package.
+  -- other-extensions:
+
   build-depends:
-    base
+    base ^>=4.17.0.0
     , containers
     , parsec
   default-language: Haskell2010
 
 executable aoc
-  main-is: Main.hs
+  import:           warnings
+  main-is:          Main.hs
   hs-source-dirs: src
   other-modules:
     AoC2015
@@ -85,14 +92,12 @@ executable aoc
     , AoC2024.Day16, AoC2024.Day17, AoC2024.Day18, AoC2024.Day19, AoC2024.Day20
     , AoC2024.Day21, AoC2024.Day22, AoC2024.Day23, AoC2024.Day24, AoC2024.Day25
   other-extensions:
-    -- LANGUAGE extensions used by modules in this package.
+  -- LANGUAGE extensions used by modules in this package.
     FlexibleInstances, TypeSynonymInstances, FlexibleContexts, TypeFamilies 
   build-depends:
-    base
+      base ^>=4.17.0.0
+    , adventOfCode
     , cmdargs
     , containers
     , split
-    , vdmr
-  ghc-options:
-    -threaded
   default-language: Haskell2010
