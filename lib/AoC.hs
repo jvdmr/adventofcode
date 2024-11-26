@@ -23,8 +23,8 @@ module AoC
   , cartesianInf
   ) where
 
-import Data.List (groupBy, inits, sortBy, (!!))
-import Data.Ord (comparing)
+import Data.List (groupBy, inits)
+-- import Data.Ord (comparing)
 import Data.Char (digitToInt)
 import Data.Map (Map)
 
@@ -42,6 +42,7 @@ uniq (a:b:rst) | a == b = uniq (b:rst)
 between :: Ord a => a -> a -> a -> Bool
 between a b c = a <= b && b <= c
 
+unjust :: Maybe a -> a
 unjust (Just a) = a
 
 bfs :: (Eq a) => (a -> [a]) -> ([a] -> [a]) -> [a] -> [a] -> [a]
@@ -62,6 +63,7 @@ none f as = all (not . f) as
 andF :: a -> [a -> Bool] -> Bool
 andF x = and . map ($ x)
 
+strings :: [String]
 strings = a ++ [f a' | f <- map (++) strings, a' <- a]
   where a = map (:[]) ['A'..'Z']
 
