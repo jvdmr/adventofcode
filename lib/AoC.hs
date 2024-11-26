@@ -15,11 +15,12 @@ module AoC
   , iterateUntilIdempotent 
   , groupOn
   , pascal
-  , countablePairs
-  , limitedCountablePairs
-  , combine
-  , combineLimited
+  , cartesianWith
+  , cartesian
   , longerThan
+  , countablePairs
+  , cartesianInfWith
+  , cartesianInf
   ) where
 
 import Data.List (groupBy, inits, sortBy, (!!))
@@ -77,29 +78,29 @@ pascal :: Int -> Int -> Int
 pascal n m = (triangle !! (m - 1)) !! (n - 1)
   where triangle = (repeat 1):map (map sum . inits) triangle
 
+-- combine two finite lists in all possible combinations
+cartesianWith :: (a -> b -> c) -> [a] -> [b] -> [c]
+cartesianWith f a b = [f (a !! i) (b !! j) | i <- [0..x], j <- [0..y]]
+  where x = length a - 1
+        y = length b - 1
+
+cartesian :: [a] -> [b] -> [(a, b)]
+cartesian = cartesianWith (,)
+
+-- test if a list is longer than x
+longerThan :: [a] -> Int -> Bool
+longerThan l n = not $ null $ drop n l
+
 -- infinite list of pairs of numbers, starting at (0, 0)
 countablePairs :: [(Int, Int)]
 countablePairs = cp 0 0
   where cp 0 j = (0, j):cp (j + 1) 0
         cp i j = (i, j):cp (i - 1) (j + 1)
 
-limitedCountablePairs :: Int -> Int -> [(Int, Int)]
-limitedCountablePairs x y = limit countablePairs
-  where limit (fst@(a, b):rst) | a == x && b == y = [fst]
-                               | a > x || b > y = limit rst
-                               | otherwise = fst:limit rst
-
 -- combine two infinite lists in all possible combinations (1-dimensional grid)
-combine :: [a] -> [b] -> [(a, b)]
-combine a b = [(a !! i, b !! j) | (i, j) <- countablePairs]
+cartesianInfWith :: (a -> b -> c) -> [a] -> [b] -> [c]
+cartesianInfWith f a b = [f (a !! i) (b !! j) | (i, j) <- countablePairs]
 
--- combine two finite lists in all possible combinations (1-dimensional grid)
-combineLimited :: [a] -> [b] -> [(a, b)]
-combineLimited a b = [(a !! i, b !! j) | (i, j) <- limitedCountablePairs x y]
-  where x = length a - 1
-        y = length b - 1
-
--- test if a list is longer than x
-longerThan :: [a] -> Int -> Bool
-longerThan l n = not $ null $ drop n l
+cartesianInf :: [a] -> [b] -> [(a, b)]
+cartesianInf = cartesianInfWith (,)
 

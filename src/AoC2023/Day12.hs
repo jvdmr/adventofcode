@@ -9,7 +9,7 @@ import Data.List.Split (splitOn)
 import Data.Map ((!))
 import qualified Data.Map as M (fromList)
 
-import AoC (Solver, combineLimited)
+import AoC (Solver, cartesian)
 import AoC.Memoize
 
 type CheckFunction = ((String, [Int]) -> Int) -> (String, [Int]) -> Int
@@ -44,8 +44,8 @@ checkm springs pattern = checkm' $ index ! lpair (springs, pattern)
   where checkm' = memoize check'
         springsTails = reverse $ tails springs
         patternTails = reverse $ tails pattern
-        combinedTails = combineLimited springsTails patternTails
-        combinedLengths = combineLimited (map length springsTails) (map length patternTails)
+        combinedTails = cartesian springsTails patternTails
+        combinedLengths = cartesian (map length springsTails) (map length patternTails)
         index = M.fromList $ zip combinedLengths [0..]
         lpair (a, b) = (length a, length b)
         check' f = check (f . (index !) . lpair) . (combinedTails !!)
