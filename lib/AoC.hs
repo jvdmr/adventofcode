@@ -4,6 +4,7 @@ module AoC
   , Day (..)
   , Year (..)
   , uniq
+  , equating
   , between
   , unjust
   , bfs
@@ -38,6 +39,9 @@ uniq [] = []
 uniq [a] = [a]
 uniq (a:b:rst) | a == b = uniq (b:rst)
                | otherwise = a:uniq (b:rst)
+
+equating :: (Eq b) => (a -> b) -> a -> a -> Bool
+equating f a b = f a == f b
 
 between :: Ord a => a -> a -> a -> Bool
 between a b c = a <= b && b <= c
