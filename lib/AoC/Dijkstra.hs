@@ -2,23 +2,28 @@
 
 module AoC.Dijkstra
   ( dijkstra
+  , dijkstraMax
   , GName (..)
   , GGraph (..)
   , Distance (..)
   ) where
 
-import Data.List (sort)
+import Data.List (sortBy)
+import Data.Ord (comparing)
 import Data.Map ((!))
 import qualified Data.Map as M
 
 -- Define according to your node's id - coordinates, labels, ...
 class (Eq a, Ord a) => GName a
 
+-- Define according to your graph's structure
 class GGraph g where
-  type GNodeName g
+  -- GNodeName g is probably the same as GName
+  type GNodeName g 
+  -- get a list of all nodes
   nodes :: g -> [GNodeName g]
-  neighbors :: g -> GNodeName g -> [GNodeName g]
-  distance :: g -> GNodeName g -> GNodeName g -> Distance
+  -- get a list of a node's neighbors and the distance to them
+  edges :: g -> GNodeName g -> [(GNodeName g, Distance)]
 
 data Distance = Dist Int
               | Infinity
@@ -48,29 +53,28 @@ instance Num Distance where
   signum (Dist a) = Dist $ signum a
 
 type DGraph k a = M.Map k a
-type Explored gname = [gname]
-type Queue gname = [(Distance, gname)]
-type Result gname = M.Map gname (gname, Distance)
-type Node gname = (gname, [(Distance, gname)])
+type Explored gname = M.Map gname Bool
+type Queue gname = [(gname, Distance)]
+type Node gname = [(gname, Distance)]
 
-updateResult :: GName a => Result a -> (Distance, a) -> Result a
-updateResult r (d, n) | snd (r ! n) > d = M.insert n (n, d) r
-                      | otherwise = r
+dijkstraLoop :: GName k => DGraph k (Node k) -> Explored k -> Queue k -> Node k
+dijkstraLoop _ _ [] = []
+dijkstraLoop g e ((n, d):q) = (n, d):dijkstraLoop g e' (sortBy (comparing snd) $ filter unseen (q ++ nxt))
+  where nxt = map totalDistance $ g ! n
+        totalDistance (nn, nd) = (nn, nd + d)
+        unseen (nn, _) = not $ M.findWithDefault False nn e'
+        e' = M.insert n True e
 
-keepFirst :: Eq b => (a -> b) -> [a] -> [a]
-keepFirst f a = keepFirst' [] a
-  where keepFirst' begin [] = reverse begin
-        keepFirst' begin (x:rest) | notElem (f x) (map f begin) = keepFirst' (x:begin) rest
-                                  | otherwise = keepFirst' begin rest
-
-dijkstraLoop :: GName k => DGraph k (Node k) -> Explored k -> Queue k -> Result k -> Result k
-dijkstraLoop _ _ [] r = r
-dijkstraLoop g e ((d, n):q) r = dijkstraLoop g (n:e) (keepFirst snd $ sort (q ++ nxt)) (foldl updateResult r nxt)
-  where nxt = filter unseen $ map totalDistance $ snd $ g ! n
-        totalDistance (nd, nn) = (nd + d, nn)
-        unseen (_, nn) = notElem nn e
-
-dijkstra :: (GName (GNodeName g), GGraph g) => g -> GNodeName g -> Result (GNodeName g)
-dijkstra graph start = dijkstraLoop nodified [] [(0, start)] $ flip updateResult (0, start) $ M.fromList $ map (\n -> (n, (n, Infinity))) $ nodes graph
+dijkstra :: (GName (GNodeName g), GGraph g) => g -> GNodeName g -> (GNodeName g -> Distance)
+dijkstra graph start = flip (M.findWithDefault Infinity) $ M.fromList $ dijkstraLoop nodified M.empty [(start, 0)]
   where nodified = M.fromList $ map nodify $ nodes graph
-        nodify n = (n, (n, map (\n' -> (distance graph n n', n')) $ neighbors graph n))
+        nodify n = (n, edges graph n)
+
+dijkstraMax :: (GName (GNodeName g), GGraph g) => g -> GNodeName g -> Distance -> (GNodeName g -> Bool)
+dijkstraMax graph start Infinity = fix . dijkstra graph start
+  where fix Infinity = False
+        fix _ = True
+dijkstraMax graph start maxd = flip (M.findWithDefault False) $ M.fromList $ map (flip (,) True . fst) $ takeWhile ((<= maxd) . snd) $ dijkstraLoop nodified M.empty [(start, 0)]
+  where nodified = M.fromList $ map nodify $ nodes graph
+        nodify n = (n, edges graph n)
+

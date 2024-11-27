@@ -5,12 +5,10 @@ module AoC2023.Day17
   ) where
 
 import Data.List
-import Data.Map ((!))
 import qualified Data.Map as M
 
-import AoC (Solver, unjust)
-import AoC.Grid hiding ((!), Direction)
-import qualified AoC.Grid as J ((!))
+import AoC (Solver)
+import AoC.Grid hiding (Direction)
 import AoC.Dijkstra
 
 type GCoord = Coord Int
@@ -20,52 +18,43 @@ data Direction = H | V | Q
 
 type Block = (GCoord, Direction)
 
-coord :: Block -> GCoord
-coord = fst
-
-dir :: Block -> Direction
-dir = snd
-
-type Line = (Block, Int)
-compareLine :: Line -> Line -> Ordering
-compareLine (_, a) (_, b) = compare a b
-
-type Lines = (Block, [Line])
-glines :: Lines -> [Line]
-glines = snd
+type Lines = M.Map Block Distance
 
 type Graph = M.Map Block Lines
+
+-- <!-- Dijkstra stuff
 
 instance GName Block
 
 instance GGraph Graph where
   type GNodeName Graph = Block
-  distance graph a b = Dist $ snd $ unjust $ find ((== coord b) . coord . fst) $ glines $ graph ! a
-  neighbors graph n = map fst $ glines $ graph ! n
+  edges graph n = M.toList $ graph M.! n
   nodes = M.keys
 
-gridNeighbors :: [Int] -> Grid Int -> Direction -> GCoord -> [Line]
-gridNeighbors boundaries g V (x, y) = sortBy compareLine [(((x', y), H), d) |
+-- -->
+
+gridNeighbors :: [Int] -> Grid Int -> Direction -> GCoord -> Lines
+gridNeighbors boundaries g V (x, y) = M.fromList [(((x', y), H), Dist d) |
   x' <- map (x +) boundaries,
-  d <- [sum $ map (g J.!) [(x'', y) | x'' <- [min x x'..max x x'], x'' /= x]],
+  d <- [sum $ map (g !) [(x'', y) | x'' <- [min x x'..max x x'], x'' /= x]],
   inGrid g (x', y)]
-gridNeighbors boundaries g H (x, y) = sortBy compareLine [(((x, y'), V), d) |
+gridNeighbors boundaries g H (x, y) = M.fromList [(((x, y'), V), Dist d) |
   y' <- map (y +) boundaries,
-  d <- [sum $ map (g J.!) [(x, y'') | y'' <- [min y y'..max y y'], y'' /= y]],
+  d <- [sum $ map (g !) [(x, y'') | y'' <- [min y y'..max y y'], y'' /= y]],
   inGrid g (x, y')]
-gridNeighbors _ g Q (x, y) = [(((x, y), d), 0) | d <- [H, V]]
+gridNeighbors _ g Q (x, y) = M.fromList [(((x, y), d), Dist 0) | d <- [H, V]]
 
 graphify :: [Int] -> Grid Int -> Graph
-graphify boundaries g = M.fromList [((c, dir), ((c, dir), gridNeighbors boundaries g dir c)) | c <- coords g, dir <- [H, V]]
+graphify boundaries g = M.fromList [((c, dir), gridNeighbors boundaries g dir c) | c <- coords g, dir <- [H, V]]
 
 readInt :: Char -> Int
 readInt c = read [c]
 
 heatloss :: [Int] -> Grid Int -> Int
 heatloss boundaries g = d
-  where gg = M.insert ((0, 0), Q) (((0, 0), Q), gridNeighbors boundaries g Q (0, 0)) $ graphify boundaries g
+  where gg = M.insert ((0, 0), Q) (gridNeighbors boundaries g Q (0, 0)) $ graphify boundaries g
         dg = dijkstra gg ((0, 0), Q)
-        (Dist d) = snd $ minimum $ map (dg !) [(maxCoord g, d) | d <- [V, H]]
+        (Dist d) = minimum $ map dg [(maxCoord g, d) | d <- [V, H]]
 
 part1 :: Solver
 part1 = show . heatloss boundaries . mapG readInt . Grid . lines
