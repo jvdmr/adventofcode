@@ -18,21 +18,22 @@ extra-source-files:
   Readme.md
 
 common warnings
---     ghc-options: -Wall
-    ghc-options:
-      -Wmissing-signatures
-      -Wunused-imports
+  ghc-options:
+--     -Wall
+    -Wmissing-signatures
+    -Wunused-imports
+    -Wunused-top-binds
 
 common optimize
-    ghc-options:
-      -O2
-      -threaded
-      -with-rtsopts=-N
+  ghc-options:
+    -O2
+    -threaded
+    -with-rtsopts=-N
 
 common debugging
-    ghc-options:
-      -prof
-      -fprof-auto
+  ghc-options:
+    -prof
+    -fprof-auto
 
 library
   import:
@@ -46,13 +47,6 @@ library
     , AoC.Memoize
     , AoC.Parsec
     , AoC.Trace
-
-  -- Modules included in this library but not exported.
-  -- other-modules:
-
-  -- LANGUAGE extensions used by modules in this package.
-  -- other-extensions:
-
   build-depends:
     base ^>=4.17.0.0
     , containers
