@@ -5,6 +5,7 @@ module AoC
   , Year (..)
   , uniq
   , equating
+  , count
   , between
   , unjust
   , bfs
@@ -20,6 +21,7 @@ module AoC
   , cartesian
   , longerThan
   , countablePairs
+  , countableZPairs
   , cartesianInfWith
   , cartesianInf
   ) where
@@ -42,6 +44,9 @@ uniq (a:b:rst) | a == b = uniq (b:rst)
 
 equating :: (Eq b) => (a -> b) -> a -> a -> Bool
 equating f a b = f a == f b
+
+count :: (a -> Bool) -> [a] -> Int
+count pred = length . filter pred
 
 between :: Ord a => a -> a -> a -> Bool
 between a b c = a <= b && b <= c
@@ -97,11 +102,18 @@ cartesian = cartesianWith (,)
 longerThan :: [a] -> Int -> Bool
 longerThan l n = not $ null $ drop n l
 
--- infinite list of pairs of numbers, starting at (0, 0)
+-- infinite list of pairs of natural numbers, starting at (0, 0)
 countablePairs :: [(Int, Int)]
 countablePairs = cp 0 0
   where cp 0 j = (0, j):cp (j + 1) 0
         cp i j = (i, j):cp (i - 1) (j + 1)
+
+-- infinite list of pairs of whole numbers (including negatives), starting at (0, 0)
+countableZPairs :: [(Int, Int)]
+countableZPairs = cp 0 0
+  where cp 0 j = (0, j):(0, -j):cp (j + 1) 0
+        cp i 0 = (i, 0):(-i, 0):cp (i - 1) 1
+        cp i j = (i, j):(-i, j):(i, -j):(-i, -j):cp (i - 1) (j + 1)
 
 -- combine two infinite lists in all possible combinations (1-dimensional grid)
 cartesianInfWith :: (a -> b -> c) -> [a] -> [b] -> [c]

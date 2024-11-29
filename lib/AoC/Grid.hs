@@ -25,6 +25,7 @@ module AoC.Grid
   , outside
   , size
   , surround
+  , ungrid
   ) where
 
 import AoC (between, bfs)
@@ -45,6 +46,9 @@ neg :: Num a => Coord a -> Coord a
 neg (a, b) = (-a, -b)
 
 data Grid a = Grid [[a]]
+
+ungrid :: Grid a -> [[a]]
+ungrid (Grid a) = a
 
 drawGrid :: Grid Char -> String
 drawGrid (Grid g) = concat $ map ((++ "\n") . show) g

@@ -14,7 +14,7 @@ import Data.Map ((!))
 import qualified Data.Map as M
 
 -- Define according to your node's id - coordinates, labels, ...
-class (Eq a, Ord a) => GName a
+class (Show a, Eq a, Ord a) => GName a
 
 -- Define according to your graph's structure
 class GGraph g where
