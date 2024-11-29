@@ -82,9 +82,8 @@ fromGrid grid = M.fromList $ zip nodes $ map nb nodes
         nb = reverse . sortOn length . trails grid
 
 hike :: GCoord -> GCoord -> Graph -> Int
-hike s e g = pred $ maximum $ map (length . concat) $ filter ((== e) . head . head) $ bfs nb prune [] [[[s]]]
+hike s e g = pred $ maximum $ map (length . concat) $ filter ((== e) . head . head) $ map fst $ bfs nb [[s]]
   where nb trail@((xy:_):_) = map (:trail) $ filter (flip notElem (map head trail) . head) $ g M.! xy
-        prune = id
 
 part1 :: Solver
 part1 = show . h . Grid . map (map readTrails) . lines

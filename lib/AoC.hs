@@ -9,6 +9,7 @@ module AoC
   , between
   , unjust
   , bfs
+  , bfsTiers
   , bfsState
   , hexToDec 
   , none
@@ -26,8 +27,7 @@ module AoC
   , cartesianInf
   ) where
 
-import Data.List (groupBy, inits)
--- import Data.Ord (comparing)
+import Data.List (groupBy, inits, nub)
 import Data.Char (digitToInt)
 import Data.Map (Map)
 
@@ -54,9 +54,15 @@ between a b c = a <= b && b <= c
 unjust :: Maybe a -> a
 unjust (Just a) = a
 
-bfs :: (Eq a) => (a -> [a]) -> ([a] -> [a]) -> [a] -> [a] -> [a]
-bfs _ _ result [] = result
-bfs neighbors prune result (node:queue) = bfs neighbors prune (node:result) $ prune (queue ++ (filter (flip notElem (queue ++ result)) $ neighbors node))
+bfs :: (Eq a) => (a -> [a]) -> a -> [(a, Int)]
+bfs neighbors start = bfs' [start] [(start, 0)]
+  where bfs' _ [] = []
+        bfs' seen (node@(n, d):queue) = node:let nbs = filter (flip notElem seen) $ neighbors n in bfs' (nbs ++ seen) $ queue ++ map (flip (,) (d + 1)) nbs
+
+bfsTiers :: (Eq a) => (a -> [a]) -> a -> [([a], Int)]
+bfsTiers neighbors start = bfs' ([start], []) ([start], 0)
+  where bfs' _ ([], _) = []
+        bfs' (cur, prev) nodes@(ns, d) = nodes:let nbs = filter (flip notElem prev) $ nub $ concat $ map neighbors ns in bfs' (nbs, cur) (nbs, d + 1)
 
 bfsState :: (Eq a) => b -> (b -> a -> (b, [a])) -> ([a] -> [a]) -> [a] -> [a] -> (b, [a])
 bfsState state _ _ result [] = (state, result)

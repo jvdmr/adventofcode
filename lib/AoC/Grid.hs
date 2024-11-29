@@ -8,6 +8,7 @@ module AoC.Grid
   , InOrOut (..)
   , add
   , border
+  , cget
   , coords
   , coordsG
   , countIOO
@@ -131,8 +132,8 @@ countIOO :: InOrOut -> Grid InOrOut -> Int
 countIOO x (Grid g) = length $ filter (== x) $ concat g
 
 outside :: (Ord a, Eq a, Num a, Enum a) => [Coord a] -> [Coord a]
-outside l = filter (inGrid g) $ map (add (-1, -1)) $ bfs nb id l' [(0, 0)]
-  where nb c = filter (inGrid g') [go d c | d <- [D, R, U, L]]
+outside l = [c | c <- map (add (-1, -1) . fst) $ bfs nb (0, 0), inGrid g c]
+  where nb c = [c' | c' <- map (flip go c) [D, R, U, L], inGrid g' c', notElem c' l']
         g = drawCoords 1 0 l
         g' = border 0 g
         l' = map (add (-mx + 1, -my + 1)) l
