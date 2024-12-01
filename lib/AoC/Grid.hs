@@ -29,7 +29,7 @@ module AoC.Grid
   , ungrid
   ) where
 
-import AoC (between, bfs)
+import AoC.Util (between, bfs)
 
 data Axis = X | Y | Z
   deriving (Show, Eq)

@@ -7,7 +7,8 @@ module AoC2023.Day20
 import Data.Map ((!))
 import qualified Data.Map as M
 
-import AoC (Solver, none, bfsState)
+import AoC (Solver)
+import AoC.Util (none, bfsState)
 import AoC.Parsec
 
 data Pulse = High

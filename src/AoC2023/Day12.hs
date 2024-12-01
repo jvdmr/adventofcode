@@ -9,7 +9,8 @@ import Data.List.Split (splitOn)
 import Data.Map ((!))
 import qualified Data.Map as M (fromList)
 
-import AoC (Solver, cartesian)
+import AoC (Solver)
+import AoC.Util (cartesian)
 import AoC.Memoize
 
 type CheckFunction = ((String, [Int]) -> Int) -> (String, [Int]) -> Int

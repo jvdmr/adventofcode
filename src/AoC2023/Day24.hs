@@ -6,7 +6,8 @@ module AoC2023.Day24
 
 import Data.List.Split (splitOn)
 
-import AoC (Solver, between)
+import AoC (Solver)
+import AoC.Util (between)
 import AoC.Grid3D
 
 parseCoord :: String -> (Double, Double, Double)

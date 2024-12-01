@@ -7,7 +7,8 @@ module AoC2023.Day03
 import Data.List
 import Data.Char
 
-import AoC (Solver, uniq)
+import AoC (Solver)
+import AoC.Util (uniq)
 import AoC.Grid
 
 type GCoord = Coord Int

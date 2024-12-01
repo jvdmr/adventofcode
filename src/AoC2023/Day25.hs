@@ -8,7 +8,8 @@ import Data.List
 import Data.List.Split (splitOn)
 import qualified Data.Map as M
 
-import AoC (Solver, groupOn)
+import AoC (Solver)
+import AoC.Util (groupOn)
 
 type Label = String
 type Link = (Label, [Label])

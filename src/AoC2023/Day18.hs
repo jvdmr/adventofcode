@@ -6,7 +6,8 @@ module AoC2023.Day18
 
 import Data.List.Split (splitOn)
 
-import AoC (Solver, hexToDec)
+import AoC (Solver)
+import AoC.Util (hexToDec)
 import AoC.Grid
 
 type GCoord = Coord Int

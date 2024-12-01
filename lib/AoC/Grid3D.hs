@@ -19,7 +19,7 @@ module AoC.Grid3D
   , surround
   ) where
 
-import AoC (between)
+import AoC.Util (between)
 
 data Axis = X | Y | Z
   deriving (Show, Eq)

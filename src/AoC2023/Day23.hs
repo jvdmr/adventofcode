@@ -7,7 +7,8 @@ module AoC2023.Day23
 import Data.List
 import qualified Data.Map as M
 
-import AoC (Solver, bfs)
+import AoC (Solver)
+import AoC.Util (bfs)
 import AoC.Grid
 
 type GCoord = Coord Int

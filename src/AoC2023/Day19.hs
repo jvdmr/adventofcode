@@ -8,7 +8,8 @@ import Data.List.Split (splitOn)
 import Data.Map ((!))
 import qualified Data.Map as M
 
-import AoC (Solver, bfs)
+import AoC (Solver)
+import AoC.Util (bfs)
 import AoC.Parsec
 
 data MachinePart = MP { x :: Int, m :: Int, a :: Int, s :: Int }

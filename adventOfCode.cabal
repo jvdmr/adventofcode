@@ -47,6 +47,7 @@ library
     , AoC.Memoize
     , AoC.Parsec
     , AoC.Trace
+    , AoC.Util
   build-depends:
     base ^>=4.17.0.0
     , containers

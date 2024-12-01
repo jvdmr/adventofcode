@@ -7,7 +7,8 @@ module AoC2023.Day21
 import Data.List (transpose)
 import qualified Data.Map as M
 
-import AoC (Solver, cartesianWith, count)
+import AoC (Solver)
+import AoC.Util (cartesianWith, count)
 import AoC.Grid
 import AoC.Dijkstra
 import AoC.Trace
