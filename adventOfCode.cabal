@@ -41,6 +41,7 @@ library
   hs-source-dirs:   lib
   exposed-modules:
     AoC
+    , AoC.Bfs
     , AoC.Dijkstra
     , AoC.Grid
     , AoC.Grid3D

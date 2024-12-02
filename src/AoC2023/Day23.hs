@@ -8,7 +8,7 @@ import Data.List
 import qualified Data.Map as M
 
 import AoC (Solver)
-import AoC.Util (bfs)
+import AoC.Bfs (bfs)
 import AoC.Grid
 
 type GCoord = Coord Int

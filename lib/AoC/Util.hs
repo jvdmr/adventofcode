@@ -2,9 +2,6 @@
 module AoC.Util
   ( andF
   , between
-  , bfs
-  , bfsState
-  , bfsTiers
   , cartesian
   , cartesianInf
   , cartesianInfWith
@@ -19,12 +16,15 @@ module AoC.Util
   , longerThan
   , none
   , pascal
+  , skipOne
   , strings
   , uniq
   , unjust
+  , zipTail
+  , zipTailWith
   ) where
 
-import Data.List (groupBy, inits, nub)
+import Data.List (groupBy, inits)
 import Data.Char (digitToInt)
 
 -- uniq is better than nub on sorted lists
@@ -46,21 +46,6 @@ between a c b = a <= b && b <= c
 unjust :: Maybe a -> a
 unjust (Just a) = a
 
-bfs :: (Eq a) => (a -> [a]) -> a -> [(a, Int)]
-bfs neighbors start = bfs' [start] [(start, 0)]
-  where bfs' _ [] = []
-        bfs' seen (node@(n, d):queue) = node:let nbs = filter (flip notElem seen) $ neighbors n in bfs' (nbs ++ seen) $ queue ++ map (flip (,) (d + 1)) nbs
-
-bfsTiers :: (Eq a) => (a -> [a]) -> a -> [([a], Int)]
-bfsTiers neighbors start = bfs' ([start], []) ([start], 0)
-  where bfs' _ ([], _) = []
-        bfs' (cur, prev) nodes@(ns, d) = nodes:let nbs = filter (flip notElem prev) $ nub $ concat $ map neighbors ns in bfs' (nbs, cur) (nbs, d + 1)
-
-bfsState :: (Eq a) => b -> (b -> a -> (b, [a])) -> ([a] -> [a]) -> [a] -> [a] -> (b, [a])
-bfsState state _ _ result [] = (state, result)
-bfsState state neighbors prune result (node:queue) = bfsState state' neighbors prune (node:result) $ prune (queue ++ filter (flip notElem (queue ++ result)) neighbors')
-  where (state', neighbors') = neighbors state node
-
 hexToDec :: String -> Int
 hexToDec = sum . zipWith (*) (iterate (* 16) 1) . reverse . map digitToInt
 
@@ -74,9 +59,18 @@ strings :: [String]
 strings = a ++ [f a' | f <- map (++) strings, a' <- a]
   where a = map (:[]) ['A'..'Z']
 
+skipOne :: [a] -> [[a]]
+skipOne [] = [[]]
+skipOne (a:as) = as:map (a:) (skipOne as)
+
+zipTailWith :: (a -> a -> b) -> [a] -> [b]
+zipTailWith f a = zipWith f a $ tail a
+
+zipTail :: [a] -> [(a, a)]
+zipTail = zipTailWith (,)
+
 iterateUntilIdempotent :: Eq a => (a -> a) -> a -> [a]
-iterateUntilIdempotent f x = x:(map snd $ takeWhile (uncurry (/=)) $ zip results $ tail results)
-  where results = iterate f x
+iterateUntilIdempotent f x = x:(map snd $ takeWhile (uncurry (/=)) $ zipTail $ iterate f x)
 
 groupOn :: Eq a => (b -> a) -> [b] -> [[b]]
 groupOn f lst = map (map fst) $ groupBy eq $ zip lst $ map f lst
