@@ -53,7 +53,7 @@ range hs | length hs > 10 = prodRange
 
 inRange :: Range -> Maybe Position -> Bool
 inRange (s, e) Nothing = False
-inRange (s, e) (Just (x, y, z)) = between s x e && between s y e
+inRange (s, e) (Just (x, y, z)) = all (between s e) [x, y]
 
 combine :: [a] -> [(a, a)]
 combine [] = []

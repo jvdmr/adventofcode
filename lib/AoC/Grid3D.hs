@@ -64,7 +64,7 @@ mapG :: (a -> b) -> Grid a -> Grid b
 mapG f (Grid g) = Grid $ map (map (map f)) g
 
 inGrid :: (Ord b, Num b) => Grid a -> Coord b -> Bool
-inGrid (Grid g) (x, y, z) = between 0 x mx && between 0 y my && between 0 z mz
+inGrid (Grid g) (x, y, z) = between 0 mx x && between 0 my y && between 0 mz z
   where mz = fromIntegral $ length g - 1
         my = fromIntegral $ length (head g) - 1
         mx = fromIntegral $ length (head (head g)) - 1

@@ -41,7 +41,7 @@ count :: (a -> Bool) -> [a] -> Int
 count pred = length . filter pred
 
 between :: Ord a => a -> a -> a -> Bool
-between a b c = a <= b && b <= c
+between a c b = a <= b && b <= c
 
 unjust :: Maybe a -> a
 unjust (Just a) = a

@@ -80,7 +80,7 @@ mapG :: (a -> b) -> Grid a -> Grid b
 mapG f (Grid g) = Grid $ map (map f) g
 
 inGrid :: (Ord b, Num b) => Grid a -> Coord b -> Bool
-inGrid g (x, y) = between 0 x mx && between 0 y my
+inGrid g (x, y) = between 0 mx x && between 0 my y
   where (mx, my) = maxCoord g
 
 surround :: (Eq a, Num a) => Coord a -> [Coord a]
