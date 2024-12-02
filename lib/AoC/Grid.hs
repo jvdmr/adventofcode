@@ -48,6 +48,7 @@ neg :: Num a => Coord a -> Coord a
 neg (a, b) = (-a, -b)
 
 data Grid a = Grid [[a]]
+  deriving (Eq)
 
 ungrid :: Grid a -> [[a]]
 ungrid (Grid a) = a
