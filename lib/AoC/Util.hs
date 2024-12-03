@@ -18,6 +18,7 @@ module AoC.Util
   , pascal
   , skipOne
   , strings
+  , uncurryL
   , uniq
   , unjust
   , zipTail
@@ -113,4 +114,7 @@ cartesianInfWith f a b = [f (a !! i) (b !! j) | (i, j) <- countablePairs]
 
 cartesianInf :: [a] -> [b] -> [(a, b)]
 cartesianInf = cartesianInfWith (,)
+
+uncurryL :: (a -> a -> b) -> [a] -> b
+uncurryL f (a:b:_) = f a b
 

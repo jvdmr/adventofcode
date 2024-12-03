@@ -7,9 +7,7 @@ module AoC2024.Day01
 import Data.List (transpose, sort)
 
 import AoC (Solver)
-
-uncurryL :: (a -> a -> b) -> [a] -> b
-uncurryL f (a:b:_) = f a b
+import AoC.Util (uncurryL)
 
 part1 :: Solver
 part1 = show . sum . map abs . uncurryL (zipWith (-)) . map sort . transpose . map (map read . words) . lines
