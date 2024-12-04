@@ -10,6 +10,7 @@ module AoC.Grid3D
   , coords
   , coordsG
   , drawCoords
+  , drawGrid
   , fromCoords
   , go
   , inGrid
@@ -17,9 +18,13 @@ module AoC.Grid3D
   , maxCoord
   , neg
   , surround
+  , ungrid
   ) where
 
+import Data.List (transpose)
+
 import AoC.Util (between)
+import qualified AoC.Trace as T (showGrids)
 
 data Axis = X | Y | Z
   deriving (Show, Eq)
@@ -38,6 +43,13 @@ neg :: Num a => Coord a -> Coord a
 neg (a, b, c) = (-a, -b, -c)
 
 data Grid a = Grid [[[a]]]
+
+ungrid :: Grid a -> [[[a]]]
+ungrid (Grid a) = a
+
+-- prints grid slice by slice, z axis going up, every slice being a coordinate on the y axis
+drawGrid :: Grid Char -> String
+drawGrid (Grid g) = T.showGrids $ transpose $ reverse g
 
 (!) :: Integral b => Grid a -> Coord b -> a
 (!) (Grid g) (x, y, z) = ((g !! fromIntegral z) !! fromIntegral y) !! fromIntegral x

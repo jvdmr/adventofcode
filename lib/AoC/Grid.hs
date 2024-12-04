@@ -31,6 +31,7 @@ module AoC.Grid
 
 import AoC.Bfs (bfs)
 import AoC.Util (between)
+import qualified AoC.Trace as T (showGrid)
 
 data Axis = X | Y | Z
   deriving (Show, Eq)
@@ -54,7 +55,7 @@ ungrid :: Grid a -> [[a]]
 ungrid (Grid a) = a
 
 drawGrid :: Grid Char -> String
-drawGrid (Grid g) = concat $ map ((++ "\n") . show) g
+drawGrid (Grid g) = T.showGrid g
 
 instance (Show a, Eq a) => Show (Grid a) where
   show (Grid g) = concat $ map ((++ "\n") . concat . map show) g

@@ -3,9 +3,18 @@ module AoC.Trace
   ( idtrace
   , ftrace
   , rtrace
+  , showGrid
+  , showGrids
   ) where
 
+import Data.List (intercalate, transpose)
 import Debug.Trace (trace)
+
+showGrid :: [[Char]] -> String
+showGrid g = intercalate "\n" g
+
+showGrids :: [[[Char]]] -> String
+showGrids gs = intercalate "\n" [intercalate "  " z | z <- transpose gs]
 
 idtrace :: (Show a) => a -> a
 idtrace x = trace (show x) x
