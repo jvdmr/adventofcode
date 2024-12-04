@@ -9,11 +9,11 @@ module AoC.Grid3D
   , cget
   , coords
   , coordsG
-  , drawCoords
   , drawGrid
   , fromCoords
   , go
   , inGrid
+  , insertAt
   , mapG
   , maxCoord
   , neg
@@ -24,7 +24,7 @@ module AoC.Grid3D
 import Data.List (transpose)
 
 import AoC.Util (between)
-import qualified AoC.Trace as T (showGrids)
+import qualified AoC.Trace as T (showGrids, showCGrids)
 
 data Axis = X | Y | Z
   deriving (Show, Eq)
@@ -49,7 +49,13 @@ ungrid (Grid a) = a
 
 -- prints grid slice by slice, z axis going up, every slice being a coordinate on the y axis
 drawGrid :: Grid Char -> String
-drawGrid (Grid g) = T.showGrids $ transpose $ reverse g
+drawGrid = T.showCGrids . transpose . reverse . ungrid
+
+instance (Show a) => Show (Grid a) where
+  show = T.showGrids . transpose . reverse . ungrid
+
+instance (Eq a) => Eq (Grid a) where
+  Grid a == Grid b = a == b
 
 (!) :: Integral b => Grid a -> Coord b -> a
 (!) (Grid g) (x, y, z) = ((g !! fromIntegral z) !! fromIntegral y) !! fromIntegral x
@@ -104,8 +110,8 @@ fromCoords cs = Grid [[[(x, y, z) | x <- [minX..maxX]] | y <- [minY..maxY]] | 
         minZ = minimum $ map (\(_, _, z) -> z) cs
         maxZ = maximum $ map (\(_, _, z) -> z) cs
 
-drawCoords :: (Eq b, Ord b, Enum b) => a -> a -> [Coord b] -> Grid a
-drawCoords yes no cs = mapG draw $ fromCoords cs
-  where draw c | elem c cs = yes
-               | otherwise = no
+insertAt :: (Integral b) => Grid a -> a -> [Coord b] -> Grid a
+insertAt g v cs = mapG fv $ coordsG g
+  where fv i | i `elem` cs = v
+             | otherwise = g ! i
 
