@@ -2,9 +2,10 @@
 module AoC2024.Day02
   ( part1
   , part2
+  , test
   ) where
 
-import AoC (Solver)
+import AoC (Solver, Test)
 import AoC.Util (zipTailWith, between, count, skipOne)
 
 check :: [Int] -> Bool
@@ -14,6 +15,9 @@ check diffs@(a:_) = btwn && sgn
 
 safe :: [Int] -> Bool
 safe = check . zipTailWith (-)
+
+test :: Test
+test = show . length . lines
 
 part1 :: Solver
 part1 = show . count safe . map (map read . words) . lines

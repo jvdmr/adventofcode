@@ -27,3 +27,16 @@ cp -r template ${year}
 mv ${year}/* src/
 rmdir ${year}
 
+(
+	cd src
+	cp Main.hs Main${year}.hs
+	grep -- "-- TEMPLATE " Main${year}.hs | while read template
+	do
+		rendered="${template//xxxx/${year}}"
+		rendered="${rendered/-- TEMPLATE /}"
+		sed -e "s/${template}/${rendered}\n${template}/g" Main${year}.hs > Main${year}.hs.sed
+		mv Main${year}.hs.sed Main${year}.hs
+	done
+	mv Main${year}.hs Main.hs
+)
+

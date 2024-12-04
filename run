@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function show_help () {
-  echo "$0 [-h] [-t] [-c] [-i inputfile] <year>/<day> [part]
+  echo "$0 [-h] [-t] [-c] [-i inputfile] src/Year<year>/Day<day> [part]
 
 -h              help (this)
 
@@ -14,6 +14,10 @@ function show_help () {
 -d              Debug (enables profiling etc)
 
 -c              Only compile
+
+[part]          (Optional) Specify which part to run.
+                Options are 1, 2, and occasionally 'test'.
+                Default is running both parts, no test.
   "
 }
 

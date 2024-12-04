@@ -1,8 +1,9 @@
 module AoC2024
   ( days
+  , tests
   ) where
 
-import AoC (Year)
+import AoC (Year, YearTests)
 import AoC2024.Day01 as Day01
 import AoC2024.Day02 as Day02
 import AoC2024.Day03 as Day03
@@ -59,5 +60,35 @@ days =
     , (23, (Day23.part1, Day23.part2))
     , (24, (Day24.part1, Day24.part2))
     , (25, (Day25.part1, Day25.part2))
+    ]
+
+tests :: YearTests
+tests =
+  fromList
+    [ (1, Day01.test)
+    , (2, Day02.test)
+    , (3, Day03.test)
+    , (4, Day04.test)
+    , (5, Day05.test)
+    , (6, Day06.test)
+    , (7, Day07.test)
+    , (8, Day08.test)
+    , (9, Day09.test)
+    , (10, Day10.test)
+    , (11, Day11.test)
+    , (12, Day12.test)
+    , (13, Day13.test)
+    , (14, Day14.test)
+    , (15, Day15.test)
+    , (16, Day16.test)
+    , (17, Day17.test)
+    , (18, Day18.test)
+    , (19, Day19.test)
+    , (20, Day20.test)
+    , (21, Day21.test)
+    , (22, Day22.test)
+    , (23, Day23.test)
+    , (24, Day24.test)
+    , (25, Day25.test)
     ]
 
