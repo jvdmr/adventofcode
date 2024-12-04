@@ -8,7 +8,6 @@ import Data.List.Split (splitOn)
 
 import AoC (Solver)
 import AoC.Util (between)
-import AoC.Grid3D
 
 parseCoord :: String -> (Double, Double, Double)
 parseCoord s = read $ "(" ++ s ++ ")"

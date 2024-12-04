@@ -36,7 +36,7 @@ xmas c = any (== "MMASS") $ map (cutx . ($ c)) [df, map reverse . df, df . map r
 
 test :: Test
 test = out . filter xmas . chunks 3 3 . lines
-  where out cs = "\n" ++ (showGrids $ take 10 cs) ++ "\nTotal chunks: " ++ show (length cs)
+  where out cs = (showCGrids $ take 10 cs) ++ "Total chunks: " ++ show (length cs)
 
 part2 :: Solver
 part2 = show . length . filter xmas . chunks 3 3 . lines
