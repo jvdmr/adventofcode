@@ -15,6 +15,7 @@ module AoC.Util
   , iterateUntilIdempotent 
   , longerThan
   , none
+  , pair
   , pascal
   , skipOne
   , strings
@@ -117,4 +118,7 @@ cartesianInf = cartesianInfWith (,)
 
 uncurryL :: (a -> a -> b) -> [a] -> b
 uncurryL f (a:b:_) = f a b
+
+pair :: [a] -> (a, a)
+pair [a, b] = (a, b)
 
