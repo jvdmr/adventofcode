@@ -84,6 +84,19 @@ disintegratables settled = filter (flip notElem lb) settled
 part1 :: Solver
 part1 = show . length . disintegratables . settle . map expand . iblocks . lines
 
+supportedBy :: [Block] -> [Block] -> [Block]
+supportedBy settled collapsed = filter (flip andF [(/= []), all (flip elem collapsed)] . supports) settled
+
+collapse :: [Block] -> [Block] -> [Block]
+collapse settled collapsed | sb == [] = collapsed
+                           | otherwise = collapse settled' (collapsed ++ sb)
+  where settled' = filter (flip notElem collapsed) settled
+        sb = supportedBy settled' collapsed
+
+rubble :: [Block] -> [Block]
+rubble settled = concat $ map (tail . rtrace (collapse settled) . (:[])) lb
+  where lb = loadbearing settled
+
 part2 :: Solver
-part2 = show . length . lines
+part2 = show . length . rubble . settle . map expand . iblocks . lines
 
