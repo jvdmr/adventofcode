@@ -18,6 +18,7 @@ module AoC.Grid
   , go
   , inGrid
   , inorout
+  , insertAt
   , inside
   , mapG
   , maxCoord
@@ -147,4 +148,9 @@ inside :: (Ord a, Eq a, Num a, Enum a, Integral a) => [Coord a] -> [Coord a]
 inside l = l ++ (filter ((== I) . (g !)) $ coords g)
   where outC = outside l
         g = drawCoords O I outC
+
+insertAt :: (Integral b) => Grid a -> a -> [Coord b] -> Grid a
+insertAt g v cs = mapG fv $ coordsG g
+  where fv i | i `elem` cs = v
+             | otherwise = g ! i
 

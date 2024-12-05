@@ -11,8 +11,10 @@ module AoC.Util
   , countableZPairs
   , equating
   , groupOn
+  , head'
   , hexToDec 
   , iterateUntilIdempotent 
+  , last'
   , longerThan
   , none
   , pair
@@ -35,6 +37,14 @@ uniq [] = []
 uniq [a] = [a]
 uniq (a:b:rst) | a == b = uniq (b:rst)
                | otherwise = a:uniq (b:rst)
+
+head' :: [[a]] -> [a]
+head' [] = []
+head' a = head a
+
+last' :: [[a]] -> [a]
+last' [] = []
+last' a = last a
 
 equating :: (Eq b) => (a -> b) -> a -> a -> Bool
 equating f a b = f a == f b
