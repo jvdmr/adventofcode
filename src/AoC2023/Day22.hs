@@ -9,91 +9,80 @@ import Data.List.Split (splitOn)
 import Data.Ord (comparing)
 
 import AoC (Solver)
-import AoC.Util (strings, andF)
-import AoC.Grid3D
+import AoC.Util (strings, equating, last', andF)
+import AoC.Grid (Grid, Coord, insertAt, (!), cget, Axis(..), fromCoords, mapG)
 import AoC.Trace
 
 type Range = (Coord Int, Coord Int)
 
 expandRange :: Range -> [Coord Int]
-expandRange ((x1, y1, z1), (x2, y2, z2)) = [(x, y, z - 1) | x <- [min x1 x2..max x1 x2], y <- [min y1 y2..max y1 y2], z <- [min z1 z2..max z1 z2]]
+expandRange ((x1, y1), (x2, y2)) = [(x, y) | x <- [min x1 x2..max x1 x2], y <- [min y1 y2..max y1 y2]]
 
 type Name = String
-type Block = (Name, Range)
-type Blocks = [Block]
+type IBlock = (Name, ((Int, Int, Int), (Int, Int, Int)))
+type IBlocks = [IBlock]
 
-block :: Name -> String -> Block
-block name s = (name, (a, b))
+iblock :: Name -> String -> IBlock
+iblock n s = (n, (a, b))
   where [a, b] = map (read . p) $ splitOn "~" s
         p str = "(" ++ str ++ ")"
 
-blocks :: [String] -> Blocks
-blocks = zipWith block strings
+iblocks :: [String] -> IBlocks
+iblocks = zipWith iblock strings
 
-type ExpandedBlock = (Name, [Coord Int])
-type ExpandedBlocks = [ExpandedBlock]
+data Block = Block { name :: Name, height :: Int, z :: Int, coords :: [Coord Int], supports :: [Block] }
+           | Space
+           deriving (Eq)
 
-bname :: ExpandedBlock -> Name
-bname = fst
+setSupports :: Block -> [Block] -> Block
+setSupports (Block n h _ cs _) [] = Block n h 1 cs []
+setSupports (Block n h _ cs _) s = Block n h nz cs s
+  where nz = top $ head s
 
-bcoords :: ExpandedBlock -> [Coord Int]
-bcoords = snd
+top :: Block -> Int
+top block = z block + height block
 
-expand :: Block -> ExpandedBlock
-expand (name, r) = (name, expandRange r)
+block :: Block -> Bool
+block Space = False
+block _ = True
 
-getz :: ExpandedBlock -> Int
-getz (_, cs) = minimum $ map (cget Z) cs
+instance Ord Block where
+  compare = comparing z
 
-sortEB :: ExpandedBlocks -> ExpandedBlocks
-sortEB = sortBy $ comparing getz
+instance Show Block where
+  show block@(Block _ _ _ _ _) = "(" ++ name block ++ ", " ++ show (height block) ++ ", " ++ show (z block) ++ ", " ++ show (head $ coords block) ++ "~" ++ show (last $ coords block) ++ ")"
+  show space = "Space"
 
-dropBlock :: ExpandedBlock -> ExpandedBlock
-dropBlock (n, c) = (n, map (go D) c)
+expand :: IBlock -> Block
+expand (n, ((x1, y1, z1), (x2, y2, z2))) = Block n h lz (expandRange r') []
+  where lz = min z1 z2
+        h = 1 + (abs $ z1 - z2)
+        r' = ((x1, y1), (x2, y2))
 
-fits :: Grid Name -> ExpandedBlock -> Bool
-fits g (_, c) = all (flip andF [inGrid g, (== "") . (g !)]) c
+fall :: (Grid Block, [Block]) -> [Block] -> [Block]
+fall (_, rbs) [] = reverse rbs
+fall (g, rbs) (b:rst) = fall (g', b':rbs) rst
+  where g' = insertAt g b' cs
+        b' = setSupports b bs
+        bs = last' $ groupBy (equating top) $ sortBy (comparing top) $ nub $ filter block $ map ((!) g) cs
+        cs = coords b
 
-fall :: (Grid Name, ExpandedBlocks) -> ExpandedBlocks -> (Grid Name, ExpandedBlocks)
--- fall (g, rbs) [] = (g, btrace $ reverse rbs)
-fall (g, rbs) [] = (g, reverse rbs)
-fall (g, rbs) (b:rst) | fits g b' = fall (g, rbs) (b':rst)
-                      | otherwise = fall (insertAt g (bname b) (bcoords b), b:rbs) rst
-                       where b' = dropBlock b
-
-settle :: ExpandedBlocks -> (Grid Name, ExpandedBlocks)
-settle bs = fall (emptyGrid, []) $ sortEB bs
+settle :: [Block] -> [Block]
+settle bs = fall (emptyGrid, []) $ sort bs
   where mx = maximum $ map (cget X) cs
         my = maximum $ map (cget Y) cs
-        mz = maximum $ map (cget Z) cs
-        cs = concat $ map snd bs
-        emptyGrid = mapG (\_ -> "") $ fromCoords [(0, 0, 0), (mx, my, mz)]
+        cs = concat $ map coords bs
+        emptyGrid = mapG (\_ -> Space) $ fromCoords [(0, 0), (mx, my)]
 
-disintegratable :: Grid Name -> ExpandedBlocks -> ExpandedBlock -> Bool
--- disintegratable g bs b = (g'', bs') == rftrace show sf (fall (g', [])) bs'
-disintegratable g bs b = (g'', bs') == fall (g', []) bs'
-  where bs' = filter (/= b) bs
-        g' = mapG (\_ -> "") g
-        g'' = mapG noB g
-        noB c | c == bname b = ""
-              | otherwise = c
---         sf (sg, seb) = "(" ++ drawGrid (mapG head' sg) ++ ", " ++ show seb ++ ")"
---         head' l | length l == 0 = ' '
---                 | otherwise = head l
+loadbearing :: [Block] -> [Block]
+loadbearing settled = nub $ concat $ filter ((== 1) . length) $ map supports settled
 
-disintegratables :: ExpandedBlocks -> ExpandedBlocks
-disintegratables bs = filter (disintegratable g settled) settled
-  where (g, settled) = settle bs
-
-showBlock :: ExpandedBlock -> String
-showBlock (n, cs) = "(" ++ n ++ ", " ++ show (head cs) ++ "~" ++ show (last cs) ++ ")"
-
-btrace :: ExpandedBlocks -> ExpandedBlocks
-btrace = ftrace (intercalate "\n" . map showBlock)
+disintegratables :: [Block] -> [Block]
+disintegratables settled = filter (flip notElem lb) settled
+  where lb = loadbearing settled
 
 part1 :: Solver
-part1 = show . length . btrace . disintegratables . map expand . blocks . lines
--- part1 = show . length . disintegratables . map expand . blocks . lines
+part1 = show . length . disintegratables . settle . map expand . iblocks . lines
 
 part2 :: Solver
 part2 = show . length . lines
