@@ -14,7 +14,7 @@ module AoC.Grid
   , coords
   , coordsG
   , countIOO
-  , counterClockwise
+  , counterclockwise
   , drawCoords
   , drawGrid
   , fromCoords
@@ -95,7 +95,13 @@ surround :: (Eq a, Num a) => Coord a -> [Coord a]
 surround (x, y) = [(xn, yn) | xn <- map (+x) [-1, 0, 1], yn <- map (+y) [-1, 0, 1], xn /= x || yn /= y]
 
 data Direction = U | R | D | L
-  deriving (Show, Eq, Read, Enum)
+  deriving (Eq, Read, Enum)
+
+instance Show Direction where
+  show U = "^"
+  show R = ">"
+  show D = "v"
+  show L = "<"
 
 parseDirection :: Char -> Direction
 parseDirection '^' = U
@@ -107,9 +113,9 @@ clockwise :: Direction -> Direction
 clockwise L = U
 clockwise d = succ d
 
-counterClockwise :: Direction -> Direction
-counterClockwise U = L
-counterClockwise d = pred d
+counterclockwise :: Direction -> Direction
+counterclockwise U = L
+counterclockwise d = pred d
 
 backwards :: Direction -> Direction
 backwards = clockwise . clockwise
