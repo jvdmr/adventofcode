@@ -17,10 +17,12 @@ module AoC.Util
   , last'
   , longerThan
   , none
+  , orF
   , pair
   , pascal
   , skipOne
   , strings
+  , takeUntil
   , uncurryL
   , uniq
   , unjust
@@ -66,6 +68,9 @@ none f as = all (not . f) as
 
 andF :: a -> [a -> Bool] -> Bool
 andF x = and . map ($ x)
+
+orF :: a -> [a -> Bool] -> Bool
+orF x = or . map ($ x)
 
 strings :: [String]
 strings = a ++ [f a' | f <- map (++) strings, a' <- a]
@@ -131,4 +136,9 @@ uncurryL f (a:b:_) = f a b
 
 pair :: [a] -> (a, a)
 pair [a, b] = (a, b)
+
+-- takeUntil is takeWhile plus one extra element
+takeUntil :: (a -> Bool) -> [a] -> [a]
+takeUntil f (a:as) | f a = a:takeUntil f as
+                   | otherwise = [a]
 

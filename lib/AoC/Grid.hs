@@ -7,11 +7,14 @@ module AoC.Grid
   , Grid (..)
   , InOrOut (..)
   , add
+  , backwards
   , border
   , cget
+  , clockwise
   , coords
   , coordsG
   , countIOO
+  , counterClockwise
   , drawCoords
   , drawGrid
   , fromCoords
@@ -25,6 +28,7 @@ module AoC.Grid
   , neg
   , noborder
   , outside
+  , parseDirection
   , size
   , surround
   , ungrid
@@ -90,8 +94,25 @@ inGrid g (x, y) = between 0 mx x && between 0 my y
 surround :: (Eq a, Num a) => Coord a -> [Coord a]
 surround (x, y) = [(xn, yn) | xn <- map (+x) [-1, 0, 1], yn <- map (+y) [-1, 0, 1], xn /= x || yn /= y]
 
-data Direction = D | R | U | L
-  deriving (Show, Eq, Read)
+data Direction = U | R | D | L
+  deriving (Show, Eq, Read, Enum)
+
+parseDirection :: Char -> Direction
+parseDirection '^' = U
+parseDirection '>' = R
+parseDirection 'v' = D
+parseDirection '<' = L
+
+clockwise :: Direction -> Direction
+clockwise L = U
+clockwise d = succ d
+
+counterClockwise :: Direction -> Direction
+counterClockwise U = L
+counterClockwise d = pred d
+
+backwards :: Direction -> Direction
+backwards = clockwise . clockwise
 
 go :: Num a => Direction -> Coord a -> Coord a
 go D c = add c (0, 1)
