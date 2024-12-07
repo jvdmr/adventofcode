@@ -21,6 +21,7 @@ module AoC.Util
   , pair
   , pascal
   , skipOne
+  , stopLoop
   , strings
   , takeUntil
   , uncurryL
@@ -141,4 +142,8 @@ pair [a, b] = (a, b)
 takeUntil :: (a -> Bool) -> [a] -> [a]
 takeUntil f (a:as) | f a = a:takeUntil f as
                    | otherwise = [a]
+
+stopLoop :: (Eq a) => [a] -> [a]
+stopLoop [] = []
+stopLoop (a:as) = a:takeWhile (/= a) as
 
