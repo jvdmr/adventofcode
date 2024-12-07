@@ -21,7 +21,9 @@ module AoC.Grid
   , go
   , inGrid
   , inorout
+  , insert
   , insertAt
+  , insertAtRange
   , inside
   , mapG
   , maxCoord
@@ -95,7 +97,7 @@ surround :: (Eq a, Num a) => Coord a -> [Coord a]
 surround (x, y) = [(xn, yn) | xn <- map (+x) [-1, 0, 1], yn <- map (+y) [-1, 0, 1], xn /= x || yn /= y]
 
 data Direction = U | R | D | L
-  deriving (Eq, Read, Enum)
+  deriving (Eq, Ord, Read, Enum)
 
 instance Show Direction where
   show U = "^"
@@ -176,8 +178,19 @@ inside l = l ++ (filter ((== I) . (g !)) $ coords g)
   where outC = outside l
         g = drawCoords O I outC
 
-insertAt :: (Integral b) => Grid a -> a -> [Coord b] -> Grid a
-insertAt g v cs = mapG fv $ coordsG g
-  where fv i | i `elem` cs = v
-             | otherwise = g ! i
+insert :: Grid a -> a -> Coord Int -> Grid a
+insert g v c = insertAtRange g v c c
+
+insertAt :: Grid a -> a -> [Coord Int] -> Grid a
+insertAt g v cs = foldl fv g cs
+  where fv gr c = insertAtRange gr v c c
+
+insertAtRange :: Grid a -> a -> Coord Int -> Coord Int -> Grid a
+insertAtRange (Grid g) v (xa, ya) (xb, yb) = Grid $ heady ++ [headx xs ++ middlex ++ lastx xs | xs <- middley] ++ lasty
+  where heady = take ya g
+        middley = drop ya $ take (yb + 1) g
+        lasty = drop (yb + 1) g
+        headx xs = take xa xs
+        middlex = drop xa $ take (xb + 1) $ repeat v
+        lastx xs = drop (xb + 1) xs
 
