@@ -1,6 +1,7 @@
 {-# LANGUAGE FlexibleInstances, TypeSynonymInstances, FlexibleContexts #-}
 module AoC.Trace
-  ( idtrace
+  ( trace
+  , idtrace
   , ftrace
   , rtrace
   , rftrace
