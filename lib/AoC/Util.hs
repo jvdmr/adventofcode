@@ -20,6 +20,7 @@ module AoC.Util
   , orF
   , pair
   , pascal
+  , readChar
   , skipOne
   , stopLoop
   , strings
@@ -146,4 +147,7 @@ takeUntil f (a:as) | f a = a:takeUntil f as
 stopLoop :: (Eq a) => [a] -> [a]
 stopLoop [] = []
 stopLoop (a:as) = a:takeWhile (/= a) as
+
+readChar :: (Read a) => Char -> a
+readChar c = read [c]
 
