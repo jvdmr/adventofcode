@@ -21,7 +21,7 @@ antennas g = map gatherGroup $ groupBy (equating fst) $ sort [(g ! c, c) | c <- 
 antinode :: Grid a -> Coord Int -> Coord Int -> [Coord Int]
 antinode g a b | add a d == b = filter (inGrid g) $ [add b d, add a (neg d)]
                | otherwise = filter (inGrid g) $ [add a d, add b (neg d)]
-               where d = add a (neg b)
+  where d = add a (neg b)
 
 antinodes :: Grid a -> (Grid a -> Coord Int -> Coord Int -> [Coord Int]) -> (Char, [Coord Int]) -> [Coord Int]
 antinodes _ _ (_, [_]) = []
