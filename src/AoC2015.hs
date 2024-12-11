@@ -3,31 +3,31 @@ module AoC2015
   ) where
 
 import AoC (Year)
-import AoC2015.Day01 as Day01
-import AoC2015.Day02 as Day02
-import AoC2015.Day03 as Day03
-import AoC2015.Day04 as Day04
-import AoC2015.Day05 as Day05
-import AoC2015.Day06 as Day06
-import AoC2015.Day07 as Day07
-import AoC2015.Day08 as Day08
-import AoC2015.Day09 as Day09
-import AoC2015.Day10 as Day10
-import AoC2015.Day11 as Day11
-import AoC2015.Day12 as Day12
-import AoC2015.Day13 as Day13
-import AoC2015.Day14 as Day14
-import AoC2015.Day15 as Day15
-import AoC2015.Day16 as Day16
-import AoC2015.Day17 as Day17
-import AoC2015.Day18 as Day18
-import AoC2015.Day19 as Day19
-import AoC2015.Day20 as Day20
-import AoC2015.Day21 as Day21
-import AoC2015.Day22 as Day22
-import AoC2015.Day23 as Day23
-import AoC2015.Day24 as Day24
-import AoC2015.Day25 as Day25
+import qualified AoC2015.Day01 as Day01
+import qualified AoC2015.Day02 as Day02
+import qualified AoC2015.Day03 as Day03
+import qualified AoC2015.Day04 as Day04
+import qualified AoC2015.Day05 as Day05
+import qualified AoC2015.Day06 as Day06
+import qualified AoC2015.Day07 as Day07
+import qualified AoC2015.Day08 as Day08
+import qualified AoC2015.Day09 as Day09
+import qualified AoC2015.Day10 as Day10
+import qualified AoC2015.Day11 as Day11
+import qualified AoC2015.Day12 as Day12
+import qualified AoC2015.Day13 as Day13
+import qualified AoC2015.Day14 as Day14
+import qualified AoC2015.Day15 as Day15
+import qualified AoC2015.Day16 as Day16
+import qualified AoC2015.Day17 as Day17
+import qualified AoC2015.Day18 as Day18
+import qualified AoC2015.Day19 as Day19
+import qualified AoC2015.Day20 as Day20
+import qualified AoC2015.Day21 as Day21
+import qualified AoC2015.Day22 as Day22
+import qualified AoC2015.Day23 as Day23
+import qualified AoC2015.Day24 as Day24
+import qualified AoC2015.Day25 as Day25
 
 import Data.Map (fromList)
 

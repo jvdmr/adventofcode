@@ -2,10 +2,10 @@
 module AoC2024.Day06
   ( part1
   , part2
-  , test
+  , tests
   ) where
 
-import AoC (Solver, Test)
+import AoC (Solver, Tests)
 import AoC.Util (andF, count)
 import AoC.Grid
 -- import AoC.Trace
@@ -54,8 +54,8 @@ isVisited _ = False
 visited :: (Lab, Guard) -> Int
 visited (Grid g, _) = count isVisited $ concat g
 
-test :: Test
-test = show . parseInput . lines
+tests :: Tests
+tests = [show . parseInput . lines]
 
 part1 :: Solver
 part1 = show . visited . move . parseInput . lines

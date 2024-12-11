@@ -3,7 +3,7 @@ module AoC
   ( Solver (..)
   , Day (..)
   , Year (..)
-  , Test (..)
+  , Tests (..)
   , YearTests (..)
   ) where
 
@@ -12,6 +12,6 @@ import Data.Map (Map)
 type Solver = (String -> String)
 type Day = (Solver, Solver)
 type Year = Map Int Day
-type Test = Solver
-type YearTests = Map Int Test
+type Tests = [Solver]
+type YearTests = Map Int Tests
 

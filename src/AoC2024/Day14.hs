@@ -2,15 +2,15 @@
 module AoC2024.Day14
   ( part1
   , part2
-  , test
+  , tests
   ) where
 
 -- import Data.List
 
-import AoC (Solver, Test)
+import AoC (Solver, Tests)
 
-test :: Test
-test = show . length . lines
+tests :: Tests
+tests = [show . length . lines]
 
 part1 :: Solver
 part1 = ("Not yet solved! " ++) . show . length . lines

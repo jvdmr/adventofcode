@@ -2,16 +2,16 @@
 module AoC2024.Day01
   ( part1
   , part2
-  , test
+  , tests
   ) where
 
 import Data.List (transpose, sort)
 
-import AoC (Solver, Test)
+import AoC (Solver, Tests)
 import AoC.Util (uncurryL)
 
-test :: Test
-test = show . length . lines
+tests :: Tests
+tests = [show . length . lines]
 
 part1 :: Solver
 part1 = show . sum . map abs . uncurryL (zipWith (-)) . map sort . transpose . map (map read . words) . lines

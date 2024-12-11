@@ -2,12 +2,12 @@
 module AoC2024.Day09
   ( part1
   , part2
-  , test
+  , tests
   ) where
 
 import Data.Ord (comparing)
 
-import AoC (Solver, Test)
+import AoC (Solver, Tests)
 
 data DiskData = File { fid :: Int, dl :: Int }
               | Space { fid :: Int, dl :: Int }
@@ -48,8 +48,8 @@ expand f = take (dl f) $ repeat (fid f)
 checksum :: [DiskData] -> Int
 checksum = sum . zipWith (*) [0..] . concat . map expand
 
-test :: Test
-test = show . disk 0 . map (read . (:[])) . head . lines
+tests :: Tests
+tests = [show . disk 0 . map (read . (:[])) . head . lines]
 
 part1 :: Solver
 part1 = show . checksum . defrag . disk 0 . map (read . (:[])) . head . lines

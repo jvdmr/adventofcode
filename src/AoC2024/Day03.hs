@@ -2,10 +2,10 @@
 module AoC2024.Day03
   ( part1
   , part2
-  , test
+  , tests
   ) where
 
-import AoC (Solver, Test)
+import AoC (Solver, Tests)
 import AoC.Parsec
 
 data Instruction = Mul Int Int
@@ -41,8 +41,8 @@ calc :: Instruction -> Int
 calc (Mul x y) = x * y
 calc _ = 0
 
-test :: Test
-test = show . length . lines
+tests :: Tests
+tests = [show . length . lines]
 
 part1 :: Solver
 part1 = show . sum . map calc . right . parse (many instruction) "aoc input"

@@ -2,7 +2,7 @@
 
 module Main where
 
-import AoC (Year, YearTests)
+import AoC (Year, YearTests, Tests)
 
 import qualified AoC2015
 import qualified AoC2016
@@ -32,12 +32,16 @@ years =
     -- TEMPLATE , (xxxx, AoCxxxx.days)
     ]
 
-tests :: Map Int YearTests
-tests =
+yeartests :: Map Int YearTests
+yeartests =
   fromList
     [ (2024, AoC2024.tests)
     -- TEMPLATE , (xxxx, AoCxxxx.tests)
     ]
+
+runtests :: Tests -> String -> String
+runtests tests input = concat $ map runtest $ zip [1..] tests
+  where runtest (i, t) = "\n\nTest " ++ show i ++ ":\n" ++ t input
 
 main :: IO ()
 main = do
@@ -51,7 +55,7 @@ main = do
   let theYear = read $ yearstr args
       theDay = read $ daystr args
       (solve1, solve2) = years ! theYear ! theDay
-      test = tests ! theYear ! theDay
+      tests = yeartests ! theYear ! theDay
   input <- getContents
   case part args of
        "1" -> do
@@ -59,7 +63,7 @@ main = do
        "2" -> do
          putStrLn $ "Part 2: " ++ solve2 input
        "test" -> do
-         putStrLn $ "Testing: " ++ test input
+         putStrLn $ "Testing: " ++ runtests tests input
        _ -> do
          putStrLn $ "ERROR: Unknown part '" ++ (show $ part args) ++ "'!"
 

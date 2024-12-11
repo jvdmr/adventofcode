@@ -2,12 +2,12 @@
 module AoC2024.Day10
   ( part1
   , part2
-  , test
+  , tests
   ) where
 
 import Data.List (nub)
 
-import AoC (Solver, Test)
+import AoC (Solver, Tests)
 import AoC.Util (readChar)
 import AoC.Grid
 import AoC.Bfs (bfs)
@@ -35,8 +35,8 @@ rating g c = length $ trails g c
 score :: HikeMap -> Step -> Int
 score g c = length $ nub $ map head $ trails g c
 
-test :: Test
-test = show . length . lines
+tests :: Tests
+tests = [show . length . lines]
 
 part1 :: Solver
 part1 = show . sum . scores . mapG readChar . Grid . lines

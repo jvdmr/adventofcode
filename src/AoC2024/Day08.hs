@@ -2,12 +2,12 @@
 module AoC2024.Day08
   ( part1
   , part2
-  , test
+  , tests
   ) where
 
 import Data.List (groupBy, sort, nub)
 
-import AoC (Solver, Test)
+import AoC (Solver, Tests)
 import AoC.Util (equating)
 import AoC.Grid
 
@@ -27,8 +27,8 @@ antinodes :: Grid a -> (Grid a -> Coord Int -> Coord Int -> [Coord Int]) -> (Cha
 antinodes _ _ (_, [_]) = []
 antinodes g f (n, (c:cs)) = (concat $ map (f g c) cs) ++ antinodes g f (n, cs)
 
-test :: Test
-test = show . length . lines
+tests :: Tests
+tests = [show . length . lines]
 
 part1 :: Solver
 part1 = show . length . ans . Grid . lines

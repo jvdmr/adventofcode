@@ -2,13 +2,13 @@
 module AoC2024.Day05
   ( part1
   , part2
-  , test
+  , tests
   ) where
 
 import Data.List.Split (splitOn)
 import Data.List (sortBy)
 
-import AoC (Solver, Test)
+import AoC (Solver, Tests)
 import AoC.Util (pair)
 
 type Page = Int
@@ -35,8 +35,8 @@ checkUpdates (rules, updates) = map fst $ filter (uncurry (==)) $ zip updates $ 
 middle :: Updates -> Int
 middle lst = lst !! div (length lst) 2
 
-test :: Test
-test = show . length . lines
+tests :: Tests
+tests = [show . length . lines]
 
 part1 :: Solver
 part1 = show . sum . map middle . checkUpdates . parseInput . lines

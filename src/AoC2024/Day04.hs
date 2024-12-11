@@ -2,13 +2,13 @@
 module AoC2024.Day04
   ( part1
   , part2
-  , test
+  , tests
   ) where
 
 import Data.List (transpose)
 import Data.List.Split (splitOn)
 
-import AoC (Solver, Test)
+import AoC (Solver, Tests)
 import AoC.Trace
 
 diag :: a -> [[a]] -> [[a]]
@@ -34,8 +34,8 @@ xmas c = any (== "MMASS") $ map (cutx . ($ c)) [df, map reverse . df, df . map r
   where cutx [a, _, b, _, c] = concat [a, b, c]
         df = map (filter (/= ' ')) . diag ' '
 
-test :: Test
-test = out . filter xmas . chunks 3 3 . lines
+tests :: Tests
+tests = [out . filter xmas . chunks 3 3 . lines]
   where out cs = (showCGrids $ take 10 cs) ++ "Total chunks: " ++ show (length cs)
 
 part2 :: Solver

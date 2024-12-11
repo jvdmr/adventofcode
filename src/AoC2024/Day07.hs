@@ -2,12 +2,12 @@
 module AoC2024.Day07
   ( part1
   , part2
-  , test
+  , tests
   ) where
 
 import Data.List.Split (splitOn)
 
-import AoC (Solver, Test)
+import AoC (Solver, Tests)
 import AoC.Util (orF)
 
 parseInput :: String -> [Int]
@@ -22,8 +22,8 @@ match ops result (a:b:vs) = orF (a, b) $ map ((.) (match ops result)) $ map ((.)
 possiblyTrue :: [Operator] -> [Int] -> Bool
 possiblyTrue ops (result:values) = match ops result values
 
-test :: Test
-test = show . length . lines
+tests :: Tests
+tests = [show . length . lines]
 
 part1 :: Solver
 part1 = show . sum . map head . filter (possiblyTrue [(+), (*)]) . map parseInput . lines
