@@ -25,6 +25,14 @@ tests = [show . Grid . lines]
 part1 :: Solver
 part1 = show . sum . map fencePrice . regions . Grid . lines
 
+bulkFencePrice :: [(Coord Int, Int)] -> Int
+bulkFencePrice cs = length cs * length fence
+  where cs' = map fst cs
+        nns = concat $ map nonneighbors cs'
+        nonneighbors c = map (:[c]) $ filter (flip notElem cs') $ map (flip go c) [U, R, D, L]
+        fence = map (map fst) $ bfsDisconnected (fenceNeighbors nns) nns
+        fenceNeighbors nns c = filter (flip elem nns) [map (go d) c | d <- [U, R, D, L]]
+
 part2 :: Solver
-part2 = ("Not yet solved! " ++) . show . length . lines
+part2 = show . sum . map bulkFencePrice . regions . Grid . lines
 
