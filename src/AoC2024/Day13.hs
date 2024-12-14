@@ -31,7 +31,7 @@ col n = flip (!!) n . toLists . transpose
 
 tokens :: ClawMachine -> Integer
 tokens css = 3 * fr a + fr b
-  where result@[a, b] = col 2 $ fromRight (zero 2 3) $ idtrace $ rref $ transpose $ fromLists css
+  where result@[a, b] = col 2 $ fromRight (zero 2 3) $ rref $ transpose $ fromLists css
         fr = fromRight 0 . toInt
 
 tests :: Tests
