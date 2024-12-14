@@ -30,6 +30,7 @@ module AoC.Util
   , toInt
   , uncurryL
   , uniq
+  , unpair
   , zipTail
   , zipTailWith
   ) where
@@ -136,9 +137,6 @@ cartesianInf = cartesianInfWith (,)
 uncurryL :: (a -> a -> b) -> [a] -> b
 uncurryL f (a:b:_) = f a b
 
-pair :: [a] -> (a, a)
-pair [a, b] = (a, b)
-
 -- takeUntil is takeWhile plus one extra element
 takeUntil :: (a -> Bool) -> [a] -> [a]
 takeUntil f (a:as) | f a = a:takeUntil f as
@@ -157,9 +155,17 @@ toInt a | n `mod` d == 0 = Right $ n `div` d
   where n = numerator a
         d = denominator a
 
-combine :: (a -> b -> c) -> Coord a -> Coord b -> Coord c
+type Pair a = (a, a)
+
+pair :: [a] -> Pair a
+pair [a, b] = (a, b)
+
+unpair :: (a -> b) -> Pair a -> Pair b
+unpair f (a, b) = (f a, f b)
+
+combine :: (a -> b -> c) -> Pair a -> Pair b -> Pair c
 combine f (a, b) (c, d) = (f a c, f b d)
 
-combine3 :: (a -> b -> c -> d) -> Coord a -> Coord b -> Coord c -> Coord d
+combine3 :: (a -> b -> c -> d) -> Pair a -> Pair b -> Pair c -> Pair d
 combine3 f a = combine ($) . combine f a
 
