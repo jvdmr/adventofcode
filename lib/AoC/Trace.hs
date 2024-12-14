@@ -1,10 +1,12 @@
 {-# LANGUAGE FlexibleInstances, TypeSynonymInstances, FlexibleContexts #-}
 module AoC.Trace
   ( trace
-  , idtrace
   , ftrace
-  , rtrace
+  , idtrace
+  , sftrace
   , rftrace
+  , srftrace
+  , rtrace
   , showCGrid
   , showCGrids
   , showGrid
@@ -26,14 +28,20 @@ showGrids gs = showCGrid [intercalate "    " $ map show z | z <- transpose gs]
 showCGrids :: [[[Char]]] -> String
 showCGrids gs = showCGrid [intercalate "    " z | z <- transpose gs]
 
-idtrace :: (Show a) => a -> a
-idtrace x = trace (show x) x
-
 ftrace :: (a -> String) -> a -> a
 ftrace f x = trace (f x) x
 
+idtrace :: (Show a) => a -> a
+idtrace = ftrace show
+
+sftrace :: Show sa => (a -> sa) -> a -> a
+sftrace f = ftrace $ show . f
+
 rftrace :: (a -> String) -> (b -> String) -> (a -> b) -> a -> b
 rftrace showa showb f n = ftrace (\r -> showa n ++ " => " ++ showb r) $ f n
+
+srftrace :: (Show sa, Show sb) => (a -> sa) -> (b -> sb) -> (a -> b) -> a -> b
+srftrace fa fb = rftrace (show . fa) (show . fb)
 
 rtrace :: (Show a, Show b) => (a -> b) -> a -> b
 rtrace f n = rftrace show show f n
