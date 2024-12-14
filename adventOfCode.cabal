@@ -114,4 +114,5 @@ executable aoc
     , cmdargs
     , containers
     , split
+    , matrix
   default-language: Haskell2010
