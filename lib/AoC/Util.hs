@@ -6,6 +6,8 @@ module AoC.Util
   , cartesianInf
   , cartesianInfWith
   , cartesianWith
+  , combine
+  , combine3
   , count
   , countablePairs
   , countableZPairs
@@ -25,15 +27,16 @@ module AoC.Util
   , stopLoop
   , strings
   , takeUntil
+  , toInt
   , uncurryL
   , uniq
-  , unjust
   , zipTail
   , zipTailWith
   ) where
 
 import Data.List (groupBy, inits)
 import Data.Char (digitToInt)
+import Data.Ratio (Ratio, numerator, denominator)
 
 -- uniq is better than nub on sorted lists
 uniq :: (Eq a) => [a] -> [a]
@@ -58,9 +61,6 @@ count pred = length . filter pred
 
 between :: Ord a => a -> a -> a -> Bool
 between a c b = a <= b && b <= c
-
-unjust :: Maybe a -> a
-unjust (Just a) = a
 
 hexToDec :: String -> Int
 hexToDec = sum . zipWith (*) (iterate (* 16) 1) . reverse . map digitToInt
@@ -150,4 +150,16 @@ stopLoop (a:as) = a:takeWhile (/= a) as
 
 readChar :: (Read a) => Char -> a
 readChar c = read [c]
+
+toInt :: Integral a => Ratio a -> Either a a -- Left for rounded result, Right when a is already whole
+toInt a | n `mod` d == 0 = Right $ n `div` d
+        | otherwise = Left $ round $ (fromIntegral n / fromIntegral d)
+  where n = numerator a
+        d = denominator a
+
+combine :: (a -> b -> c) -> Coord a -> Coord b -> Coord c
+combine f (a, b) (c, d) = (f a c, f b d)
+
+combine3 :: (a -> b -> c -> d) -> Coord a -> Coord b -> Coord c -> Coord d
+combine3 f a = combine ($) . combine f a
 

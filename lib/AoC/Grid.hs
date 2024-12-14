@@ -11,6 +11,8 @@ module AoC.Grid
   , border
   , cget
   , clockwise
+  , combine
+  , combine3
   , coords
   , coordsG
   , countIOO
@@ -27,6 +29,7 @@ module AoC.Grid
   , inside
   , mapG
   , maxCoord
+  , multiply
   , neg
   , noborder
   , outside
@@ -37,7 +40,7 @@ module AoC.Grid
   ) where
 
 import AoC.Bfs (bfs)
-import AoC.Util (between)
+import AoC.Util (between, combine, combine3)
 import qualified AoC.Trace as T (showGrid, showCGrid)
 
 data Axis = X | Y | Z
@@ -50,10 +53,13 @@ cget X (x, _) = x
 cget Y (_, y) = y
 
 add :: Num a => Coord a -> Coord a -> Coord a
-add (a, b) (c, d) = (a + c, b + d)
+add = combine (+)
 
 neg :: Num a => Coord a -> Coord a
 neg (a, b) = (-a, -b)
+
+multiply :: Num a => a -> Coord a -> Coord a
+multiply n = combine (*) (n, n)
 
 data Grid a = Grid [[a]]
   deriving (Eq)
