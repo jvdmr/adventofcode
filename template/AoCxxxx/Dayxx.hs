@@ -5,7 +5,8 @@ module AoCxxxx.Dayxx
   , tests
   ) where
 
--- import Data.List
+import Prelude hiding (foldl)
+-- import Data.List (foldl')
 
 import AoC (Solver, Tests)
 
