@@ -10,7 +10,7 @@ import Data.Matrix
 import Data.Either (fromRight)
 
 import AoC (Solver, Tests)
-import AoC.Util (toInt)
+import AoC.Util (toInt, col)
 import AoC.Trace
 
 type Coords = [Rational]
@@ -25,9 +25,6 @@ type ClawMachine = [Coords] -- [button A, button B, prize]
 
 clawmachine :: [String] -> ClawMachine
 clawmachine css = map coords css
-
-col :: Int -> Matrix a -> [a]
-col n = flip (!!) n . toLists . transpose
 
 tokens :: ClawMachine -> Integer
 tokens css = 3 * fr a + fr b

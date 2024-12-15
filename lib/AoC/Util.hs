@@ -1,11 +1,14 @@
 {-# LANGUAGE FlexibleInstances, TypeSynonymInstances, FlexibleContexts #-}
 module AoC.Util
-  ( andF
+  ( Pair (..)
+  , add
+  , andF
   , between
   , cartesian
   , cartesianInf
   , cartesianInfWith
   , cartesianWith
+  , col
   , combine
   , combine3
   , count
@@ -18,16 +21,20 @@ module AoC.Util
   , iterateUntilIdempotent 
   , last'
   , longerThan
+  , multiply
+  , neg
   , none
   , orF
   , pair
   , pascal
+  , primes
   , readChar
   , skipOne
   , stopLoop
   , strings
   , takeUntil
   , toInt
+  , toList
   , uncurryL
   , uniq
   , unpair
@@ -38,6 +45,7 @@ module AoC.Util
 import Data.List (groupBy, inits)
 import Data.Char (digitToInt)
 import Data.Ratio (Ratio, numerator, denominator)
+import Data.Matrix (Matrix, toLists, transpose)
 
 -- uniq is better than nub on sorted lists
 uniq :: (Eq a) => [a] -> [a]
@@ -101,6 +109,10 @@ pascal :: Int -> Int -> Int
 pascal n m = (triangle !! (m - 1)) !! (n - 1)
   where triangle = (repeat 1):map (map sum . inits) triangle
 
+primes :: [Int]
+primes = sieve [2..]
+  where sieve (p:xs) = p:sieve [x | x <- xs, mod x p > 0]
+
 -- combine two finite lists in all possible combinations
 cartesianWith :: (a -> b -> c) -> [a] -> [b] -> [c]
 cartesianWith f a b = [f (a !! i) (b !! j) | i <- [0..x], j <- [0..y]]
@@ -157,6 +169,9 @@ toInt a | n `mod` d == 0 = Right $ n `div` d
 
 type Pair a = (a, a)
 
+toList :: Pair a -> [a]
+toList (a, b) = [a, b]
+
 pair :: [a] -> Pair a
 pair [a, b] = (a, b)
 
@@ -168,4 +183,16 @@ combine f (a, b) (c, d) = (f a c, f b d)
 
 combine3 :: (a -> b -> c -> d) -> Pair a -> Pair b -> Pair c -> Pair d
 combine3 f a = combine ($) . combine f a
+
+add :: Num a => Pair a -> Pair a -> Pair a
+add = combine (+)
+
+neg :: Num a => Pair a -> Pair a
+neg (a, b) = (-a, -b)
+
+multiply :: Num a => a -> Pair a -> Pair a
+multiply n = combine (*) (n, n)
+
+col :: Int -> Matrix a -> [a]
+col n = flip (!!) n . toLists . transpose
 

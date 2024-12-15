@@ -19,6 +19,7 @@ module AoC.Grid
   , counterclockwise
   , drawCoords
   , drawGrid
+  , drawSGrid
   , fromCoords
   , go
   , inGrid
@@ -40,26 +41,17 @@ module AoC.Grid
   ) where
 
 import AoC.Bfs (bfs)
-import AoC.Util (between, combine, combine3)
-import qualified AoC.Trace as T (showGrid, showCGrid)
+import AoC.Util (between, combine, combine3, add, neg, multiply, Pair)
+import qualified AoC.Trace as T (showGrid, showCGrid, showSGrid)
 
 data Axis = X | Y | Z
   deriving (Show, Eq)
 
-type Coord a = (a, a)
+type Coord a = Pair a
 
 cget :: Axis -> Coord a -> a
 cget X (x, _) = x
 cget Y (_, y) = y
-
-add :: Num a => Coord a -> Coord a -> Coord a
-add = combine (+)
-
-neg :: Num a => Coord a -> Coord a
-neg (a, b) = (-a, -b)
-
-multiply :: Num a => a -> Coord a -> Coord a
-multiply n = combine (*) (n, n)
 
 data Grid a = Grid [[a]]
   deriving (Eq)
@@ -69,6 +61,9 @@ ungrid (Grid a) = a
 
 drawGrid :: Grid Char -> String
 drawGrid = T.showCGrid . ungrid
+
+drawSGrid :: String -> Grid String -> String
+drawSGrid s = T.showSGrid s . ungrid
 
 instance (Show a, Eq a) => Show (Grid a) where
   show = T.showGrid . ungrid

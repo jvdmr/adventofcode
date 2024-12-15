@@ -8,6 +8,7 @@ module AoC.Trace
   , srftrace
   , rtrace
   , showCGrid
+  , showSGrid
   , showCGrids
   , showGrid
   , showGrids
@@ -21,6 +22,9 @@ showGrid = (++) "\n" . flip (++) "\n" . intercalate "\n" . map (intercalate " " 
 
 showCGrid :: [[Char]] -> String
 showCGrid = (++) "\n" . flip (++) "\n" . intercalate "\n"
+
+showSGrid :: String -> [[String]] -> String
+showSGrid s = (++) "\n" . flip (++) "\n" . intercalate "\n" . map (intercalate s)
 
 showGrids :: Show a => [[[a]]] -> String
 showGrids gs = showCGrid [intercalate "    " $ map show z | z <- transpose gs]
