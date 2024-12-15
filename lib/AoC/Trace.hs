@@ -3,6 +3,7 @@ module AoC.Trace
   ( trace
   , ftrace
   , idtrace
+  , sidtrace
   , sftrace
   , rftrace
   , srftrace
@@ -17,8 +18,8 @@ module AoC.Trace
 import Data.List (intercalate, transpose)
 import Debug.Trace (trace)
 
-showGrid :: Show a => [[a]] -> String
-showGrid = (++) "\n" . flip (++) "\n" . intercalate "\n" . map (intercalate " " . map show)
+showGrid :: Show a => String -> [[a]] -> String
+showGrid s = (++) "\n" . flip (++) "\n" . intercalate "\n" . map (intercalate s . map show)
 
 showCGrid :: [[Char]] -> String
 showCGrid = (++) "\n" . flip (++) "\n" . intercalate "\n"
@@ -37,6 +38,9 @@ ftrace f x = trace (f x) x
 
 idtrace :: (Show a) => a -> a
 idtrace = ftrace show
+
+sidtrace :: (Show a) => String -> a -> a
+sidtrace s = ftrace ((++) s . show)
 
 sftrace :: Show sa => (a -> sa) -> a -> a
 sftrace f = ftrace $ show . f
