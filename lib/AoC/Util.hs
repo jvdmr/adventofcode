@@ -1,6 +1,8 @@
 {-# LANGUAGE FlexibleInstances, TypeSynonymInstances, FlexibleContexts #-}
 module AoC.Util
   ( Pair (..)
+  , ($<)
+  , ($>)
   , add
   , andF
   , between
@@ -192,6 +194,12 @@ neg (a, b) = (-a, -b)
 
 multiply :: Num a => a -> Pair a -> Pair a
 multiply n = combine (*) (n, n)
+
+($<) :: (a -> c) -> (a, b) -> (c, b)
+($<) f (a, b) = (f a, b)
+
+($>) :: (b -> c) -> (a, b) -> (a, c)
+($>) f (a, b) = (a, f b)
 
 col :: Int -> Matrix a -> [a]
 col n = flip (!!) n . toLists . transpose
