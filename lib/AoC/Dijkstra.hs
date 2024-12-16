@@ -57,24 +57,31 @@ type Explored gname = M.Map gname Bool
 type Queue gname = [(gname, Distance)]
 type Node gname = [(gname, Distance)]
 
-dijkstraLoop :: GName k => DGraph k (Node k) -> Explored k -> Queue k -> Node k
-dijkstraLoop _ _ [] = []
-dijkstraLoop g e ((n, d):q) = (n, d):dijkstraLoop g e' (sortBy (comparing snd) $ filter unseen (q ++ nxt))
+-- Helper function that performs the actual Dijkstra algorithm on prepared data.
+dijkstraHelper :: GName k => DGraph k (Node k) -> Explored k -> Queue k -> Node k
+dijkstraHelper _ _ [] = []
+dijkstraHelper g e ((n, d):q) = (n, d):dijkstraHelper g e' (sortBy (comparing snd) $ filter unseen (q ++ nxt))
   where nxt = map totalDistance $ g ! n
         totalDistance (nn, nd) = (nn, nd + d)
         unseen (nn, _) = not $ M.findWithDefault False nn e'
         e' = M.insert n True e
 
+-- Standard Dijkstra function that, provided with a graph with predefined
+-- functions to find nodes and edges, and a starting node, returns a function
+-- that will give the shortest distance from that node to another node in the
+-- graph.
 dijkstra :: (GName (GNodeName g), GGraph g) => g -> GNodeName g -> (GNodeName g -> Distance)
-dijkstra graph start = flip (M.findWithDefault Infinity) $ M.fromList $ dijkstraLoop nodified M.empty [(start, 0)]
+dijkstra graph start = flip (M.findWithDefault Infinity) $ M.fromList $ dijkstraHelper nodified M.empty [(start, 0)]
   where nodified = M.fromList $ map nodify $ nodes graph
         nodify n = (n, edges graph n)
 
+-- Modified Dijkstra function that will only tell you if node b is reachable from node a within a certain distance.
+-- Can be used to find (un)reachable nodes by specifying distance Infinity.
 dijkstraMax :: (GName (GNodeName g), GGraph g) => g -> GNodeName g -> Distance -> (GNodeName g -> Bool)
 dijkstraMax graph start Infinity = fix . dijkstra graph start
   where fix Infinity = False
         fix _ = True
-dijkstraMax graph start maxd = flip (M.findWithDefault False) $ M.fromList $ map (flip (,) True . fst) $ takeWhile ((<= maxd) . snd) $ dijkstraLoop nodified M.empty [(start, 0)]
+dijkstraMax graph start maxd = flip (M.findWithDefault False) $ M.fromList $ map (flip (,) True . fst) $ takeWhile ((<= maxd) . snd) $ dijkstraHelper nodified M.empty [(start, 0)]
   where nodified = M.fromList $ map nodify $ nodes graph
         nodify n = (n, edges graph n)
 
