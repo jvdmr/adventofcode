@@ -6,12 +6,12 @@ module AoC2024.Day16
   ) where
 
 import Prelude hiding (foldl)
-import Data.List (sort)
+import Data.List (sort, sortBy, nub)
+import Data.Ord (comparing)
 
 import AoC (Solver, Tests)
 import AoC.Grid
 import AoC.Dijkstra
-import AoC.Trace
 
 type Location = Coord Int
 
@@ -20,35 +20,45 @@ isPath g c = '#' /= g ! c
 
 type Maze = Grid Char
 
-distance :: Direction -> Direction -> Distance
-distance d nd | d == nd = Dist 0
-              | d == backwards nd = Dist 2000 -- 2 90° turns
-              | otherwise = Dist 1000
-
 type Path = (Direction, Location)
 instance GName Path
 instance GGraph Maze where
   type GNodeName Maze = Path
   nodes g = [(d, n) | n <- filter (isPath g) $ coords g, d <- [U, R, D, L]]
-  edges g (d, c) = let dist = distance d in filter (isPath g . snd . fst) [((nd, go nd c), 1 + dist nd) | nd <- [U, R, D, L]]
+  edges g (d, c) = let turns = [((nd, c), 1000) | nd <- [U, R, D, L], nd /= d, nd /= backwards d]
+                       nc = go d c
+                       in if isPath g nc
+                             then ((d, nc), 1):turns
+                             else turns
 
-findSE :: Maze -> (Path, Path)
-findSE g = ((R, f 'S'), (A, f 'E'))
+findSE :: Maze -> ((Maze, Path), Location)
+findSE g = ((g, (R, f 'S')), f 'E')
   where f c = head $ filter ((==) c . (!) g) $ coords g
 
-parseInput :: [String] -> (Maze, (Path, Path))
-parseInput ss = let g = Grid ss in (g, findSE g)
+parseInput :: [String] -> ((Maze, Path), Location)
+parseInput = findSE . Grid
 
-dijkstra' :: (Maze, (Path, Path)) -> Distance
-dijkstra' (m, (s, e)) | fst e == A = head $ sort $ map (dijkstra m s) $ map (flip (,) $ snd e) [U, R, D, L]
-                      | otherwise = dijkstra m s e
+dijkstra1 :: Maze -> Path -> Location -> Distance
+dijkstra1 m s e = head $ sort $ map (dijkstra m s) $ map (flip (,) e) [U, R, D, L]
 
 tests :: Tests
 tests = [show . parseInput . lines]
 
 part1 :: Solver
-part1 = show . dijkstra' . parseInput . lines
+part1 = show . uncurry (uncurry dijkstra1) . parseInput . lines
+
+other :: Path -> Path
+other (d, l) = (backwards d, l)
+
+dijkstra2 :: Maze -> Path -> Location -> Int
+dijkstra2 m s e | d1 e' == d2 s = length $ nub [snd n | n <- nodes m, d1 n + d2 (other n) == dist]
+                | otherwise = error "FAIL"
+  where d1 = dijkstra m s
+        d2 = dijkstra m (other e')
+        (dist, e') = head $ sortBy (comparing fst) $ map d1' es
+        d1' e = (d1 e, e)
+        es = map (flip (,) e) [U, R, D, L]
 
 part2 :: Solver
-part2 = ("Not yet solved! " ++) . show . length . lines
+part2 = show . uncurry (uncurry dijkstra2) . parseInput . lines
 
