@@ -6,8 +6,10 @@ module AoC.Trace
   , sidtrace
   , sftrace
   , rftrace
+  , rftrace2
   , srftrace
   , rtrace
+  , rtrace2
   , showCGrid
   , showSGrid
   , showCGrids
@@ -46,11 +48,17 @@ sftrace :: Show sa => (a -> sa) -> a -> a
 sftrace f = ftrace $ show . f
 
 rftrace :: (a -> String) -> (b -> String) -> (a -> b) -> a -> b
-rftrace showa showb f n = ftrace (\r -> showa n ++ " => " ++ showb r) $ f n
+rftrace showa showb f n = ftrace (\r -> showa n ++ " -> " ++ showb r) $ f n
+
+rftrace2 :: (a -> String) -> (b -> String) -> (c -> String) -> (a -> b -> c) -> a -> b -> c
+rftrace2 showa showb showc f m n = ftrace (\r -> showa m ++ " -> " ++ showb n ++ " -> " ++ showc r) $ f m n
 
 srftrace :: (Show sa, Show sb) => (a -> sa) -> (b -> sb) -> (a -> b) -> a -> b
 srftrace fa fb = rftrace (show . fa) (show . fb)
 
 rtrace :: (Show a, Show b) => (a -> b) -> a -> b
-rtrace f n = rftrace show show f n
+rtrace = rftrace show show
+
+rtrace2 :: (Show a, Show b, Show c) => (a -> b -> c) -> a -> b -> c
+rtrace2 = rftrace2 show show show
 
