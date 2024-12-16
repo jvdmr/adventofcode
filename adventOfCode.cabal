@@ -50,7 +50,8 @@ library
     , AoC.Trace
     , AoC.Util
   build-depends:
-    base ^>=4.17.0.0
+--     base ^>=4.17.0.0
+    base
     , containers
     , parsec
     , matrix
@@ -110,7 +111,8 @@ executable aoc
   -- LANGUAGE extensions used by modules in this package.
     FlexibleInstances, TypeSynonymInstances, FlexibleContexts, TypeFamilies 
   build-depends:
-      base ^>=4.17.0.0
+--     base ^>=4.17.0.0
+    base
     , adventOfCode
     , cmdargs
     , containers
