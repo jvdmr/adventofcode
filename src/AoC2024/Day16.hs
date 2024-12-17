@@ -25,11 +25,12 @@ instance GName Path
 instance GGraph Maze where
   type GNodeName Maze = Path
   nodes g = [(d, n) | n <- filter (isPath g) $ coords g, d <- [U, R, D, L]]
-  edges g (d, c) = let turns = [((nd, c), 1000) | nd <- [U, R, D, L], nd /= d, nd /= backwards d]
+  edges g (d, c) = let turns = [((nd, c), 1000) | nd <- [clockwise d, counterclockwise d], isPath g (go nd c)]
+                       turns' = [((counterclockwise d, c), 1000)]  -- special case for dead ends
+                       ns = if ip then [((d, nc), 1)] else []
+                       ip = isPath g nc
                        nc = go d c
-                       in if isPath g nc
-                             then ((d, nc), 1):turns
-                             else turns
+                       in if null turns && not ip then turns' else turns ++ ns
 
 findSE :: Maze -> ((Maze, Path), Location)
 findSE g = ((g, (R, f 'S')), f 'E')
