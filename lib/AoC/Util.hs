@@ -1,11 +1,15 @@
 {-# LANGUAGE FlexibleInstances, TypeSynonymInstances, FlexibleContexts #-}
 module AoC.Util
   ( Pair (..)
+  , Binary (..)
+  , Bit (..)
   , ($<)
   , ($>)
   , add
   , andF
   , between
+  , binToInt
+  , bits
   , cartesian
   , cartesianInf
   , cartesianInfWith
@@ -20,6 +24,7 @@ module AoC.Util
   , groupOn
   , head'
   , hexToDec 
+  , intToBin
   , iterateUntilIdempotent 
   , last'
   , longerThan
@@ -45,6 +50,7 @@ module AoC.Util
   ) where
 
 import Data.List (groupBy, inits)
+import Data.Ord (comparing)
 import Data.Char (digitToInt)
 import Data.Ratio (Ratio, numerator, denominator)
 import Data.Matrix (Matrix, toLists, transpose)
@@ -203,4 +209,44 @@ multiply n = combine (*) (n, n)
 
 col :: Int -> Matrix a -> [a]
 col n = flip (!!) n . toLists . transpose
+
+data Bit = Zero | One
+  deriving (Eq, Ord, Enum)
+
+data Binary = Binary [Bit]
+  deriving (Eq)
+
+instance Show Bit where
+  show Zero = "0"
+  show One = "1"
+
+bits :: Binary -> [Bit]
+bits (Binary bs) = bs
+
+binToInt :: Binary -> Int
+binToInt = bti 0 . bits
+  where bti v [] = v
+        bti v (Zero:bs) = bti (2*v) bs
+        bti v (One:bs) = bti (2*v + 1) bs
+
+intToBin :: Int -> Binary
+intToBin n = Binary $ itb n []
+  where itb 0 bs = Zero:bs
+        itb 1 bs = One:bs
+        itb i bs | mod i 2 == 0 = itb (div i 2) $ Zero:bs
+                 | otherwise = itb (div i 2) $ One:bs
+
+instance Num Binary where
+  negate a = a -- no negative binary numbers
+  (+) a b = intToBin $ (binToInt a) + (binToInt b)
+  (*) a b = intToBin $ (binToInt a) * (binToInt b)
+  fromInteger a = intToBin $ fromInteger a
+  abs = id -- no negative numbers
+  signum _ = 1 -- no negative numbers
+
+instance Ord Binary where
+  compare = comparing binToInt
+
+instance Show Binary where
+  show (Binary bs) = (++) "0b" $ concat $ map show bs
 
