@@ -3,6 +3,7 @@
 module AoC.Dijkstra
   ( dijkstra
   , dijkstraMax
+  , dijkstraPaths
   , GName (..)
   , GGraph (..)
   , Distance (..)
@@ -84,4 +85,14 @@ dijkstraMax graph start Infinity = fix . dijkstra graph start
 dijkstraMax graph start maxd = flip (M.findWithDefault False) $ M.fromList $ map (flip (,) True . fst) $ takeWhile ((<= maxd) . snd) $ dijkstraHelper nodified M.empty [(start, 0)]
   where nodified = M.fromList $ map nodify $ nodes graph
         nodify n = (n, edges graph n)
+
+-- Finds all nodes in a bidirectional graph on any path between s and e with the same length as the shortest path
+dijkstraPaths :: (GName (GNodeName g), GGraph g) => g -> GNodeName g -> GNodeName g -> [GNodeName g]
+dijkstraPaths graph a b | dist == Infinity = []
+                        | dist == db a = filter pathNode $ nodes graph
+                        | otherwise = error "Graph is not bidirectional"
+  where da = dijkstra graph a
+        db = dijkstra graph b
+        dist = da b
+        pathNode n = da n + db n == dist
 
