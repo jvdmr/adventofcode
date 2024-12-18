@@ -115,7 +115,9 @@ gps :: Warehouse -> Int
 gps wh = sum $ map boxGps $ coordsWhere isGpsBox $ f wh
 
 tests :: Tests
-tests = [show . length . lines]
+tests =
+  [ show . length . lines
+  ]
 
 part1 :: Solver
 part1 = show . gps . idtrace . uncurry (foldl' move) . idtrace . parseInput1 . splitOn [""] . lines

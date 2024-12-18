@@ -43,7 +43,9 @@ dijkstra1 :: Maze -> Path -> Location -> Distance
 dijkstra1 m s e = head $ sort $ map (dijkstra m s) $ map (flip (,) e) [U, R, D, L]
 
 tests :: Tests
-tests = [show . parseInput . lines]
+tests =
+  [ show . length . lines
+  ]
 
 part1 :: Solver
 part1 = show . uncurry (uncurry dijkstra1) . parseInput . lines

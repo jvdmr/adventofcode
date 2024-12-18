@@ -17,7 +17,9 @@ safe :: [Int] -> Bool
 safe = check . zipTailWith (-)
 
 tests :: Tests
-tests = [show . length . lines]
+tests =
+  [ show . length . lines
+  ]
 
 part1 :: Solver
 part1 = show . count safe . map (map read . words) . lines

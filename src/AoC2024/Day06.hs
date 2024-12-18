@@ -55,7 +55,9 @@ visited :: (Lab, Guard) -> Int
 visited (Grid g, _) = count isVisited $ concat g
 
 tests :: Tests
-tests = [show . parseInput . lines]
+tests =
+  [ show . length . lines
+  ]
 
 part1 :: Solver
 part1 = show . visited . move . parseInput . lines

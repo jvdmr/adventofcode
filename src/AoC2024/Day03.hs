@@ -42,7 +42,9 @@ calc (Mul x y) = x * y
 calc _ = 0
 
 tests :: Tests
-tests = [show . length . lines]
+tests =
+  [ show . length . lines
+  ]
 
 part1 :: Solver
 part1 = show . sum . map calc . right . parse (many instruction) "aoc input"

@@ -23,7 +23,9 @@ possiblyTrue :: [Operator] -> [Int] -> Bool
 possiblyTrue ops (result:values) = match ops result values
 
 tests :: Tests
-tests = [show . length . lines]
+tests =
+  [ show . length . lines
+  ]
 
 part1 :: Solver
 part1 = show . sum . map head . filter (possiblyTrue [(+), (*)]) . map parseInput . lines

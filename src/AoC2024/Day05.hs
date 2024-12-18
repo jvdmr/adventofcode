@@ -36,7 +36,9 @@ middle :: Updates -> Int
 middle lst = lst !! div (length lst) 2
 
 tests :: Tests
-tests = [show . length . lines]
+tests =
+  [ show . length . lines
+  ]
 
 part1 :: Solver
 part1 = show . sum . map middle . checkUpdates . parseInput . lines

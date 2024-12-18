@@ -10,7 +10,9 @@ module AoC2024.Day11
 import AoC (Solver, Tests)
 
 tests :: Tests
-tests = [show . length . lines]
+tests =
+  [ show . length . lines
+  ]
 
 part1 :: Solver
 part1 = ("Not yet solved! " ++) . show . length . lines

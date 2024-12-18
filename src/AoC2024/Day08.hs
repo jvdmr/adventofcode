@@ -28,7 +28,9 @@ antinodes _ _ (_, [_]) = []
 antinodes g f (n, (c:cs)) = (concat $ map (f g c) cs) ++ antinodes g f (n, cs)
 
 tests :: Tests
-tests = [show . length . lines]
+tests =
+  [ show . length . lines
+  ]
 
 part1 :: Solver
 part1 = show . length . ans . Grid . lines

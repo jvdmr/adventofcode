@@ -36,7 +36,9 @@ score :: HikeMap -> Step -> Int
 score g c = length $ nub $ map head $ trails g c
 
 tests :: Tests
-tests = [show . length . lines]
+tests =
+  [ show . length . lines
+  ]
 
 part1 :: Solver
 part1 = show . sum . scores . mapG readChar . Grid . lines

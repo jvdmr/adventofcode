@@ -20,7 +20,9 @@ fencePrice cs = length cs * length nns
         cs' = map fst cs
 
 tests :: Tests
-tests = [show . Grid . lines]
+tests =
+  [ show . length . lines
+  ]
 
 part1 :: Solver
 part1 = show . sum . map fencePrice . regions . Grid . lines

@@ -49,7 +49,9 @@ checksum :: [DiskData] -> Int
 checksum = sum . zipWith (*) [0..] . concat . map expand
 
 tests :: Tests
-tests = [show . disk 0 . map (read . (:[])) . head . lines]
+tests =
+  [ show . disk 0 . map (read . (:[])) . head . lines
+  ]
 
 part1 :: Solver
 part1 = show . checksum . defrag . disk 0 . map (read . (:[])) . head . lines
