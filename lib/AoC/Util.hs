@@ -62,9 +62,9 @@ uniq [a] = [a]
 uniq (a:b:rst) | a == b = uniq (b:rst)
                | otherwise = a:uniq (b:rst)
 
-head' :: [[a]] -> [a]
+head' :: [a] -> [a]
 head' [] = []
-head' a = head a
+head' a = [head a]
 
 last' :: [[a]] -> [a]
 last' [] = []
