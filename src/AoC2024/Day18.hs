@@ -5,7 +5,6 @@ module AoC2024.Day18
   , tests
   ) where
 
-import Prelude hiding (foldl)
 import Data.List.Split (splitOn)
 
 import AoC (Solver, Tests)

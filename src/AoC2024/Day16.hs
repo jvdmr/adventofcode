@@ -5,7 +5,6 @@ module AoC2024.Day16
   , tests
   ) where
 
-import Prelude hiding (foldl)
 import Data.List (sort, sortBy, nub)
 import Data.Ord (comparing)
 
