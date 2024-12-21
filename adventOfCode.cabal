@@ -23,6 +23,7 @@ common warnings
     -Wmissing-signatures
     -Wunused-imports
     -Wunused-top-binds
+    -Wno-x-partial
 
 common optimize
   ghc-options:
