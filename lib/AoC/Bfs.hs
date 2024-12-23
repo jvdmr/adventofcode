@@ -10,6 +10,7 @@ module AoC.Bfs
   , ignoreSeen
   , pathTo
   , pathToAdv
+  , unseenHeads
   ) where
 
 type SeenFilter a = [a] -> a -> Bool
@@ -19,7 +20,7 @@ type NeighborFunction a = a -> [a]
 bfsAdvanced :: SeenFilter a -> NeighborFunction a -> a -> [(a, Int)]
 bfsAdvanced seenFilter neighbors start = bfs' [start] [(start, 0)]
   where bfs' _ [] = []
-        bfs' seen (node@(n, d):queue) = node:let nbs = filter (seenFilter seen) $ neighbors n in bfs' (nbs ++ seen) $ (filter (seenFilter nbs . fst) queue) ++ map (flip (,) (d + 1)) nbs
+        bfs' seen (node@(n, d):queue) = node:let nbs = filter (seenFilter seen) $ neighbors n in bfs' (nbs ++ seen) $ queue ++ map (flip (,) (d + 1)) nbs
 
 -- Standard BFS
 bfs :: (Eq a) => NeighborFunction a -> a -> [(a, Int)]
@@ -38,9 +39,12 @@ ignoreSeen _ _ = True
 
 {-# INLINE ignoreSeen #-}
 
+unseenHeads :: (Eq a) => SeenFilter [a]
+unseenHeads as a = head a `notElem` map head as
+
 -- BFS that constructs the shortest (unweighted) path for every node to the starting node
 bfsPath :: (Eq a) => NeighborFunction a -> a -> [([a], Int)]
-bfsPath neighbors start = bfsAdvanced ignoreSeen (pathTo neighbors) [start]
+bfsPath neighbors start = bfsAdvanced unseenHeads (pathTo neighbors) [start]
 
 -- BFS that finds all disconnected parts of a graph
 bfsDisconnected :: (Eq a) => NeighborFunction a -> [a] -> [[(a, Int)]]

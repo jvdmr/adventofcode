@@ -36,6 +36,7 @@ module AoC.Util
   , pascal
   , primes
   , readChar
+  , shortestLists
   , skipOne
   , stopLoop
   , strings
@@ -49,7 +50,7 @@ module AoC.Util
   , zipTailWith
   ) where
 
-import Data.List (groupBy, inits)
+import Data.List (sortBy, groupBy, inits)
 import Data.Ord (comparing)
 import Data.Char (digitToInt)
 import Data.Ratio (Ratio, numerator, denominator)
@@ -250,3 +251,5 @@ instance Ord Binary where
 instance Show Binary where
   show (Binary bs) = (++) "0b" $ concat $ map show bs
 
+shortestLists :: (Eq a, Ord a) => [[a]] -> [[a]]
+shortestLists = head . groupBy (equating length) . sortBy (comparing length)
