@@ -10,6 +10,7 @@ module AoC.Util
   , between
   , binToInt
   , bits
+  , bxor
   , cartesian
   , cartesianInf
   , cartesianInfWith
@@ -46,6 +47,8 @@ module AoC.Util
   , uncurryL
   , uniq
   , unpair
+  , xor
+  , xorbits
   , zipTail
   , zipTailWith
   ) where
@@ -250,6 +253,22 @@ instance Ord Binary where
 
 instance Show Binary where
   show (Binary bs) = (++) "0b" $ concat $ map show bs
+
+xorbits :: [Bit] -> [Bit] -> [Bit]
+xorbits [] bs = []
+xorbits as [] = []
+xorbits (a:as) (b:bs) | a == b = Zero:xorbits as bs
+                      | otherwise = One:xorbits as bs
+
+bxor :: Binary -> Binary -> Binary
+bxor (Binary as) (Binary bs) = Binary $ xorbits as' bs'
+  where las = length as
+        lbs = length bs
+        as' = if las < lbs then (take (lbs - las) $ repeat Zero) ++ as else as
+        bs' = if lbs < las then (take (las - lbs) $ repeat Zero) ++ bs else bs
+
+xor :: Int -> Int -> Int
+xor a b = binToInt $ bxor (intToBin a) (intToBin b)
 
 shortestLists :: (Eq a, Ord a) => [[a]] -> [[a]]
 shortestLists = head . groupBy (equating length) . sortBy (comparing length)
