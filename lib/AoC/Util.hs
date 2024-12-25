@@ -10,6 +10,8 @@ module AoC.Util
   , between
   , binToInt
   , bits
+  , boolToBin
+  , boolToBit
   , bxor
   , cartesian
   , cartesianInf
@@ -217,12 +219,16 @@ col n = flip (!!) n . toLists . transpose
 data Bit = Zero | One
   deriving (Eq, Ord, Enum)
 
-data Binary = Binary [Bit]
-  deriving (Eq)
-
 instance Show Bit where
   show Zero = "0"
   show One = "1"
+
+boolToBit :: Bool -> Bit
+boolToBit b | b = One
+            | otherwise = Zero
+
+data Binary = Binary [Bit]
+  deriving (Eq)
 
 bits :: Binary -> [Bit]
 bits (Binary bs) = bs
@@ -232,6 +238,9 @@ binToInt = bti 0 . bits
   where bti v [] = v
         bti v (Zero:bs) = bti (2*v) bs
         bti v (One:bs) = bti (2*v + 1) bs
+
+boolToBin :: [Bool] -> Binary
+boolToBin = Binary . map boolToBit
 
 intToBin :: Int -> Binary
 intToBin n = Binary $ itb n []
