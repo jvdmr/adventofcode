@@ -46,6 +46,7 @@ module AoC.Util
   , takeUntil
   , toInt
   , toList
+  , trueOrFalse
   , uncurryL
   , uniq
   , unpair
@@ -212,6 +213,11 @@ multiply n = combine (*) (n, n)
 
 ($>) :: (b -> c) -> (a, b) -> (a, c)
 ($>) f (a, b) = (a, f b)
+
+trueOrFalse :: (a -> Bool) -> [a] -> Pair [a]
+trueOrFalse pred = unpair reverse . foldl' f ([], [])
+  where f (ts, fs) v | pred v = (v:ts, fs)
+                     | otherwise = (ts, v:fs)
 
 col :: Int -> Matrix a -> [a]
 col n = flip (!!) n . toLists . transpose

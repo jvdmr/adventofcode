@@ -13,7 +13,7 @@ import Data.Map ((!))
 import qualified Data.Map as M
 
 import AoC (Solver, Tests)
-import AoC.Util (($>), unpair, Pair, toList, ($<))
+import AoC.Util (($>), unpair, Pair, toList, ($<), trueOrFalse)
 import AoC.Trace
 
 type Computer = String
@@ -41,11 +41,6 @@ tests =
 
 part1 :: Solver
 part1 = show . length . ftrace (intercalate "\n" . map show) . triads 't' . network . lines
-
-trueOrFalse :: (a -> Bool) -> [a] -> Pair [a]
-trueOrFalse pred = unpair reverse . foldl' f ([], [])
-  where f (ts, fs) v | pred v = (v:ts, fs)
-                     | otherwise = (ts, v:fs)
 
 largestGroup :: Network -> [Computer]
 largestGroup nw = sort $ last $ sortBy (comparing length) $ foldl' f [] $ M.keys nw
