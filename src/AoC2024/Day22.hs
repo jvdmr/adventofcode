@@ -5,10 +5,12 @@ module AoC2024.Day22
   , tests
   ) where
 
-import Prelude hiding (foldl) -- use foldl' from Data.List if you need foldl
+import Prelude hiding (foldl)
+import Data.List (groupBy, tails, sortBy, nubBy)
+import Data.Ord (comparing)
 
 import AoC (Solver, Tests)
-import AoC.Util (xor, xorbits, intToBin, binToInt, Bit(..), Binary(..), bits)
+import AoC.Util (xor, xorbits, intToBin, binToInt, Bit(..), Binary(..), bits, equating)
 
 type RBits = [Bit]
 
@@ -43,11 +45,24 @@ tests =
   [ show . length . lines
   , const $ show $ xor 42 15
   , const $ show $ map (ns 123) [1..10]
+  , const $ show $ ns 123 2000
   ]
 
 part1 :: Solver
 part1 = show . sum . map (flip ns 2000 . read) . lines
 
+prices :: [Int] -> [[Int]]
+prices = map (map (flip mod 10 . fromRBits) . take 2000 . iterate nextSecret . rbits)
+
+pattern :: [Int] -> ([Int], Int)
+pattern l = (zipWith (-) (tail l) l, last l)
+
+patterns :: [Int] -> [([Int], Int)]
+patterns = nubBy (equating fst) . map (pattern . take 5) . takeWhile (flip (>) 4 . length) . tails
+
+bananas :: [[Int]] -> Int
+bananas = maximum . map (sum . map snd) . groupBy (equating fst) . sortBy (comparing fst) . concat . map patterns
+
 part2 :: Solver
-part2 = ("Not yet solved! " ++) . show . length . lines
+part2 = show . bananas . prices . map read . lines
 
