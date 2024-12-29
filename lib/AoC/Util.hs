@@ -61,6 +61,7 @@ import Data.Ord (comparing)
 import Data.Char (digitToInt)
 import Data.Ratio (Ratio, numerator, denominator)
 import Data.Matrix (Matrix, toLists, transpose)
+import Data.Function (on)
 
 -- uniq is better than nub on sorted lists
 uniq :: (Eq a) => [a] -> [a]
@@ -78,7 +79,7 @@ last' [] = []
 last' a = last a
 
 equating :: (Eq b) => (a -> b) -> a -> a -> Bool
-equating f a b = f a == f b
+equating = on (==)
 
 count :: (a -> Bool) -> [a] -> Int
 count pred = length . filter pred
@@ -287,3 +288,4 @@ xor a b = binToInt $ bxor (intToBin a) (intToBin b)
 
 shortestLists :: (Eq a, Ord a) => [[a]] -> [[a]]
 shortestLists = head . groupBy (equating length) . sortBy (comparing length)
+
