@@ -30,7 +30,9 @@ rmdir ${year}
 (
 	cd src
 	cp Main.hs Main${year}.hs
-	grep -- "-- TEMPLATE " Main${year}.hs | while read template
+	# To have `read` not ignore leading/trailing whitespace, IFS variable must be cleared.
+	# -r: Do not treat a Backslash as an escape character. (== raw input)
+	grep -- "-- TEMPLATE " Main${year}.hs | while IFS= read -r template
 	do
 		rendered="${template//xxxx/${year}}"
 		rendered="${rendered/-- TEMPLATE /}"
