@@ -11,6 +11,7 @@ import qualified AoC2021
 import qualified AoC2022
 import qualified AoC2023
 import qualified AoC2024
+import qualified AoC2025
 -- TEMPLATE import qualified AoCxxxx
 
 import Data.Map (Map, fromList, (!))
@@ -29,6 +30,7 @@ years =
     , (2022, AoC2022.days)
     , (2023, AoC2023.days)
     , (2024, AoC2024.days)
+    , (2025, AoC2025.days)
     -- TEMPLATE , (xxxx, AoCxxxx.days)
     ]
 
@@ -36,6 +38,7 @@ yeartests :: Map Int YearTests
 yeartests =
   fromList
     [ (2024, AoC2024.tests)
+    , (2025, AoC2025.tests)
     -- TEMPLATE , (xxxx, AoCxxxx.tests)
     ]
 

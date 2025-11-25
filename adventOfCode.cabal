@@ -7,7 +7,7 @@ cabal-version:      3.4
 -- the first thing in the cabal file.
 
 name:               adventOfCode
-version:            2024
+version:            2025
 
 author:             jvdmr
 maintainer:         joris@vdmr.be
@@ -108,6 +108,12 @@ executable aoc
     , AoC2024.Day11, AoC2024.Day12, AoC2024.Day13, AoC2024.Day14, AoC2024.Day15
     , AoC2024.Day16, AoC2024.Day17, AoC2024.Day18, AoC2024.Day19, AoC2024.Day20
     , AoC2024.Day21, AoC2024.Day22, AoC2024.Day23, AoC2024.Day24, AoC2024.Day25
+    , AoC2025
+    , AoC2025.Day01, AoC2025.Day02, AoC2025.Day03, AoC2025.Day04, AoC2025.Day05
+    , AoC2025.Day06, AoC2025.Day07, AoC2025.Day08, AoC2025.Day09, AoC2025.Day10
+    , AoC2025.Day11, AoC2025.Day12, AoC2025.Day13, AoC2025.Day14, AoC2025.Day15
+    , AoC2025.Day16, AoC2025.Day17, AoC2025.Day18, AoC2025.Day19, AoC2025.Day20
+    , AoC2025.Day21, AoC2025.Day22, AoC2025.Day23, AoC2025.Day24, AoC2025.Day25
   other-extensions:
   -- LANGUAGE extensions used by modules in this package.
     FlexibleInstances, TypeSynonymInstances, FlexibleContexts, TypeFamilies 
