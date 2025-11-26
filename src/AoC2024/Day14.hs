@@ -13,10 +13,10 @@ import Data.Either (fromRight)
 import AoC (Solver, Tests)
 import AoC.Util (Pair, pair, unpair, add, multiply, combine)
 import qualified AoC.Util as P (toList)
-import AoC.Grid (drawCoords, drawSGrid)
+import AoC.Grid (Coord, drawCoords, drawSGrid, go, Direction(R))
 import AoC.Trace
 
-type Robot = Pair (Pair Int)
+type Robot = Pair (Coord Int)
 
 robot :: String -> Robot
 robot = pair . map (pair . map read . splitOn "," . drop 2) . splitOn " "
@@ -39,13 +39,22 @@ quadrant m ((x, y), _) | x < cx && y < cy = TopLeft
                        | otherwise = Center
   where (cx, cy) = unpair (flip div 2) m
 
-steps :: Pair Int -> Int -> [Robot] -> [Robot]
-steps m n rs = ftrace (drawSGrid "" . drawCoords "🤖" "  " . map fst . filter ((/=) Center . quadrant m)) $ map (moveRobot m n) rs
+showRobots :: [Robot] -> String
+showRobots = drawSGrid "" . drawCoords "🤖" "  " . map fst
 
-quadrants :: Int -> [Robot] -> [Quadrant]
-quadrants n rs = map (quadrant (mx, my)) $ steps (mx, my) n rs
+steps :: Int -> [Robot] -> [Robot]
+steps n rs = map (moveRobot m n) rs
+  where m = bounds rs
+
+bounds :: [Robot] -> Pair Int
+bounds rs = (mx, my)
   where mx = (+) 1 $ maximum $ map (fst . fst) rs
         my = (+) 1 $ maximum $ map (snd . fst) rs
+
+quadrants :: Int -> [Robot] -> [Quadrant]
+quadrants n rs = map (quadrant m) $ ftrace showRobots $ steps n rs
+-- quadrants n rs = map (quadrant m) $ steps n rs
+  where m = bounds rs
 
 noCenter :: [Quadrant] -> [Quadrant]
 noCenter = filter (/= Center)
@@ -53,29 +62,44 @@ noCenter = filter (/= Center)
 part1 :: Solver
 part1 = show . product . map length . group . sort . noCenter . quadrants 100 . map robot . lines
 
-tracetree :: [Int] -> [Robot] -> Int
-tracetree ns rs = sum $ map length $ map (flip (steps (mx, my)) rs . idtrace) ns
-  where mx = (+) 1 $ maximum $ map (fst . fst) rs
-        my = (+) 1 $ maximum $ map (snd . fst) rs
+isCluster :: Int -> [Quadrant] -> Bool
+isCluster lim = any ((> lim) . length) . ftrace (show . maximum . map length) . group . sort
+
+isTree :: [Robot] -> Int -> Bool
+isTree rs n = any treeLine rs'
+  where rs' = map fst $ steps n rs
+        row p = take 10 $ (p:row (go R p))
+        treeLine = all (flip elem rs') . row
+
+findTree :: (Int -> Bool) -> Int -> Int -> Int
+findTree match step n | match n = n
+                      | otherwise = findTree match step (idtrace $ n + step)
 
 part2 :: Solver
--- part2 = show . tracetree [0..100000] . map robot . lines
-part2 = show . tracetree [2188] . map robot . lines
-
-findMiddles :: [Robot] -> ([Int], [Robot])
-findMiddles rs = (ns, rs)
-  where mx = (+) 1 $ maximum $ map (fst . fst) rs
-        my = (+) 1 $ maximum $ map (snd . fst) rs
-        (cx, cy) = unpair (flip div 2) (mx, my)
-        topOfTree = (cx, 0)
-        toc (p, v) = last $ toLists $ transpose $ fromRight (zero 2 3) $ rref $ transpose $ fromLists $ map (map toRational . P.toList) [p, v, topOfTree]
-        ns = [5]
+part2 = show . result . start . map robot . lines
+  where result (s, step, match, rs) | length rs < 500 = 0  -- ignore other test inputs
+                                    | otherwise = ftrace (showRobots . flip steps rs) $ findTree match step s
+        start rs = (result (0, 1, isCluster 200 . flip quadrants rs, rs), (fst $ bounds rs), isTree rs, rs)
 
 tests :: Tests
 tests =
-  [ show . tracetree [0] . map robot . lines
-  -- , show . tracetree [2188] . map robot . lines
-  , show . tracetree [0..100000] . map robot . lines
---   , show . uncurry tracetree . findMiddles . map robot . lines
+  [ show . map robot . lines
+  , show . sum . map length . ftrace showRobots . steps 100 . map robot . lines
+  , show . sum . map length . ftrace showRobots . steps 5 . map robot . lines
+  -- , show . sum . map length . ftrace showRobots . steps 25 . map robot . lines
+  , show . sum . map length . ftrace showRobots . steps 66 . map robot . lines -- +41
+  -- , show . sum . map length . ftrace showRobots . steps 128 . map robot . lines -- +62
+  , show . sum . map length . ftrace showRobots . steps 167 . map robot . lines -- +39
+  -- , show . sum . map length . ftrace showRobots . steps 231 . map robot . lines -- +64
+  -- , show . sum . map length . ftrace showRobots . steps 268 . map robot . lines -- +37
+  -- , show . sum . map length . ftrace showRobots . steps 334 . map robot . lines -- +66
+  -- , show . sum . map length . ftrace showRobots . steps 369 . map robot . lines -- +35
+  -- , show . sum . map length . ftrace showRobots . steps 437 . map robot . lines -- +68
+  -- , show . sum . map length . ftrace showRobots . steps 470 . map robot . lines -- +33
+  -- , show . sum . map length . ftrace showRobots . steps 540 . map robot . lines -- +70
+  , show . sum . map length . ftrace showRobots . steps 571 . map robot . lines -- +31
+  -- , show . sum . map length . ftrace showRobots . steps 643 . map robot . lines -- +72
+  -- , show . sum . map length . ftrace showRobots . steps 672 . map robot . lines -- +29
+  -- , show . sum . map length . ftrace showRobots . steps 746 . map robot . lines -- +74
   ]
 
