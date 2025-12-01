@@ -27,6 +27,7 @@ module AoC.Util
   , groupOn
   , head'
   , hexToDec 
+  , ignoreInput
   , intToBin
   , iterateUntilIdempotent 
   , last'
@@ -62,6 +63,8 @@ import Data.Char (digitToInt)
 import Data.Ratio (Ratio, numerator, denominator)
 import Data.Matrix (Matrix, toLists, transpose)
 import Data.Function (on)
+
+import AoC (Solver)
 
 -- uniq is better than nub on sorted lists
 uniq :: (Eq a) => [a] -> [a]
@@ -288,4 +291,7 @@ xor a b = binToInt $ bxor (intToBin a) (intToBin b)
 
 shortestLists :: (Eq a, Ord a) => [[a]] -> [[a]]
 shortestLists = head . groupBy (equating length) . sortBy (comparing length)
+
+ignoreInput :: String -> Solver
+ignoreInput s _ = s
 
