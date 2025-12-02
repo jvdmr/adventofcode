@@ -15,6 +15,8 @@ function show_help () {
 
 -c              Only compile
 
+-C              Clean before building
+
 [part]          (Optional) Specify which part to run.
                 Options are 1, 2, and occasionally 'test'.
                 Default is running both parts, no test.
@@ -24,7 +26,8 @@ function show_help () {
 TEST=true
 PROD=true
 DEBUG=false
-while getopts "hti:cpd" opt; do
+CLEAN=false
+while getopts "hti:cCpd" opt; do
   case "$opt" in
   h|\?)
     show_help
@@ -47,6 +50,9 @@ while getopts "hti:cpd" opt; do
     TEST=false
     PROD=false
     ;;
+	C)
+		CLEAN=true
+		;;
   :)
     echo "Option -$OPTARG requires an argument." >&2
     exit 1
@@ -74,6 +80,10 @@ then
 	RUNARGS="${RUNARGS} --part=${part}"
 fi
 
+if $CLEAN
+then
+	cabal clean
+fi
 cabal new-build ${BUILDARGS} aoc
 if [ $? -gt 0 ]
 then
