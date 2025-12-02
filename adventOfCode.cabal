@@ -48,14 +48,16 @@ library
     , AoC.Grid3D
     , AoC.Memoize
     , AoC.Parsec
+    , AoC.Text
     , AoC.Trace
     , AoC.Util
   build-depends:
 --     base ^>=4.17.0.0
     base
     , containers
-    , parsec
     , matrix
+    , parsec
+    , split
   default-language: Haskell2010
 
 executable aoc
