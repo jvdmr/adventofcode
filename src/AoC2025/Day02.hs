@@ -5,7 +5,7 @@ module AoC2025.Day02
   , tests
   ) where
 
-import Prelude hiding (foldl) -- use foldl' from Data.List if you need foldl
+import Prelude hiding (foldl) -- use foldl' instead of foldl
 
 import AoC (Solver, Tests)
 

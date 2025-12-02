@@ -5,7 +5,7 @@ module AoC2025.Day01
   , tests
   ) where
 
-import Prelude hiding (foldl, Either(..)) -- use foldl' if you need foldl
+import Prelude hiding (foldl, Either(..)) -- use foldl' instead of foldl
 
 import AoC (Solver, Tests)
 import AoC.Util (ignoreInput)
