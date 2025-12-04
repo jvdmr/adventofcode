@@ -16,6 +16,7 @@ module AoC.Grid
   , coords
   , coordsG
   , coordsWhere
+  , coordsWhere'
   , countIOO
   , counterclockwise
   , drawCoords
@@ -101,7 +102,10 @@ coords g = [(x, y) | x <- [0..mx], y <- [0..my]]
   where (mx, my) = maxCoord g
 
 coordsWhere :: (Integral b, Enum b, Num b) => (a -> Bool) -> Grid a -> [Coord b]
-coordsWhere f g = filter (f . (!) g) $ coords g
+coordsWhere f g = coordsWhere' (f . (!) g) g
+
+coordsWhere' :: (Integral b, Enum b, Num b) => (Coord b -> Bool) -> Grid a -> [Coord b]
+coordsWhere' f g = filter f $ coords g
 
 coordsG :: (Enum b, Num b) => Grid a -> Grid (Coord b)
 coordsG g = setData g [[(x, y) | x <- [0..mx]] | y <- [0..my]] 
