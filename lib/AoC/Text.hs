@@ -6,7 +6,7 @@ module AoC.Text
 
 import Data.List.Split (splitOn)
 
-import AoC.Util (pair)
+import AoC.Pair (pair)
 
 csl :: String -> [String]
 csl = splitOn ","

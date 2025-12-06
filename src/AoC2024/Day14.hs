@@ -11,8 +11,8 @@ import Data.Matrix (Matrix, fromLists, rref, transpose, toLists, zero)
 import Data.Either (fromRight)
 
 import AoC (Solver, Tests)
-import AoC.Util (Pair, pair, unpair, add, multiply, combine)
-import qualified AoC.Util as P (toList)
+import AoC.Pair (Pair, pair, unpair, add, multiply, combine)
+import qualified AoC.Pair as P (toList)
 import AoC.Grid (Coord, drawCoords, drawSGrid, go, Direction(R))
 import AoC.Trace
 

@@ -47,6 +47,7 @@ library
     , AoC.Grid
     , AoC.Grid3D
     , AoC.Memoize
+    , AoC.Pair
     , AoC.Parsec
     , AoC.Text
     , AoC.Trace

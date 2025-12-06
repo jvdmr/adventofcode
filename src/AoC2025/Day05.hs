@@ -9,7 +9,8 @@ import Prelude hiding (foldl) -- use foldl' instead of foldl
 import Data.List.Split (splitOn)
 
 import AoC (Solver, Tests)
-import AoC.Util (between, Pair(..), pair, ignoreInput)
+import AoC.Pair (Pair(..), pair)
+import AoC.Util (between, ignoreInput)
 -- import AoC.Trace (idtrace)
 
 type Range = Pair Int

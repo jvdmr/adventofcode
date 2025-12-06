@@ -8,7 +8,7 @@ module AoC2024.Day18
 import Data.List.Split (splitOn)
 
 import AoC (Solver, Tests)
-import AoC.Util (pair)
+import AoC.Pair (pair)
 import AoC.Grid
 import AoC.Dijkstra
 

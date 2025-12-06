@@ -13,7 +13,8 @@ import Data.Map ((!))
 import qualified Data.Map as M
 
 import AoC (Solver, Tests)
-import AoC.Util (($>), unpair, Pair, toList, ($<), trueOrFalse)
+import AoC.Pair (toList)
+import AoC.Util (($>), ($<), trueOrFalse)
 import AoC.Trace
 
 type Computer = String

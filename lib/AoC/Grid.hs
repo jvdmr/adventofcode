@@ -46,7 +46,8 @@ module AoC.Grid
   ) where
 
 import AoC.Bfs (bfs)
-import AoC.Util (between, combine, combine3, add, neg, multiply, Pair)
+import AoC.Pair (combine, combine3, add, neg, multiply, Pair (..))
+import AoC.Util (between)
 import qualified AoC.Trace as T (showGrid, showCGrid, showSGrid)
 
 data Axis = X | Y | Z

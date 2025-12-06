@@ -9,7 +9,7 @@ import Data.List.Split (splitOn)
 import Data.List (sortBy)
 
 import AoC (Solver, Tests)
-import AoC.Util (pair)
+import AoC.Pair (pair)
 
 type Page = Int
 type Rules = (Page -> Page -> Ordering)

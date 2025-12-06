@@ -1,11 +1,9 @@
 {-# LANGUAGE FlexibleInstances, TypeSynonymInstances, FlexibleContexts #-}
 module AoC.Util
-  ( Pair (..)
-  , Binary (..)
+  ( Binary (..)
   , Bit (..)
   , ($<)
   , ($>)
-  , add
   , andF
   , between
   , binToInt
@@ -18,8 +16,6 @@ module AoC.Util
   , cartesianInfWith
   , cartesianWith
   , col
-  , combine
-  , combine3
   , count
   , countablePairs
   , countableZPairs
@@ -32,11 +28,8 @@ module AoC.Util
   , iterateUntilIdempotent 
   , last'
   , longerThan
-  , multiply
-  , neg
   , none
   , orF
-  , pair
   , pascal
   , primes
   , readChar
@@ -46,11 +39,9 @@ module AoC.Util
   , strings
   , takeUntil
   , toInt
-  , toList
   , trueOrFalse
   , uncurryL
   , uniq
-  , unpair
   , xor
   , xorbits
   , zipTail
@@ -65,6 +56,7 @@ import Data.Matrix (Matrix, toLists, transpose)
 import Data.Function (on)
 
 import AoC (Solver)
+import AoC.Pair (Pair(..), unpair)
 
 -- uniq is better than nub on sorted lists
 uniq :: (Eq a) => [a] -> [a]
@@ -185,32 +177,6 @@ toInt a | n `mod` d == 0 = Right $ n `div` d
         | otherwise = Left $ round $ (fromIntegral n / fromIntegral d)
   where n = numerator a
         d = denominator a
-
-type Pair a = (a, a)
-
-toList :: Pair a -> [a]
-toList (a, b) = [a, b]
-
-pair :: [a] -> Pair a
-pair [a, b] = (a, b)
-
-unpair :: (a -> b) -> Pair a -> Pair b
-unpair f (a, b) = (f a, f b)
-
-combine :: (a -> b -> c) -> Pair a -> Pair b -> Pair c
-combine f (a, b) (c, d) = (f a c, f b d)
-
-combine3 :: (a -> b -> c -> d) -> Pair a -> Pair b -> Pair c -> Pair d
-combine3 f a = combine ($) . combine f a
-
-add :: Num a => Pair a -> Pair a -> Pair a
-add = combine (+)
-
-neg :: Num a => Pair a -> Pair a
-neg (a, b) = (-a, -b)
-
-multiply :: Num a => a -> Pair a -> Pair a
-multiply n = combine (*) (n, n)
 
 ($<) :: (a -> c) -> (a, b) -> (c, b)
 ($<) f (a, b) = (f a, b)
