@@ -28,6 +28,7 @@ module AoC.Util
   , iterateUntilIdempotent 
   , last'
   , longerThan
+  , multiply
   , none
   , orF
   , pascal
@@ -261,3 +262,5 @@ shortestLists = head . groupBy (equating length) . sortBy (comparing length)
 ignoreInput :: String -> Solver
 ignoreInput s _ = s
 
+multiply :: Num a => [a] -> a
+multiply = foldl' (*) 1
