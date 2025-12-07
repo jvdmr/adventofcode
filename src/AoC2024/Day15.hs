@@ -6,7 +6,7 @@ module AoC2024.Day15
   ) where
 
 import Prelude hiding (foldl)
-import Data.List (foldl', nub)
+import Data.List (nub)
 import Data.List.Split (splitOn)
 
 import AoC (Solver, Tests)
