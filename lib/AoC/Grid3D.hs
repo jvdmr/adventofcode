@@ -9,6 +9,7 @@ module AoC.Grid3D
   , cget
   , coords
   , coordsG
+  , distance
   , drawGrid
   , fromCoords
   , go
@@ -41,6 +42,12 @@ add (a, b, c) (d, e, f) = (a + d, b + e, c + f)
 
 neg :: Num a => Coord a -> Coord a
 neg (a, b, c) = (-a, -b, -c)
+
+distance :: Floating a => Coord a -> Coord a -> a
+distance (a, b, c) (d, e, f) = sqrt $ x^2 + y^2 + z^2
+  where x = abs (a - d)
+        y = abs (b - e)
+        z = abs (c - f)
 
 data Grid a = Grid [[[a]]]
 

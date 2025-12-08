@@ -19,6 +19,7 @@ module AoC.Grid
   , coordsWhere'
   , countIOO
   , counterclockwise
+  , distance
   , drawCoords
   , drawGrid
   , drawSGrid
@@ -58,6 +59,11 @@ type Coord a = Pair a
 cget :: Axis -> Coord a -> a
 cget X (x, _) = x
 cget Y (_, y) = y
+
+distance :: Floating a => Coord a -> Coord a -> a
+distance (a, b) (c, d) = sqrt $ x^2 + y^2
+  where x = abs (a - c)
+        y = abs (b - d)
 
 data Grid a = Grid [[a]]
             | SGrid String [[a]]
