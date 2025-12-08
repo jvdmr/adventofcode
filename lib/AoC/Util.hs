@@ -20,6 +20,7 @@ module AoC.Util
   , countablePairs
   , countableZPairs
   , equating
+  , filterFirst
   , groupOn
   , head'
   , hexToDec 
@@ -264,3 +265,8 @@ ignoreInput s _ = s
 
 multiply :: Num a => [a] -> a
 multiply = foldl' (*) 1
+
+filterFirst :: (a -> Bool) -> [a] -> [a]
+filterFirst f (a:as) | f a = as
+                     | otherwise = a:filterFirst f as
+
