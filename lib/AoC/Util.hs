@@ -129,8 +129,7 @@ iterateUntilIdempotent f x = x:(map snd $ takeWhile (uncurry (/=)) $ zipTail $ i
 
 -- Group elements of a list based on predicate
 groupOn :: Eq a => (b -> a) -> [b] -> [[b]]
-groupOn f lst = map (map fst) $ groupBy eq $ zip lst $ map f lst
-  where eq (_, a) (_, b) = a == b
+groupOn f lst = map (map fst) $ groupBy (equating snd) $ zip lst $ map f lst
 
 -- Pascal's triangle - line n, position m
 pascal :: Int -> Int -> Int
