@@ -21,6 +21,7 @@ module AoC.Util
   , count
   , countablePairs
   , countableZPairs
+  , enumFromTo'
   , equating
   , filterFirst
   , groupOn
@@ -307,4 +308,10 @@ combinationsWith f (a:as) = map (f a) as ++ combinationsWith f as
 -- create all possible pairs between different elements of a list, excluding duplicates and reversed combinations (ie. if (a, b) is in the result, (b, a) won't be)
 combinations :: [a] -> [(a, a)]
 combinations = combinationsWith (,)
+
+-- enumFromTo but it also goes down
+enumFromTo' :: Enum a => a -> a -> [a]
+enumFromTo' a b | null up = reverse $ enumFromTo b a
+                | otherwise = up
+  where up = enumFromTo a b
 
