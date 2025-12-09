@@ -31,6 +31,8 @@ module AoC.Grid
   , insertAt
   , insertAtRange
   , inside
+  , isIn
+  , isOut
   , mapG
   , maxCoord
   , multiply
@@ -46,7 +48,8 @@ module AoC.Grid
   , ungrid
   ) where
 
-import AoC.Bfs (bfs)
+import Data.List (sortOn, scanl')
+
 import AoC.Pair (combine, combine3, add, neg, multiply, Pair (..))
 import AoC.Util (between)
 import qualified AoC.Trace as T (showGrid, showCGrid, showSGrid)
@@ -94,12 +97,14 @@ instance (Show a, Eq a) => Show (Grid a) where
   show (SGrid s a) = T.showGrid s a
 
 (!) :: Integral b => Grid a -> Coord b -> a
-(!) g (x, y) = (ungrid g !! fromIntegral y) !! fromIntegral x
+(!) (Grid a) (x, y) = (a !! fromIntegral y) !! fromIntegral x
+(!) (SGrid _ a) (x, y) = (a !! fromIntegral y) !! fromIntegral x
 
 size :: (Num b) => Grid a -> Coord b
-size g = (mx, my)
-  where my = fromIntegral $ length $ ungrid g
-        mx = fromIntegral $ length $ head $ ungrid g
+size (Grid g) = (mx, my)
+  where my = fromIntegral $ length g
+        mx = fromIntegral $ length $ head g
+size (SGrid _ g) = size $ Grid g
 
 maxCoord :: Num b => Grid a -> Coord b
 maxCoord = add (-1, -1) . size
@@ -124,9 +129,6 @@ mapG f g = setData g $ map (map f) $ ungrid g
 inGrid :: (Ord b, Num b) => Grid a -> Coord b -> Bool
 inGrid g (x, y) = between 0 mx x && between 0 my y
   where (mx, my) = maxCoord g
-
-surround :: (Eq a, Num a) => Coord a -> [Coord a]
-surround (x, y) = [(xn, yn) | xn <- map (+x) [-1, 0, 1], yn <- map (+y) [-1, 0, 1], xn /= x || yn /= y]
 
 data Direction = U | R | D | L
   deriving (Eq, Ord, Read, Enum)
@@ -159,6 +161,9 @@ go D c = add c (0, 1)
 go R c = add c (1, 0)
 go U c = add c (0, -1)
 go L c = add c (-1, 0)
+
+surround :: (Show a, Num a) => Coord a -> [Coord a]
+surround c = scanl' (flip go) (go U $ go R c) [D, D, L, L, U, U, R]
 
 fromCoords :: (Ord a, Enum a) => [Coord a] -> Grid (Coord a)
 fromCoords cs = Grid [[(x, y) | x <- [minX..maxX]] | y <- [minY..maxY]]
@@ -196,34 +201,45 @@ inorout outC g = mapG ioo $ coordsG g
 countIOO :: InOrOut -> Grid InOrOut -> Int
 countIOO x g = length $ filter (== x) $ concat $ ungrid g
 
-outside :: (Ord a, Eq a, Num a, Enum a) => [Coord a] -> [Coord a]
-outside l = [c | c <- map (add (-1, -1) . fst) $ bfs nb (0, 0), inGrid g c]
-  where nb c = [c' | c' <- map (flip go c) [D, R, U, L], inGrid g' c', notElem c' l']
-        g = drawCoords 1 0 l
-        g' = border 0 g
-        l' = map (add (-mx + 1, -my + 1)) l
-        mx = minimum $ map fst l
-        my = minimum $ map snd l
+isIn :: Integral a => Grid InOrOut -> Coord a -> Bool
+isIn g c = (g ! c) == I
 
-inside :: (Ord a, Eq a, Num a, Enum a, Integral a) => [Coord a] -> [Coord a]
-inside l = l ++ (filter ((== I) . (g !)) $ coords g)
-  where outC = outside l
-        g = drawCoords O I outC
+isOut :: Integral a => Grid InOrOut -> Coord a -> Bool
+isOut g c = (g ! c) == O
+
+-- draw the inside and outside edges of a closed loop of coordinates
+-- note: this function does not decide which is inside or outside
+contours :: (Show a, Eq a, Num a) => [Coord a] -> ([Coord a], [Coord a])
+contours loop = (concat $ map fst splitSurroundings, concat $ map snd splitSurroundings)
+  where splitInOut prv cur nxt = let s = tail $ dropWhile (/= nxt) $ inflst $ surround cur in (filter (flip notElem loop) $ takeWhile (/= prv) s, filter (flip notElem loop) $ takeWhile (/= nxt) $ tail $ dropWhile (/= prv) s)
+        inflst l = l ++ inflst l
+        splitSurroundings = followLine loop
+        followLine [prv, cur] = take 2 $ followLine $ [prv, cur] ++ take 2 loop
+        followLine (prv:cur:nxt:rst) = (splitInOut prv cur nxt):followLine (cur:nxt:rst)
+
+outside :: (Show a, Eq a, Num a) => [Coord a] -> [Coord a]
+outside loop = last $ sortOn length [cl, cr]
+  where (cl, cr) = contours loop
+
+inside :: (Show a, Eq a, Num a) => [Coord a] -> [Coord a]
+inside loop = head $ sortOn length [cl, cr]
+  where (cl, cr) = contours loop
 
 insert :: Grid a -> a -> Coord Int -> Grid a
-insert g v c = insertAtRange g v c c
+insert g@(Grid _) v c = insertAtRange g v c c
+insert g@(SGrid s _) v c = insertAtRange g v c c
 
 insertAt :: Grid a -> a -> [Coord Int] -> Grid a
-insertAt g v cs = foldl fv g cs
+insertAt g v cs = foldl' fv g cs
   where fv gr c = insertAtRange gr v c c
 
 insertAtRange :: Grid a -> a -> Coord Int -> Coord Int -> Grid a
-insertAtRange g v (xa, ya) (xb, yb) = setData g $ heady ++ [headx xs ++ middlex ++ lastx xs | xs <- middley] ++ lasty
+insertAtRange (Grid d) v (xa, ya) (xb, yb) = Grid $ heady ++ [headx xs ++ middlex ++ lastx xs | xs <- middley] ++ lasty
   where heady = take ya d
         middley = drop ya $ take (yb + 1) d
         lasty = drop (yb + 1) d
         headx xs = take xa xs
         middlex = drop xa $ take (xb + 1) $ repeat v
         lastx xs = drop (xb + 1) xs
-        d = ungrid g
+insertAtRange (SGrid s d) v a b = SGrid s $ ungrid $ insertAtRange (Grid d) v a b
 
