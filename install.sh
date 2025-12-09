@@ -8,4 +8,5 @@ cabal install --lib pureMD5
 cabal install --lib json
 cabal install --lib hashmap
 cabal install --lib parsec3-numbers
+cabal install --lib range
 # cabal install --lib strings
