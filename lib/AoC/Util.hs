@@ -16,6 +16,8 @@ module AoC.Util
   , cartesianInfWith
   , cartesianWith
   , col
+  , combinations
+  , combinationsWith
   , count
   , countablePairs
   , countableZPairs
@@ -296,4 +298,13 @@ multiply = foldl' (*) 1
 filterFirst :: (a -> Bool) -> [a] -> [a]
 filterFirst f (a:as) | f a = as
                      | otherwise = a:filterFirst f as
+
+-- apply function to all possible combinations of different elements of a list, excluding duplicates and reversed combinations (ie. if (f a b) is in the result, (f b a) won't be)
+combinationsWith :: (a -> a -> b) -> [a] -> [b]
+combinationsWith _ [] = []
+combinationsWith f (a:as) = map (f a) as ++ combinationsWith f as
+
+-- create all possible pairs between different elements of a list, excluding duplicates and reversed combinations (ie. if (a, b) is in the result, (b, a) won't be)
+combinations :: [a] -> [(a, a)]
+combinations = combinationsWith (,)
 
