@@ -143,9 +143,7 @@ primes = sieve [2..]
 
 -- combine two finite lists in all possible combinations
 cartesianWith :: (a -> b -> c) -> [a] -> [b] -> [c]
-cartesianWith f a b = [f (a !! i) (b !! j) | i <- [0..x], j <- [0..y]]
-  where x = length a - 1
-        y = length b - 1
+cartesianWith f a b = concat $ map (flip map b . f) a
 
 -- combine two finite lists into pairs
 cartesian :: [a] -> [b] -> [(a, b)]
