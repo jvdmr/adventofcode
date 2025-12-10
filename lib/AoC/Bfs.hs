@@ -1,7 +1,7 @@
 {-# LANGUAGE FlexibleInstances, TypeSynonymInstances, FlexibleContexts #-}
 module AoC.Bfs
   ( bfs
-  , SeenFilter (..)
+  , UnseenFilter (..)
   , NeighborFunction (..)
   , bfsAdvanced
   , bfsDisconnected
@@ -13,33 +13,33 @@ module AoC.Bfs
   , unseenHeads
   ) where
 
-type SeenFilter a = [a] -> a -> Bool
+type UnseenFilter a = [a] -> a -> Bool
 type NeighborFunction a = a -> [a]
 
--- Allows custom seenFilter
-bfsAdvanced :: SeenFilter a -> NeighborFunction a -> a -> [(a, Int)]
-bfsAdvanced seenFilter neighbors start = bfs' [start] [(start, 0)]
+-- Allows custom unseenFilter
+bfsAdvanced :: UnseenFilter a -> NeighborFunction a -> a -> [(a, Int)]
+bfsAdvanced unseenFilter neighbors start = bfs' [start] [(start, 0)]
   where bfs' _ [] = []
-        bfs' seen (node@(n, d):queue) = node:let nbs = filter (seenFilter seen) $ neighbors n in bfs' (nbs ++ seen) $ queue ++ map (flip (,) (d + 1)) nbs
+        bfs' seen (node@(n, d):queue) = node:let nbs = filter (unseenFilter seen) $ neighbors n in bfs' (nbs ++ seen) $ queue ++ map (flip (,) (d + 1)) nbs
 
 -- Standard BFS
 bfs :: (Eq a) => NeighborFunction a -> a -> [(a, Int)]
 bfs neighbors start = bfsAdvanced (flip notElem) neighbors start
 
--- Wraps a standard neighbors function in one that builds a path with a custom seenFilter
-pathToAdv :: SeenFilter a -> NeighborFunction a -> NeighborFunction [a]
-pathToAdv seenFilter neighbors as@(a:_) = map (flip (:) as) $ filter (seenFilter as) $ neighbors a
+-- Wraps a standard neighbors function in one that builds a path with a custom unseenFilter
+pathToAdv :: UnseenFilter a -> NeighborFunction a -> NeighborFunction [a]
+pathToAdv unseenFilter neighbors as@(a:_) = map (flip (:) as) $ filter (unseenFilter as) $ neighbors a
 
 -- Wraps a standard neighbors function in one that builds a path
 pathTo :: (Eq a) => NeighborFunction a -> NeighborFunction [a]
 pathTo = pathToAdv (flip notElem)
 
-ignoreSeen :: SeenFilter a
+ignoreSeen :: UnseenFilter a
 ignoreSeen _ _ = True
 
 {-# INLINE ignoreSeen #-}
 
-unseenHeads :: (Eq a) => SeenFilter [a]
+unseenHeads :: (Eq a) => UnseenFilter [a]
 unseenHeads as a = head a `notElem` map head as
 
 -- BFS that constructs the shortest (unweighted) path for every node to the starting node
