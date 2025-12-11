@@ -57,6 +57,7 @@ library
     base
     , containers
     , matrix
+    , parallel
     , parsec
     , range
     , split
@@ -125,6 +126,7 @@ executable aoc
     , adventOfCode
     , cmdargs
     , containers
+    , parallel
     , parsec
     , range
     , split
